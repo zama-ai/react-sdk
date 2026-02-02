@@ -145,6 +145,8 @@ export const createFhevmInstance = async (parameters: {
   mockChains?: Record<number, string>;
   signal: AbortSignal;
   onStatusChange?: (status: FhevmRelayerStatusType) => void;
+  /** API key for relayer authentication (required for v0.4.0+) */
+  apiKey?: string;
 }): Promise<FhevmInstance> => {
   const throwIfAborted = () => {
     if (signal.aborted) throw new FhevmAbortError();
@@ -154,7 +156,7 @@ export const createFhevmInstance = async (parameters: {
     if (onStatusChange) onStatusChange(status);
   };
 
-  const { signal, onStatusChange, provider: providerOrUrl, mockChains } = parameters;
+  const { signal, onStatusChange, provider: providerOrUrl, mockChains, apiKey } = parameters;
 
   // Resolve chainId
   const { isMock, rpcUrl, chainId } = await resolve(providerOrUrl, mockChains);
@@ -228,6 +230,13 @@ export const createFhevmInstance = async (parameters: {
     publicKey: pub.publicKey,
     publicParams: pub.publicParams,
     relayerRouteVersion: 2,
+    // Add API key authentication if provided (required for relayer-sdk v0.4.0+)
+    ...(apiKey && {
+      auth: {
+        __type: "ApiKeyHeader" as const,
+        value: apiKey,
+      },
+    }),
   };
 
   // notify that state === "creating"

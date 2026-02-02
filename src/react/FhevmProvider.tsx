@@ -82,6 +82,23 @@ export interface FhevmProviderProps {
    * Default: true
    */
   autoInit?: boolean;
+
+  /**
+   * API key for relayer authentication.
+   * Required for relayer-sdk v0.4.0+ when using Zama's hosted relayer.
+   *
+   * Get your API key from the Zama dashboard.
+   *
+   * @example
+   * ```tsx
+   * <FhevmProvider
+   *   config={config}
+   *   apiKey={process.env.NEXT_PUBLIC_ZAMA_API_KEY}
+   *   ...
+   * />
+   * ```
+   */
+  apiKey?: string;
 }
 
 /**
@@ -151,6 +168,7 @@ export function FhevmProvider({
   storage,
   wagmi,
   autoInit = true,
+  apiKey,
 }: FhevmProviderProps): React.ReactElement {
   // Support deprecated wagmi prop for backwards compatibility
   const address = addressProp ?? wagmi?.address;
@@ -256,6 +274,7 @@ export function FhevmProvider({
           onStatusChange: (sdkStatus) => {
             console.log(`[FhevmProvider] SDK status: ${sdkStatus}`);
           },
+          apiKey,
         });
 
         // Check if we were aborted during initialization
@@ -283,7 +302,7 @@ export function FhevmProvider({
         setFhevmStatus("error");
       }
     },
-    [provider, config, mockChains]
+    [provider, config, mockChains, apiKey]
   );
 
   // Refresh function for manual re-initialization
