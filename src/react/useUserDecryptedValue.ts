@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useFhevmContext } from "./context";
 import { fhevmKeys } from "./queryKeys";
 

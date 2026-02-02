@@ -1,14 +1,14 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { useFhevmContext } from "./context";
 import type { RelayerEncryptedInput } from "@zama-fhe/relayer-sdk/web";
+import { useCallback, useMemo } from "react";
 import type {
   EncryptInput,
   EncryptResult,
   EncryptedOutput,
   FheTypeName,
 } from "../types/encryption";
+import { useFhevmContext } from "./context";
 
 // Re-export types for convenience
 export type { EncryptInput, EncryptResult, EncryptedOutput, FheTypeName };

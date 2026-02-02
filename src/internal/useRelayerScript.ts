@@ -104,6 +104,7 @@ export function useRelayerScript(): UseRelayerScriptReturn {
     document.head.appendChild(script);
 
     // No cleanup - we don't remove the script once added
+    return undefined;
   }, []);
 
   return {

@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { useFhevmContext } from "./context";
-import { useEthersSigner } from "./useEthersSigner";
+import { useCallback, useEffect, useState } from "react";
 import { ERC20TOERC7984_ABI, ERC20_ABI } from "../abi/index";
 import type { ShieldStatus, UseShieldOptions, UseShieldReturn } from "../types/shield";
+import { useFhevmContext } from "./context";
+import { useEthersSigner } from "./useEthersSigner";
 
 // Re-export types for convenience
 export type { ShieldStatus, UseShieldOptions, UseShieldReturn };

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createFhevmConfig, createStorage, createMemoryStorage, noopStorage } from "../src/config";
 import { hardhatLocal, sepolia, defineMockChain } from "../src/chains";
+import { createFhevmConfig, createStorage, createMemoryStorage, noopStorage } from "../src/config";
 
 describe("createFhevmConfig", () => {
   it("should create a config with provided chains", () => {

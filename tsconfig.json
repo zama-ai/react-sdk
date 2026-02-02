@@ -5,15 +5,24 @@
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": true,
     "declaration": true,
     "outDir": "dist",
     "rootDir": "src",
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "types": ["node"]
+    "types": ["node"],
+
+    // Strict type checking
+    "strict": true,
+    "skipLibCheck": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false
   },
   "include": ["src/**/*"]
 }
-

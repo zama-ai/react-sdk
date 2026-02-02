@@ -1,5 +1,5 @@
-import { FhevmRelayerSDKType, FhevmWindowType } from "./fhevmTypes";
 import { SDK_CDN_URL } from "./constants";
+import { FhevmRelayerSDKType, FhevmWindowType } from "./fhevmTypes";
 
 type TraceType = (message?: unknown, ...optionalParams: unknown[]) => void;
 

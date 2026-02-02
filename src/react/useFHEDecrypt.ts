@@ -2,9 +2,9 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { FhevmDecryptionSignature, type SignerParams } from "../FhevmDecryptionSignature.js";
-import { GenericStringStorage } from "../storage/GenericStringStorage.js";
 import { FhevmInstance } from "../fhevmTypes.js";
 import type { Eip1193Provider } from "../internal/eip1193.js";
+import { GenericStringStorage } from "../storage/GenericStringStorage.js";
 
 export type FHEDecryptRequest = { handle: string; contractAddress: `0x${string}` };
 

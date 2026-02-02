@@ -1,13 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ethers } from "ethers";
-import { useFhevmContext } from "./context";
-import { useEthersSigner } from "./useEthersSigner";
-import { useUserDecrypt, type DecryptRequest } from "./useUserDecrypt";
-import { useUserDecryptedValues } from "./useUserDecryptedValue";
-import { FhevmDecryptionSignature } from "../FhevmDecryptionSignature";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ERC7984_ABI } from "../abi/index";
+import { FhevmDecryptionSignature } from "../FhevmDecryptionSignature";
 import type {
   BalanceStatus,
   ConfidentialBalanceConfig,
@@ -16,6 +12,10 @@ import type {
   UseConfidentialBalancesOptions,
   UseConfidentialBalancesReturn,
 } from "../types/balance";
+import { useFhevmContext } from "./context";
+import { useEthersSigner } from "./useEthersSigner";
+import { useUserDecrypt, type DecryptRequest } from "./useUserDecrypt";
+import { useUserDecryptedValues } from "./useUserDecryptedValue";
 
 export type {
   BalanceStatus,

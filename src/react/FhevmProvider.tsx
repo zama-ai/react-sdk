@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FhevmConfig } from "../config";
 import type { FhevmInstance } from "../fhevmTypes";
 import type { Eip1193Provider } from "../internal/eip1193";
+import { createFhevmInstance, FhevmAbortError } from "../internal/fhevm";
+import { useRelayerScript } from "../internal/useRelayerScript";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
 import { FhevmContext, type FhevmContextValue, type FhevmStatus } from "./context";
-import { createFhevmInstance, FhevmAbortError } from "../internal/fhevm";
-import { InMemoryStorageProvider } from "./useInMemoryStorage";
 import { fhevmQueryClient } from "./queryClient";
-import { useRelayerScript } from "../internal/useRelayerScript";
+import { InMemoryStorageProvider } from "./useInMemoryStorage";
 
 /**
  * Props for FhevmProvider component.

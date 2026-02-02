@@ -1,13 +1,13 @@
+import { FhevmInstance, FhevmInstanceConfig } from "../fhevmTypes";
+import { isAddress, getChainId as getChainIdFromProvider, type Eip1193Provider } from "./eip1193";
 import type {
   FhevmInitSDKOptions,
   FhevmInitSDKType,
   FhevmLoadSDKType,
   FhevmWindowType,
 } from "./fhevmTypes";
-import { isFhevmWindowType, RelayerSDKLoader } from "./RelayerSDKLoader";
 import { publicKeyStorageGet, publicKeyStorageSet } from "./PublicKeyStorage";
-import { FhevmInstance, FhevmInstanceConfig } from "../fhevmTypes";
-import { isAddress, getChainId as getChainIdFromProvider, type Eip1193Provider } from "./eip1193";
+import { isFhevmWindowType, RelayerSDKLoader } from "./RelayerSDKLoader";
 import { getChainIdFromUrl, getWeb3ClientVersion, tryGetFhevmHardhatMetadata } from "./rpc";
 
 export class FhevmReactError extends Error {

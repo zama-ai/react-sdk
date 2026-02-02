@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { createFhevmConfig } from "../src/config";
 import { hardhatLocal, sepolia } from "../src/chains";
+import { createFhevmConfig } from "../src/config";
 
 // Note: Full React rendering tests would require @testing-library/react
 // For now, we test the exports and basic configuration

@@ -1,6 +1,6 @@
-import { useFhevmContext, type FhevmStatus } from "./context";
-import type { FhevmInstance } from "../fhevmTypes";
 import type { FhevmConfig } from "../config";
+import type { FhevmInstance } from "../fhevmTypes";
+import { useFhevmContext, type FhevmStatus } from "./context";
 
 /**
  * Return type for useFhevmClient hook.

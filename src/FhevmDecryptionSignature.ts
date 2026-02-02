@@ -1,4 +1,3 @@
-import { GenericStringStorage } from "./storage/GenericStringStorage";
 import { EIP712Type, FhevmDecryptionSignatureType, FhevmInstance } from "./fhevmTypes";
 import {
   isAddress,
@@ -6,6 +5,7 @@ import {
   type Eip1193Provider,
   type EIP712TypedData,
 } from "./internal/eip1193";
+import { GenericStringStorage } from "./storage/GenericStringStorage";
 
 function _timestampNow(): number {
   return Math.floor(Date.now() / 1000);

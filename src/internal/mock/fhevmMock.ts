@@ -6,8 +6,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-import { JsonRpcProvider, Contract } from "ethers";
 import { MockFhevmInstance } from "@fhevm/mock-utils";
+import { JsonRpcProvider, Contract } from "ethers";
 import { FhevmInstance } from "../../fhevmTypes";
 
 // ERC-5267 eip712Domain() ABI - returns the EIP712 domain info

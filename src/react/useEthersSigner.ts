@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
 import { ethers } from "ethers";
+import { useEffect, useState, useMemo } from "react";
 import { useFhevmContext } from "./context";
 
 /**

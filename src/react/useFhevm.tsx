@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FhevmInstance } from "../fhevmTypes.js";
-import { createFhevmInstance } from "../internal/fhevm.js";
 import type { Eip1193Provider } from "../internal/eip1193.js";
+import { createFhevmInstance } from "../internal/fhevm.js";
 
 function _assert(condition: boolean, message?: string): asserts condition {
   if (!condition) {
