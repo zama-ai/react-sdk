@@ -1,4 +1,5 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { logger } from "./logger";
 
 type FhevmStoredPublicKey = {
   publicKeyId: string;
@@ -27,26 +28,76 @@ interface PublicParamsDB extends DBSchema {
   };
 }
 
-let __dbPromise: Promise<IDBPDatabase<PublicParamsDB>> | undefined = undefined;
+/**
+ * Storage type currently in use.
+ */
+type StorageType = "indexeddb" | "memory" | "none";
 
+let __dbPromise: Promise<IDBPDatabase<PublicParamsDB>> | undefined = undefined;
+let __storageType: StorageType = "none";
+const __memoryFallback: Map<
+  string,
+  { publicKey?: FhevmStoredPublicKey; publicParams?: FhevmStoredPublicParams }
+> = new Map();
+
+/**
+ * Get the current storage type being used.
+ */
+export function getPublicKeyStorageType(): StorageType {
+  return __storageType;
+}
+
+/**
+ * Initialize IndexedDB with fallback to memory storage.
+ * Logs which storage type is being used.
+ */
 async function _getDB(): Promise<IDBPDatabase<PublicParamsDB> | undefined> {
+  // Return cached DB if already initialized
   if (__dbPromise) {
     return __dbPromise;
   }
+
+  // SSR - use memory storage
   if (typeof window === "undefined") {
+    __storageType = "memory";
+    logger.debug("[PublicKeyStorage]", "SSR detected, using memory storage");
     return undefined;
   }
-  __dbPromise = openDB<PublicParamsDB>("fhevm", 1, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains("paramsStore")) {
-        db.createObjectStore("paramsStore", { keyPath: "acl" });
-      }
-      if (!db.objectStoreNames.contains("publicKeyStore")) {
-        db.createObjectStore("publicKeyStore", { keyPath: "acl" });
-      }
-    },
-  });
-  return __dbPromise;
+
+  // Try IndexedDB
+  try {
+    __dbPromise = openDB<PublicParamsDB>("fhevm", 1, {
+      upgrade(db) {
+        if (!db.objectStoreNames.contains("paramsStore")) {
+          db.createObjectStore("paramsStore", { keyPath: "acl" });
+        }
+        if (!db.objectStoreNames.contains("publicKeyStore")) {
+          db.createObjectStore("publicKeyStore", { keyPath: "acl" });
+        }
+      },
+    });
+
+    // Test if DB is accessible (private browsing may block IndexedDB)
+    const db = await __dbPromise;
+    if (db) {
+      __storageType = "indexeddb";
+      logger.debug("[PublicKeyStorage]", "Using IndexedDB for public key storage");
+      return db;
+    }
+  } catch (error) {
+    // IndexedDB failed (private browsing, disabled, etc.)
+    logger.warn(
+      "[PublicKeyStorage]",
+      "IndexedDB unavailable, falling back to memory storage:",
+      error instanceof Error ? error.message : String(error)
+    );
+    __dbPromise = undefined;
+  }
+
+  // Fallback to memory storage
+  __storageType = "memory";
+  logger.debug("[PublicKeyStorage]", "Using memory storage (data will not persist)");
+  return undefined;
 }
 
 // Types that match @zama-fhe/relayer-sdk v0.4 FhevmPkeConfigType
@@ -113,35 +164,37 @@ export async function publicKeyStorageGet(aclAddress: `0x${string}`): Promise<{
   publicParams?: FhevmPkeCrsByCapacityType;
 }> {
   const db = await _getDB();
-  if (!db) {
-    return {};
-  }
 
   let storedPublicKey: FhevmStoredPublicKey | null = null;
-  try {
-    const pk = await db.get("publicKeyStore", aclAddress);
-    if (pk?.value) {
-      assertFhevmStoredPublicKey(pk.value);
-      storedPublicKey = pk.value;
-    }
-  } catch (error) {
-    // Log error but continue - cached data is optional
-    if (process.env.NODE_ENV === "development") {
-      console.warn("[fhevm] Failed to read public key from IndexedDB:", error);
-    }
-  }
-
   let storedPublicParams: FhevmStoredPublicParams | null = null;
-  try {
-    const pp = await db.get("paramsStore", aclAddress);
-    if (pp?.value) {
-      assertFhevmStoredPublicParams(pp.value);
-      storedPublicParams = pp.value;
+
+  if (db) {
+    // Try IndexedDB
+    try {
+      const pk = await db.get("publicKeyStore", aclAddress);
+      if (pk?.value) {
+        assertFhevmStoredPublicKey(pk.value);
+        storedPublicKey = pk.value;
+      }
+    } catch (error) {
+      logger.warn("[PublicKeyStorage]", "Failed to read public key from IndexedDB:", error);
     }
-  } catch (error) {
-    // Log error but continue - cached data is optional
-    if (process.env.NODE_ENV === "development") {
-      console.warn("[fhevm] Failed to read public params from IndexedDB:", error);
+
+    try {
+      const pp = await db.get("paramsStore", aclAddress);
+      if (pp?.value) {
+        assertFhevmStoredPublicParams(pp.value);
+        storedPublicParams = pp.value;
+      }
+    } catch (error) {
+      logger.warn("[PublicKeyStorage]", "Failed to read public params from IndexedDB:", error);
+    }
+  } else {
+    // Use memory fallback
+    const cached = __memoryFallback.get(aclAddress);
+    if (cached) {
+      storedPublicKey = cached.publicKey ?? null;
+      storedPublicParams = cached.publicParams ?? null;
     }
   }
 
@@ -175,15 +228,27 @@ export async function publicKeyStorageSet(
   assertFhevmStoredPublicParams(publicParams);
 
   const db = await _getDB();
-  if (!db) {
-    return;
+
+  if (db) {
+    // Use IndexedDB
+    try {
+      if (publicKey) {
+        await db.put("publicKeyStore", { acl: aclAddress, value: publicKey });
+      }
+      if (publicParams) {
+        await db.put("paramsStore", { acl: aclAddress, value: publicParams });
+      }
+    } catch (error) {
+      logger.warn("[PublicKeyStorage]", "Failed to write to IndexedDB:", error);
+      // Fall through to memory storage
+    }
   }
 
-  if (publicKey) {
-    await db.put("publicKeyStore", { acl: aclAddress, value: publicKey });
-  }
-
-  if (publicParams) {
-    await db.put("paramsStore", { acl: aclAddress, value: publicParams });
-  }
+  // Also store in memory (ensures data survives IndexedDB errors and
+  // provides immediate access without async DB read)
+  const existing = __memoryFallback.get(aclAddress) ?? {};
+  __memoryFallback.set(aclAddress, {
+    publicKey: publicKey ?? existing.publicKey,
+    publicParams: publicParams ?? existing.publicParams,
+  });
 }

@@ -5,6 +5,9 @@ import { useCallback, useMemo } from "react";
 import { FhevmInstance } from "../fhevmTypes.js";
 import { logger } from "../internal/logger.js";
 
+// Track if deprecation warning has been shown
+let useFHEEncryptionDeprecationWarned = false;
+
 export type EncryptResult = {
   handles: Uint8Array[];
   inputProof: Uint8Array;
@@ -126,6 +129,16 @@ export const buildParamsFromAbi = (
  * @deprecated Use useEncrypt instead, which provides a simpler API and integrates with FhevmProvider context.
  *
  * Legacy hook for FHE encryption. Requires manual instance and address management.
+ *
+ * Migration example:
+ * ```tsx
+ * // Before (legacy):
+ * const { encryptWith, canEncrypt } = useFHEEncryption({ instance, userAddress, contractAddress });
+ *
+ * // After (recommended):
+ * const { encrypt, isReady } = useEncrypt();
+ * const [handle, proof] = await encrypt([{ type: 'uint64', value: 100n }], contractAddress);
+ * ```
  */
 export const useFHEEncryption = (params: {
   instance: FhevmInstance | undefined;
@@ -133,6 +146,16 @@ export const useFHEEncryption = (params: {
   userAddress: `0x${string}` | undefined;
   contractAddress: `0x${string}` | undefined;
 }) => {
+  // Show deprecation warning once in development
+  if (!useFHEEncryptionDeprecationWarned && process.env.NODE_ENV !== "production") {
+    useFHEEncryptionDeprecationWarned = true;
+    logger.warn(
+      "[useFHEEncryption]",
+      "useFHEEncryption is deprecated. Use useEncrypt instead. " +
+        "See https://github.com/zama-ai/fhevm-react for migration guide."
+    );
+  }
+
   const { instance, userAddress, contractAddress } = params;
 
   const canEncrypt = useMemo(

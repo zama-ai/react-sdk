@@ -4,14 +4,27 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { FhevmDecryptionSignature, type SignerParams } from "../FhevmDecryptionSignature.js";
 import { FhevmInstance } from "../fhevmTypes.js";
 import type { Eip1193Provider } from "../internal/eip1193.js";
+import { logger } from "../internal/logger.js";
 import { GenericStringStorage } from "../storage/GenericStringStorage.js";
 
 export type FHEDecryptRequest = { handle: string; contractAddress: `0x${string}` };
+
+// Track if deprecation warning has been shown
+let useFHEDecryptDeprecationWarned = false;
 
 /**
  * @deprecated Use useUserDecrypt instead, which integrates with FhevmProvider context.
  *
  * Legacy hook for FHE decryption. Requires manual provider and storage management.
+ *
+ * Migration example:
+ * ```tsx
+ * // Before (legacy):
+ * const { decrypt, results } = useFHEDecrypt({ instance, provider, address, ... });
+ *
+ * // After (recommended):
+ * const { decrypt, decryptedValues } = useUserDecrypt();
+ * ```
  */
 export const useFHEDecrypt = (params: {
   instance: FhevmInstance | undefined;
@@ -23,6 +36,16 @@ export const useFHEDecrypt = (params: {
   chainId: number | undefined;
   requests: readonly FHEDecryptRequest[] | undefined;
 }) => {
+  // Show deprecation warning once in development
+  if (!useFHEDecryptDeprecationWarned && process.env.NODE_ENV !== "production") {
+    useFHEDecryptDeprecationWarned = true;
+    logger.warn(
+      "[useFHEDecrypt]",
+      "useFHEDecrypt is deprecated. Use useUserDecrypt instead. " +
+        "See https://github.com/zama-ai/fhevm-react for migration guide."
+    );
+  }
+
   const { instance, provider, address, fhevmDecryptionSignatureStorage, chainId, requests } =
     params;
 

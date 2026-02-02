@@ -11,8 +11,32 @@ function _assert(condition: boolean, message?: string): asserts condition {
   }
 }
 
+// Track if deprecation warning has been shown
+let useFhevmDeprecationWarned = false;
+
 export type FhevmGoState = "idle" | "loading" | "ready" | "error";
 
+/**
+ * @deprecated Use FhevmProvider and useFhevmContext instead.
+ *
+ * Legacy hook for FHEVM instance management. The new FhevmProvider component
+ * provides automatic instance management with wallet integration.
+ *
+ * Migration example:
+ * ```tsx
+ * // Before (legacy):
+ * const { instance, status } = useFhevm({ provider, chainId });
+ *
+ * // After (recommended):
+ * // 1. Wrap your app with FhevmProvider
+ * <FhevmProvider config={config} address={address} chainId={chainId} isConnected={isConnected}>
+ *   <App />
+ * </FhevmProvider>
+ *
+ * // 2. Use useFhevmContext in your components
+ * const { instance, status } = useFhevmContext();
+ * ```
+ */
 export function useFhevm(parameters: {
   provider: string | Eip1193Provider | undefined;
   chainId: number | undefined;
@@ -24,6 +48,16 @@ export function useFhevm(parameters: {
   error: Error | undefined;
   status: FhevmGoState;
 } {
+  // Show deprecation warning once in development
+  if (!useFhevmDeprecationWarned && process.env.NODE_ENV !== "production") {
+    useFhevmDeprecationWarned = true;
+    logger.warn(
+      "[useFhevm]",
+      "useFhevm is deprecated. Use FhevmProvider and useFhevmContext instead. " +
+        "See https://github.com/zama-ai/fhevm-react for migration guide."
+    );
+  }
+
   const { provider, chainId, initialMockChains, enabled = true } = parameters;
 
   const [instance, _setInstance] = useState<FhevmInstance | undefined>(undefined);
