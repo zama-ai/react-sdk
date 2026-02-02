@@ -1,5 +1,6 @@
 import { SDK_CDN_URL } from "./constants";
 import { FhevmRelayerSDKType, FhevmWindowType } from "./fhevmTypes";
+import { logger } from "./logger";
 
 type TraceType = (message?: unknown, ...optionalParams: unknown[]) => void;
 
@@ -65,17 +66,17 @@ export class RelayerSDKLoader {
    * Uses exponential backoff with jitter between retry attempts.
    */
   public async load(): Promise<void> {
-    console.log("[RelayerSDKLoader] load...");
+    logger.debug("[RelayerSDKLoader]", "load...");
     // Ensure this only runs in the browser
     if (typeof window === "undefined") {
-      console.log("[RelayerSDKLoader] window === undefined");
+      logger.debug("[RelayerSDKLoader]", "window === undefined");
       throw new Error("RelayerSDKLoader: can only be used in the browser.");
     }
 
     // Check if already loaded
     if ("relayerSDK" in window) {
       if (!isFhevmRelayerSDKType(window.relayerSDK, this._trace)) {
-        console.log("[RelayerSDKLoader] window.relayerSDK === undefined");
+        logger.debug("[RelayerSDKLoader]", "window.relayerSDK is invalid");
         throw new Error("RelayerSDKLoader: Unable to load FHEVM Relayer SDK");
       }
       return;
@@ -87,19 +88,21 @@ export class RelayerSDKLoader {
       try {
         if (attempt > 0) {
           const backoffDelay = calculateBackoff(attempt - 1, this._initialDelay, this._maxDelay);
-          console.log(
-            `[RelayerSDKLoader] Retry attempt ${attempt}/${this._maxRetries} after ${Math.round(backoffDelay)}ms delay`
+          logger.debug(
+            "[RelayerSDKLoader]",
+            `Retry attempt ${attempt}/${this._maxRetries} after ${Math.round(backoffDelay)}ms delay`
           );
           await delay(backoffDelay);
         }
 
         await this._loadScript();
-        console.log("[RelayerSDKLoader] Successfully loaded Relayer SDK");
+        logger.debug("[RelayerSDKLoader]", "Successfully loaded Relayer SDK");
         return;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.warn(
-          `[RelayerSDKLoader] Load attempt ${attempt + 1}/${this._maxRetries + 1} failed:`,
+        logger.warn(
+          "[RelayerSDKLoader]",
+          `Load attempt ${attempt + 1}/${this._maxRetries + 1} failed:`,
           lastError.message
         );
 
@@ -153,7 +156,7 @@ export class RelayerSDKLoader {
 
       script.onload = () => {
         if (!isFhevmWindowType(window, this._trace)) {
-          console.log("[RelayerSDKLoader] script onload FAILED...");
+          logger.debug("[RelayerSDKLoader]", "script onload FAILED - invalid relayerSDK object");
           reject(
             new Error(
               `RelayerSDKLoader: Relayer SDK script has been successfully loaded from ${SDK_CDN_URL}, however, the window.relayerSDK object is invalid.`
@@ -165,13 +168,13 @@ export class RelayerSDKLoader {
       };
 
       script.onerror = () => {
-        console.log("[RelayerSDKLoader] script onerror... ");
+        logger.debug("[RelayerSDKLoader]", "script onerror");
         reject(new Error(`RelayerSDKLoader: Failed to load Relayer SDK from ${SDK_CDN_URL}`));
       };
 
-      console.log("[RelayerSDKLoader] add script to DOM...");
+      logger.debug("[RelayerSDKLoader]", "adding script to DOM...");
       document.head.appendChild(script);
-      console.log("[RelayerSDKLoader] script added!");
+      logger.debug("[RelayerSDKLoader]", "script added!");
     });
   }
 }

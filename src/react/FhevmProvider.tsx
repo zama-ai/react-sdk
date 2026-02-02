@@ -4,6 +4,7 @@ import type { FhevmConfig } from "../config";
 import type { FhevmInstance } from "../fhevmTypes";
 import type { Eip1193Provider } from "../internal/eip1193";
 import { createFhevmInstance, FhevmAbortError } from "../internal/fhevm";
+import { logger } from "../internal/logger";
 import { useRelayerScript } from "../internal/useRelayerScript";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
 import { FhevmContext, type FhevmContextValue, type FhevmStatus } from "./context";
@@ -198,8 +199,9 @@ export function FhevmProvider({
   // Warn about deprecated wagmi prop
   useEffect(() => {
     if (wagmi && process.env.NODE_ENV !== "production") {
-      console.warn(
-        "[FhevmProvider] The 'wagmi' prop is deprecated. " +
+      logger.warn(
+        "[FhevmProvider]",
+        "The 'wagmi' prop is deprecated. " +
           "Use 'address', 'chainId', and 'isConnected' props directly instead."
       );
     }
@@ -262,8 +264,9 @@ export function FhevmProvider({
       // Check if chain is supported
       const chain = config.getChain(targetChainId);
       if (!chain) {
-        console.warn(
-          `[FhevmProvider] Chain ${targetChainId} is not configured. Skipping initialization.`
+        logger.warn(
+          "[FhevmProvider]",
+          `Chain ${targetChainId} is not configured. Skipping initialization.`
         );
         setFhevmStatus("idle");
         return;
@@ -271,7 +274,7 @@ export function FhevmProvider({
 
       // Check if provider is available
       if (!provider) {
-        console.warn("[FhevmProvider] No provider available. Skipping initialization.");
+        logger.warn("[FhevmProvider]", "No provider available. Skipping initialization.");
         setFhevmStatus("idle");
         return;
       }
@@ -291,8 +294,9 @@ export function FhevmProvider({
       if (initTimeout > 0) {
         timeoutId = setTimeout(() => {
           if (!abortController.signal.aborted) {
-            console.warn(
-              `[FhevmProvider] Initialization timed out after ${initTimeout}ms for chain ${targetChainId}`
+            logger.warn(
+              "[FhevmProvider]",
+              `Initialization timed out after ${initTimeout}ms for chain ${targetChainId}`
             );
             abortController.abort();
             setFhevmError(
@@ -313,7 +317,7 @@ export function FhevmProvider({
           mockChains,
           signal: abortController.signal,
           onStatusChange: (sdkStatus) => {
-            console.log(`[FhevmProvider] SDK status: ${sdkStatus}`);
+            logger.debug("[FhevmProvider]", `SDK status: ${sdkStatus}`);
           },
           apiKey,
         });
@@ -330,13 +334,16 @@ export function FhevmProvider({
 
         // Check if chain changed during initialization
         if (initRef.current.chainId !== targetChainId) {
-          console.log(`[FhevmProvider] Chain changed during initialization. Discarding instance.`);
+          logger.debug(
+            "[FhevmProvider]",
+            "Chain changed during initialization. Discarding instance."
+          );
           return;
         }
 
         setInstance(newInstance);
         setFhevmStatus("ready");
-        console.log(`[FhevmProvider] FHEVM instance ready for chain ${targetChainId}`);
+        logger.debug("[FhevmProvider]", `FHEVM instance ready for chain ${targetChainId}`);
       } catch (err) {
         // Clear timeout on error
         if (timeoutId !== undefined) {
@@ -348,7 +355,7 @@ export function FhevmProvider({
           return;
         }
 
-        console.error("[FhevmProvider] Failed to initialize FHEVM:", err);
+        logger.error("[FhevmProvider]", "Failed to initialize FHEVM:", err);
         setFhevmError(err instanceof Error ? err : new Error(String(err)));
         setFhevmStatus("error");
       }

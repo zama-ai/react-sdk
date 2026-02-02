@@ -9,6 +9,7 @@
 import { MockFhevmInstance } from "@fhevm/mock-utils";
 import { JsonRpcProvider, Contract } from "ethers";
 import { FhevmInstance } from "../../fhevmTypes";
+import { logger } from "../logger";
 
 // ERC-5267 eip712Domain() ABI - returns the EIP712 domain info
 const EIP712_DOMAIN_ABI = [
@@ -38,7 +39,8 @@ async function getEip712Domain(
   // Access by index as the return is a tuple
   const chainId = Number(domain[3]);
   const verifyingContract = domain[4] as string;
-  console.log(
+  logger.debug(
+    "[fhevmMock]",
     `[fhevmMock] EIP712 domain for ${contractAddress}: chainId=${chainId}, verifyingContract=${verifyingContract}`
   );
   return {
@@ -65,7 +67,7 @@ export const fhevmMockCreateInstance = async (parameters: {
     getEip712Domain(provider, parameters.metadata.InputVerifierAddress),
   ]);
 
-  console.log(`[fhevmMock] Creating MockFhevmInstance with config:`, {
+  logger.debug("[fhevmMock]", `[fhevmMock] Creating MockFhevmInstance with config:`, {
     aclContractAddress: parameters.metadata.ACLAddress,
     chainId: parameters.chainId,
     gatewayChainId: kmsVerifierDomain.chainId,

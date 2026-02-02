@@ -240,10 +240,11 @@ interface TfheParams {
 10. Phase 4.1 - Standardize error handling
 
 ### Medium-term (Future PRs)
-9. Phase 1.2 - CDN integrity checking
-10. Phase 5.1 - Deprecate legacy API
-11. Phase 5.2 - Storage fallback chain
-12. Phase 4.2 - Console logging cleanup (create debug logger utility)
+9. ✅ Phase 4.2 - Console logging cleanup (created logger utility, replaced ~40 console calls)
+10. Phase 1.2 - CDN integrity checking
+11. Phase 5.1 - Deprecate legacy API
+12. Phase 5.2 - Storage fallback chain
+13. Phase 4.3 - Memoization improvements (useConfidentialBalances)
 
 ---
 

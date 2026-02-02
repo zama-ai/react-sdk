@@ -2,6 +2,7 @@
 
 import { ethers } from "ethers";
 import { useEffect, useState, useMemo } from "react";
+import { logger } from "../internal/logger";
 import { useFhevmContext } from "./context";
 
 /**
@@ -102,7 +103,7 @@ export function useEthersSigner(): UseEthersSignerReturn {
         setProvider(browserProvider);
         setSigner(jsonRpcSigner);
       } catch (err) {
-        console.error("[useEthersSigner] Failed to create signer:", err);
+        logger.error("[useEthersSigner]", "Failed to create signer:", err);
         setError(err instanceof Error ? err : new Error(String(err)));
         setSigner(undefined);
         setProvider(undefined);

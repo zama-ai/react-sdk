@@ -5,6 +5,7 @@ import {
   type Eip1193Provider,
   type EIP712TypedData,
 } from "./internal/eip1193";
+import { logger } from "./internal/logger";
 import { GenericStringStorage } from "./storage/GenericStringStorage";
 
 /**
@@ -321,10 +322,10 @@ export class FhevmDecryptionSignature {
         this.#userAddress,
         withPublicKey ? this.#publicKey : undefined
       );
-      console.log("[FhevmDecryptionSignature] Saving signature with key:", storageKey.key);
+      logger.debug("[FhevmDecryptionSignature]", "Saving signature with key:", storageKey.key);
       await storage.setItem(storageKey.key, value);
     } catch (e) {
-      console.error("[FhevmDecryptionSignature] Failed to save to storage:", e);
+      logger.error("[FhevmDecryptionSignature]", "Failed to save to storage:", e);
     }
   }
 
@@ -343,32 +344,33 @@ export class FhevmDecryptionSignature {
         publicKey
       );
 
-      console.log(
-        "[FhevmDecryptionSignature] Looking for cached signature with key:",
+      logger.debug(
+        "[FhevmDecryptionSignature]",
+        "Looking for cached signature with key:",
         storageKey.key
       );
       const result = await storage.getItem(storageKey.key);
 
       if (!result) {
-        console.log("[FhevmDecryptionSignature] No cached signature found");
+        logger.debug("[FhevmDecryptionSignature]", "No cached signature found");
         return null;
       }
 
       try {
         const kps = FhevmDecryptionSignature.fromJSON(result);
         if (!kps.isValid()) {
-          console.log("[FhevmDecryptionSignature] Cached signature expired");
+          logger.debug("[FhevmDecryptionSignature]", "Cached signature expired");
           return null;
         }
 
-        console.log("[FhevmDecryptionSignature] Found valid cached signature");
+        logger.debug("[FhevmDecryptionSignature]", "Found valid cached signature");
         return kps;
       } catch (e) {
-        console.log("[FhevmDecryptionSignature] Failed to parse cached signature:", e);
+        logger.debug("[FhevmDecryptionSignature]", "Failed to parse cached signature:", e);
         return null;
       }
     } catch (e) {
-      console.log("[FhevmDecryptionSignature] Error loading from storage:", e);
+      logger.debug("[FhevmDecryptionSignature]", "Error loading from storage:", e);
       return null;
     }
   }
@@ -420,7 +422,7 @@ export class FhevmDecryptionSignature {
         userAddress,
       });
     } catch (err) {
-      console.error("[FhevmDecryptionSignature] Failed to create signature:", err);
+      logger.error("[FhevmDecryptionSignature]", "Failed to create signature:", err);
       return null;
     }
   }
@@ -440,9 +442,9 @@ export class FhevmDecryptionSignature {
 
     // Debug: Check storage type
     const storageType = storage.constructor?.name || "unknown";
-    console.log("[FhevmDecryptionSignature] Using storage type:", storageType);
-    console.log("[FhevmDecryptionSignature] Contract addresses:", contractAddresses);
-    console.log("[FhevmDecryptionSignature] User address:", userAddress);
+    logger.debug("[FhevmDecryptionSignature]", "Using storage type:", storageType);
+    logger.debug("[FhevmDecryptionSignature]", "Contract addresses:", contractAddresses);
+    logger.debug("[FhevmDecryptionSignature]", "User address:", userAddress);
 
     const cached: FhevmDecryptionSignature | null =
       await FhevmDecryptionSignature.loadFromGenericStringStorage(
@@ -454,11 +456,11 @@ export class FhevmDecryptionSignature {
       );
 
     if (cached) {
-      console.log("[FhevmDecryptionSignature] Using cached signature");
+      logger.debug("[FhevmDecryptionSignature]", "Using cached signature");
       return cached;
     }
 
-    console.log("[FhevmDecryptionSignature] Generating new keypair...");
+    logger.debug("[FhevmDecryptionSignature]", "Generating new keypair...");
 
     // Get keypair - either provided or generate new one
     let publicKey: string;
@@ -470,8 +472,9 @@ export class FhevmDecryptionSignature {
     } else {
       // Validate instance has required methods
       if (!hasSigningMethods(instance)) {
-        console.error(
-          "[FhevmDecryptionSignature] FhevmInstance does not have generateKeypair method"
+        logger.error(
+          "[FhevmDecryptionSignature]",
+          "FhevmInstance does not have generateKeypair method"
         );
         return null;
       }
@@ -489,7 +492,7 @@ export class FhevmDecryptionSignature {
     );
 
     if (!sig) {
-      console.error("[FhevmDecryptionSignature] Failed to create signature");
+      logger.error("[FhevmDecryptionSignature]", "Failed to create signature");
       return null;
     }
 

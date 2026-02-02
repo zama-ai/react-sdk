@@ -3,6 +3,7 @@
 import { RelayerEncryptedInput } from "@zama-fhe/relayer-sdk/web";
 import { useCallback, useMemo } from "react";
 import { FhevmInstance } from "../fhevmTypes.js";
+import { logger } from "../internal/logger.js";
 
 export type EncryptResult = {
   handles: Uint8Array[];
@@ -65,7 +66,10 @@ export const getEncryptionMethod = (internalType: string) => {
     case "externalEaddress":
       return "addAddress" as const;
     default:
-      console.warn(`Unknown internalType: ${internalType}, defaulting to add64`);
+      logger.warn(
+        "[useFHEEncryption]",
+        `Unknown internalType: ${internalType}, defaulting to add64`
+      );
       return "add64" as const;
   }
 };
@@ -112,7 +116,7 @@ export const buildParamsFromAbi = (
       case "bool":
         return Boolean(raw);
       default:
-        console.warn(`Unknown ABI param type ${input.type}; passing as hex`);
+        logger.warn("[useFHEEncryption]", `Unknown ABI param type ${input.type}; passing as hex`);
         return toHex(raw);
     }
   });

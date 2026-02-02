@@ -6,9 +6,18 @@ import type {
   FhevmLoadSDKType,
   FhevmWindowType,
 } from "./fhevmTypes";
+import { logger } from "./logger";
 import { publicKeyStorageGet, publicKeyStorageSet } from "./PublicKeyStorage";
 import { isFhevmWindowType, RelayerSDKLoader } from "./RelayerSDKLoader";
 import { getChainIdFromUrl, getWeb3ClientVersion, tryGetFhevmHardhatMetadata } from "./rpc";
+
+/**
+ * Trace function for debugging SDK loader operations.
+ * @internal
+ */
+const trace = (message?: unknown, ...optionalParams: unknown[]): void => {
+  logger.debug("[fhevm]", String(message), ...optionalParams);
+};
 
 export class FhevmReactError extends Error {
   code: string;
@@ -24,19 +33,19 @@ function throwFhevmError(code: string, message?: string, cause?: unknown): never
 }
 
 const isFhevmInitialized = (): boolean => {
-  if (!isFhevmWindowType(window, console.log)) {
+  if (!isFhevmWindowType(window, trace)) {
     return false;
   }
   return window.relayerSDK.__initialized__ === true;
 };
 
 const fhevmLoadSDK: FhevmLoadSDKType = () => {
-  const loader = new RelayerSDKLoader({ trace: console.log });
+  const loader = new RelayerSDKLoader({ trace: trace });
   return loader.load();
 };
 
 const fhevmInitSDK: FhevmInitSDKType = async (options?: FhevmInitSDKOptions) => {
-  if (!isFhevmWindowType(window, console.log)) {
+  if (!isFhevmWindowType(window, trace)) {
     throw new Error("window.relayerSDK is not available");
   }
   const result = await window.relayerSDK.initSDK(options);
@@ -191,7 +200,7 @@ export const createFhevmInstance = async (parameters: {
 
   throwIfAborted();
 
-  if (!isFhevmWindowType(window, console.log)) {
+  if (!isFhevmWindowType(window, trace)) {
     notify("sdk-loading");
 
     // throws an error if failed

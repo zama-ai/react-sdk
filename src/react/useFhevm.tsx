@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FhevmInstance } from "../fhevmTypes.js";
 import type { Eip1193Provider } from "../internal/eip1193.js";
 import { createFhevmInstance } from "../internal/fhevm.js";
+import { logger } from "../internal/logger.js";
 
 function _assert(condition: boolean, message?: string): asserts condition {
   if (!condition) {
@@ -101,7 +102,8 @@ export function useFhevm(parameters: {
         signal: thisSignal,
         provider: thisProvider as any,
         mockChains: thisRpcUrlsByChainId as any,
-        onStatusChange: (s) => console.log(`[useFhevm] createFhevmInstance status changed: ${s}`),
+        onStatusChange: (s) =>
+          logger.debug("[useFhevm]", `createFhevmInstance status changed: ${s}`),
       })
         .then((i) => {
           if (thisSignal.aborted) return;

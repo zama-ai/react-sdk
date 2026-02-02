@@ -60,5 +60,8 @@ export type {
 // ABIs
 export { ERC7984_ABI, ERC20TOERC7984_ABI, ERC20_ABI } from "./abi/index";
 
+// Logger configuration (for enabling debug mode)
+export { configureLogger, getLoggerConfig } from "./internal/logger";
+
 // React hooks and provider
 export * from "./react/index";
