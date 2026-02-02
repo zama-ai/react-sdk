@@ -11,6 +11,9 @@ coverage/
 playwright-report/
 test-results/
 
+# Auto-generated API documentation
+docs/api/
+
 # IDE
 .idea/
 .vscode/
