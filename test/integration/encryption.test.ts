@@ -20,9 +20,7 @@ function createMockFhevmInstanceForIntegration() {
 
   const mockEncrypt = vi.fn().mockImplementation(async () => {
     // Generate the correct number of handles based on how many values were added
-    const handles = Array.from({ length: addCount }, (_, i) =>
-      new Uint8Array(32).fill(0xaa + i)
-    );
+    const handles = Array.from({ length: addCount }, (_, i) => new Uint8Array(32).fill(0xaa + i));
     // Reset counter for next encryption
     addCount = 0;
     return {
