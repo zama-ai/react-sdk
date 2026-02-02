@@ -99,6 +99,22 @@ export interface FhevmProviderProps {
    * ```
    */
   apiKey?: string;
+
+  /**
+   * Timeout in milliseconds for FHEVM initialization.
+   * If initialization takes longer than this, it will be aborted and an error state set.
+   * Default: 30000 (30 seconds)
+   *
+   * @example
+   * ```tsx
+   * <FhevmProvider
+   *   config={config}
+   *   initTimeout={60000} // 60 seconds
+   *   ...
+   * />
+   * ```
+   */
+  initTimeout?: number;
 }
 
 /**
@@ -158,6 +174,9 @@ export interface FhevmProviderProps {
  * }
  * ```
  */
+/** Default timeout for FHEVM initialization (30 seconds) */
+const DEFAULT_INIT_TIMEOUT = 30000;
+
 export function FhevmProvider({
   config,
   children,
@@ -169,6 +188,7 @@ export function FhevmProvider({
   wagmi,
   autoInit = true,
   apiKey,
+  initTimeout = DEFAULT_INIT_TIMEOUT,
 }: FhevmProviderProps): React.ReactElement {
   // Support deprecated wagmi prop for backwards compatibility
   const address = addressProp ?? wagmi?.address;
@@ -266,6 +286,27 @@ export function FhevmProvider({
       setFhevmError(undefined);
       setInstance(undefined);
 
+      // Set up initialization timeout
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      if (initTimeout > 0) {
+        timeoutId = setTimeout(() => {
+          if (!abortController.signal.aborted) {
+            console.warn(
+              `[FhevmProvider] Initialization timed out after ${initTimeout}ms for chain ${targetChainId}`
+            );
+            abortController.abort();
+            setFhevmError(
+              new Error(
+                `FHEVM initialization timed out after ${initTimeout}ms. ` +
+                  `This may indicate network issues or an unresponsive relayer. ` +
+                  `You can increase the timeout via the initTimeout prop.`
+              )
+            );
+            setFhevmStatus("error");
+          }
+        }, initTimeout);
+      }
+
       try {
         const newInstance = await createFhevmInstance({
           provider,
@@ -276,6 +317,11 @@ export function FhevmProvider({
           },
           apiKey,
         });
+
+        // Clear timeout on successful initialization
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
 
         // Check if we were aborted during initialization
         if (abortController.signal.aborted) {
@@ -292,6 +338,11 @@ export function FhevmProvider({
         setFhevmStatus("ready");
         console.log(`[FhevmProvider] FHEVM instance ready for chain ${targetChainId}`);
       } catch (err) {
+        // Clear timeout on error
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
+
         if (err instanceof FhevmAbortError) {
           // Initialization was cancelled, ignore
           return;
@@ -302,7 +353,7 @@ export function FhevmProvider({
         setFhevmStatus("error");
       }
     },
-    [provider, config, mockChains, apiKey]
+    [provider, config, mockChains, apiKey, initTimeout]
   );
 
   // Refresh function for manual re-initialization

@@ -229,19 +229,19 @@ interface TfheParams {
 1. ✅ Phase 1.3 - Encryption result validation
 2. ✅ Phase 2.2 - Silent catch blocks
 3. ✅ Phase 3.1 - Remove critical `any` types
-4. ✅ Phase 4.2 - Console logging cleanup
+4. ✅ Phase 3.2 - Safe type casting (discriminated union dispatch in useEncrypt)
 
 ### Short-term (Next PR)
-5. Phase 1.1 - Storage security warnings
-6. Phase 2.1 - Initialization timeout
-7. Phase 3.2 - Safe type casting
+5. ✅ Phase 2.1 - Initialization timeout (FhevmProvider initTimeout prop)
+6. ✅ Phase 2.3 - RelayerSDKLoader retry (exponential backoff with jitter)
+7. Phase 1.1 - Storage security warnings
 8. Phase 4.1 - Standardize error handling
 
 ### Medium-term (Future PRs)
 9. Phase 1.2 - CDN integrity checking
-10. Phase 2.3 - RelayerSDKLoader retry
-11. Phase 5.1 - Deprecate legacy API
-12. Phase 5.2 - Storage fallback chain
+10. Phase 5.1 - Deprecate legacy API
+11. Phase 5.2 - Storage fallback chain
+12. Phase 4.2 - Console logging cleanup (create debug logger utility)
 
 ---
 

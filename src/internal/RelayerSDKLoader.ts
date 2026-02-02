@@ -3,11 +3,54 @@ import { FhevmRelayerSDKType, FhevmWindowType } from "./fhevmTypes";
 
 type TraceType = (message?: unknown, ...optionalParams: unknown[]) => void;
 
+/**
+ * Options for RetrySDKLoader.
+ */
+export interface RelayerSDKLoaderOptions {
+  /** Optional trace function for logging */
+  trace?: TraceType;
+  /** Maximum number of retry attempts (default: 3) */
+  maxRetries?: number;
+  /** Initial delay in ms before first retry (default: 1000) */
+  initialDelay?: number;
+  /** Maximum delay in ms between retries (default: 10000) */
+  maxDelay?: number;
+}
+
+/**
+ * Delay helper that returns a promise resolving after the specified time.
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Calculate exponential backoff delay with jitter.
+ * @param attempt - The current attempt number (0-indexed)
+ * @param initialDelay - The initial delay in ms
+ * @param maxDelay - The maximum delay in ms
+ */
+function calculateBackoff(attempt: number, initialDelay: number, maxDelay: number): number {
+  // Exponential backoff: initialDelay * 2^attempt
+  const exponentialDelay = initialDelay * Math.pow(2, attempt);
+  // Add jitter (±25%) to prevent thundering herd
+  const jitter = exponentialDelay * 0.25 * (Math.random() * 2 - 1);
+  const delayWithJitter = exponentialDelay + jitter;
+  // Cap at maxDelay
+  return Math.min(delayWithJitter, maxDelay);
+}
+
 export class RelayerSDKLoader {
   private _trace?: TraceType;
+  private _maxRetries: number;
+  private _initialDelay: number;
+  private _maxDelay: number;
 
-  constructor(options: { trace?: TraceType }) {
+  constructor(options: RelayerSDKLoaderOptions = {}) {
     this._trace = options.trace;
+    this._maxRetries = options.maxRetries ?? 3;
+    this._initialDelay = options.initialDelay ?? 1000;
+    this._maxDelay = options.maxDelay ?? 10000;
   }
 
   public isLoaded() {
@@ -17,22 +60,79 @@ export class RelayerSDKLoader {
     return isFhevmWindowType(window, this._trace);
   }
 
-  public load(): Promise<void> {
+  /**
+   * Load the Relayer SDK with automatic retry on failure.
+   * Uses exponential backoff with jitter between retry attempts.
+   */
+  public async load(): Promise<void> {
     console.log("[RelayerSDKLoader] load...");
     // Ensure this only runs in the browser
     if (typeof window === "undefined") {
       console.log("[RelayerSDKLoader] window === undefined");
-      return Promise.reject(new Error("RelayerSDKLoader: can only be used in the browser."));
+      throw new Error("RelayerSDKLoader: can only be used in the browser.");
     }
 
+    // Check if already loaded
     if ("relayerSDK" in window) {
       if (!isFhevmRelayerSDKType(window.relayerSDK, this._trace)) {
         console.log("[RelayerSDKLoader] window.relayerSDK === undefined");
         throw new Error("RelayerSDKLoader: Unable to load FHEVM Relayer SDK");
       }
-      return Promise.resolve();
+      return;
     }
 
+    let lastError: Error | undefined;
+
+    for (let attempt = 0; attempt <= this._maxRetries; attempt++) {
+      try {
+        if (attempt > 0) {
+          const backoffDelay = calculateBackoff(attempt - 1, this._initialDelay, this._maxDelay);
+          console.log(
+            `[RelayerSDKLoader] Retry attempt ${attempt}/${this._maxRetries} after ${Math.round(backoffDelay)}ms delay`
+          );
+          await delay(backoffDelay);
+        }
+
+        await this._loadScript();
+        console.log("[RelayerSDKLoader] Successfully loaded Relayer SDK");
+        return;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        console.warn(
+          `[RelayerSDKLoader] Load attempt ${attempt + 1}/${this._maxRetries + 1} failed:`,
+          lastError.message
+        );
+
+        // Remove failed script to allow retry
+        if (attempt < this._maxRetries) {
+          this._removeScript();
+        }
+      }
+    }
+
+    // All retries exhausted
+    throw new Error(
+      `RelayerSDKLoader: Failed to load Relayer SDK after ${this._maxRetries + 1} attempts. ` +
+        `Last error: ${lastError?.message ?? "Unknown error"}. ` +
+        `Please check your network connection and try again.`
+    );
+  }
+
+  /**
+   * Remove any existing script tag for the SDK.
+   * Called before retry to ensure clean state.
+   */
+  private _removeScript(): void {
+    const existingScript = document.querySelector(`script[src="${SDK_CDN_URL}"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+  }
+
+  /**
+   * Internal method to load the script once.
+   */
+  private _loadScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       const existingScript = document.querySelector(`script[src="${SDK_CDN_URL}"]`);
       if (existingScript) {
@@ -40,6 +140,7 @@ export class RelayerSDKLoader {
           reject(
             new Error("RelayerSDKLoader: window object does not contain a valid relayerSDK object.")
           );
+          return;
         }
         resolve();
         return;
@@ -58,6 +159,7 @@ export class RelayerSDKLoader {
               `RelayerSDKLoader: Relayer SDK script has been successfully loaded from ${SDK_CDN_URL}, however, the window.relayerSDK object is invalid.`
             )
           );
+          return;
         }
         resolve();
       };
