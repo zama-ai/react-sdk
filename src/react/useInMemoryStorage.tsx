@@ -1,5 +1,8 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import { GenericStringInMemoryStorage, GenericStringStorage } from "../storage/GenericStringStorage";
+import {
+  GenericStringInMemoryStorage,
+  GenericStringStorage,
+} from "../storage/GenericStringStorage";
 
 interface UseInMemoryStorageState {
   storage: GenericStringStorage;
@@ -21,5 +24,9 @@ export const useInMemoryStorage = () => {
 
 export const InMemoryStorageProvider: React.FC<InMemoryStorageProviderProps> = ({ children }) => {
   const [storage] = useState<GenericStringStorage>(new GenericStringInMemoryStorage());
-  return <InMemoryStorageContext.Provider value={{ storage }}>{children}</InMemoryStorageContext.Provider>;
+  return (
+    <InMemoryStorageContext.Provider value={{ storage }}>
+      {children}
+    </InMemoryStorageContext.Provider>
+  );
 };

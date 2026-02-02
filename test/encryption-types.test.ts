@@ -55,7 +55,10 @@ describe("EncryptInput type safety", () => {
     });
 
     it("should accept address with hex string value", () => {
-      const input: EncryptInput = { type: "address", value: "0x1234567890abcdef1234567890abcdef12345678" };
+      const input: EncryptInput = {
+        type: "address",
+        value: "0x1234567890abcdef1234567890abcdef12345678",
+      };
       expect(input.type).toBe("address");
       expect(input.value).toBe("0x1234567890abcdef1234567890abcdef12345678");
     });

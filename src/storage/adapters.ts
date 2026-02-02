@@ -64,7 +64,12 @@ class LocalStorageAdapter implements GenericStringStorage {
     }
     const fullKey = this.#prefix + key;
     const value = localStorage.getItem(fullKey);
-    console.log("[LocalStorageAdapter] getItem:", fullKey, "->", value ? `${value.length} chars` : "null");
+    console.log(
+      "[LocalStorageAdapter] getItem:",
+      fullKey,
+      "->",
+      value ? `${value.length} chars` : "null"
+    );
     return value;
   }
 

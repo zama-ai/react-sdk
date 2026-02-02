@@ -146,9 +146,7 @@ export interface UsePublicDecryptReturn {
  * }
  * ```
  */
-export function usePublicDecrypt(
-  params: PublicDecryptParams | undefined
-): UsePublicDecryptReturn {
+export function usePublicDecrypt(params: PublicDecryptParams | undefined): UsePublicDecryptReturn {
   const { instance, chainId, status } = useFhevmContext();
   const queryClient = useQueryClient();
 
@@ -184,10 +182,7 @@ export function usePublicDecrypt(
       for (const handle of handles) {
         const value = clearValuesRecord[handle];
         if (value !== undefined) {
-          queryClient.setQueryData(
-            fhevmKeys.publicDecryptHandle(chainId, handle),
-            value
-          );
+          queryClient.setQueryData(fhevmKeys.publicDecryptHandle(chainId, handle), value);
         }
       }
 

@@ -28,12 +28,7 @@ export type {
 } from "./internal/eip1193";
 
 // Encryption types
-export type {
-  FheTypeName,
-  EncryptInput,
-  EncryptResult,
-  EncryptedOutput,
-} from "./types/encryption";
+export type { FheTypeName, EncryptInput, EncryptResult, EncryptedOutput } from "./types/encryption";
 
 // Transfer types
 export type {
@@ -67,4 +62,3 @@ export { ERC7984_ABI, ERC20TOERC7984_ABI, ERC20_ABI } from "./abi/index";
 
 // React hooks and provider
 export * from "./react/index";
-

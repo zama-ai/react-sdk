@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { FhevmConfig } from "../config";
 import type { FhevmInstance } from "../fhevmTypes";
@@ -174,11 +168,7 @@ export function FhevmProvider({
   }, [wagmi]);
 
   // Load relayer SDK script automatically
-  const {
-    status: scriptStatus,
-    error: scriptError,
-    isReady: scriptReady,
-  } = useRelayerScript();
+  const { status: scriptStatus, error: scriptError, isReady: scriptReady } = useRelayerScript();
 
   const [instance, setInstance] = useState<FhevmInstance | undefined>(undefined);
   const [fhevmStatus, setFhevmStatus] = useState<FhevmStatus>("idle");
@@ -243,9 +233,7 @@ export function FhevmProvider({
 
       // Check if provider is available
       if (!provider) {
-        console.warn(
-          "[FhevmProvider] No provider available. Skipping initialization."
-        );
+        console.warn("[FhevmProvider] No provider available. Skipping initialization.");
         setFhevmStatus("idle");
         return;
       }
@@ -277,17 +265,13 @@ export function FhevmProvider({
 
         // Check if chain changed during initialization
         if (initRef.current.chainId !== targetChainId) {
-          console.log(
-            `[FhevmProvider] Chain changed during initialization. Discarding instance.`
-          );
+          console.log(`[FhevmProvider] Chain changed during initialization. Discarding instance.`);
           return;
         }
 
         setInstance(newInstance);
         setFhevmStatus("ready");
-        console.log(
-          `[FhevmProvider] FHEVM instance ready for chain ${targetChainId}`
-        );
+        console.log(`[FhevmProvider] FHEVM instance ready for chain ${targetChainId}`);
       } catch (err) {
         if (err instanceof FhevmAbortError) {
           // Initialization was cancelled, ignore
@@ -374,9 +358,7 @@ export function FhevmProvider({
   return (
     <FhevmContext.Provider value={contextValue}>
       <QueryClientProvider client={fhevmQueryClient}>
-        <InMemoryStorageProvider>
-          {children}
-        </InMemoryStorageProvider>
+        <InMemoryStorageProvider>{children}</InMemoryStorageProvider>
       </QueryClientProvider>
     </FhevmContext.Provider>
   );

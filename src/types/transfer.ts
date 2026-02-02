@@ -3,13 +3,7 @@ import type { ethers } from "ethers";
 /**
  * Transfer status for tracking the confidential transfer flow.
  */
-export type TransferStatus =
-  | "idle"
-  | "encrypting"
-  | "signing"
-  | "confirming"
-  | "success"
-  | "error";
+export type TransferStatus = "idle" | "encrypting" | "signing" | "confirming" | "success" | "error";
 
 /**
  * Options for useConfidentialTransfer hook.

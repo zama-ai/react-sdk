@@ -1,10 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  createFhevmConfig,
-  createStorage,
-  createMemoryStorage,
-  noopStorage,
-} from "../src/config";
+import { createFhevmConfig, createStorage, createMemoryStorage, noopStorage } from "../src/config";
 import { hardhatLocal, sepolia, defineMockChain } from "../src/chains";
 
 describe("createFhevmConfig", () => {
@@ -69,9 +64,7 @@ describe("createFhevmConfig", () => {
       chains: [hardhatLocal, customHardhat],
     });
 
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Duplicate chain ID 31337")
-    );
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Duplicate chain ID 31337"));
 
     // Should use first definition
     expect(config.getChain(31337)?.rpcUrl).toBe("http://localhost:8545");

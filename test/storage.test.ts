@@ -10,4 +10,3 @@ describe("GenericStringInMemoryStorage", () => {
     expect(s.getItem("k")).toBe(null);
   });
 });
-

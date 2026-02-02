@@ -7,4 +7,3 @@ describe("FhevmDecryptionSignature", () => {
     expect(FhevmDecryptionSignature.checkIs({})).toBe(false);
   });
 });
-

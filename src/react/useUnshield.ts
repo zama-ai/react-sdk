@@ -6,11 +6,7 @@ import { useFhevmContext } from "./context";
 import { useEthersSigner } from "./useEthersSigner";
 import { useEncrypt } from "./useEncrypt";
 import { ERC20TOERC7984_ABI } from "../abi/index";
-import type {
-  UnshieldStatus,
-  UseUnshieldOptions,
-  UseUnshieldReturn,
-} from "../types/shield";
+import type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn } from "../types/shield";
 
 // Re-export types for convenience
 export type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn };
@@ -91,9 +87,7 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
   const unshield = useCallback(
     async (amount: bigint, to?: `0x${string}`): Promise<void> => {
       if (fhevmStatus !== "ready" || !encryptReady || !instance) {
-        const err = new Error(
-          "FHEVM not ready. Please wait for initialization."
-        );
+        const err = new Error("FHEVM not ready. Please wait for initialization.");
         setError(err);
         setStatus("error");
         onError?.(err);
@@ -101,9 +95,7 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
       }
 
       if (!signerReady || !signer || !address) {
-        const err = new Error(
-          "Wallet not connected. Please connect your wallet."
-        );
+        const err = new Error("Wallet not connected. Please connect your wallet.");
         setError(err);
         setStatus("error");
         onError?.(err);
@@ -119,10 +111,7 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
         setTxHash(undefined);
         setFinalizeTxHash(undefined);
 
-        const encryptResult = await encrypt(
-          [{ type: "uint64", value: amount }],
-          wrapperAddress
-        );
+        const encryptResult = await encrypt([{ type: "uint64", value: amount }], wrapperAddress);
 
         if (!encryptResult) {
           throw new Error("Encryption failed - no result returned");
@@ -133,16 +122,15 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
         // Step 2: Sign and submit unwrap transaction
         setStatus("signing");
 
-        const wrapper = new ethers.Contract(
-          wrapperAddress,
-          ERC20TOERC7984_ABI,
-          signer
-        );
+        const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
 
         // unwrap(address from, address to, bytes32 encryptedAmount, bytes inputProof)
-        const tx = await wrapper[
-          "unwrap(address,address,bytes32,bytes)"
-        ](address, recipient, amountHandle, proof);
+        const tx = await wrapper["unwrap(address,address,bytes32,bytes)"](
+          address,
+          recipient,
+          amountHandle,
+          proof
+        );
 
         setTxHash(tx.hash);
 
@@ -246,8 +234,7 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
   const isSigning = status === "signing";
   const isDecrypting = status === "decrypting";
   const isFinalizing = status === "finalizing";
-  const isPending =
-    status !== "idle" && status !== "success" && status !== "error";
+  const isPending = status !== "idle" && status !== "success" && status !== "error";
   const isSuccess = status === "success";
   const isError = status === "error";
 

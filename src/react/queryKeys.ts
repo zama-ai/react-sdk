@@ -82,8 +82,7 @@ export const fhevmKeys = {
   instance: () => [...fhevmKeys.all, "instance"] as const,
 
   /** Key for instance on a specific chain */
-  instanceFor: (chainId: number) =>
-    [...fhevmKeys.instance(), chainId] as const,
+  instanceFor: (chainId: number) => [...fhevmKeys.instance(), chainId] as const,
 } as const;
 
 /** Type helper for query key arrays */

@@ -5,254 +5,254 @@ export const ERC20TOERC7984_ABI = [
   {
     inputs: [],
     stateMutability: "nonpayable",
-    type: "constructor"
+    type: "constructor",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "target",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "AddressEmptyCode",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "implementation",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC1967InvalidImplementation",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "ERC1967NonPayable",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "uint256",
         name: "requestId",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "ERC7984InvalidGatewayRequest",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "receiver",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984InvalidReceiver",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "receiver",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984InvalidReceiver",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "sender",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984InvalidSender",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "ERC7984TotalSupplyOverflow",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "caller",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984UnauthorizedCaller",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "holder",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "spender",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984UnauthorizedSpender",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "address",
         name: "user",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984UnauthorizedUseOfEncryptedAmount",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "holder",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "ERC7984ZeroBalance",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "FailedCall",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "InvalidInitialization",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "InvalidKMSSignatures",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "InvalidUnwrapRequest",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "NotInitializing",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "owner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "OwnableInvalidOwner",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "account",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "OwnableUnauthorizedAccount",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "uint8",
         name: "bits",
-        type: "uint8"
+        type: "uint8",
       },
       {
         internalType: "uint256",
         name: "value",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "SafeCastOverflowedUintDowncast",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "token",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "SafeERC20FailedOperation",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "bytes32",
         name: "handle",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "address",
         name: "sender",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "SenderNotAllowedToUseHandle",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "UUPSUnauthorizedCallContext",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [
       {
         internalType: "bytes32",
         name: "slot",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "UUPSUnsupportedProxiableUUID",
-    type: "error"
+    type: "error",
   },
   {
     inputs: [],
     name: "ZamaProtocolUnsupported",
-    type: "error"
+    type: "error",
   },
   {
     anonymous: false,
@@ -261,17 +261,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "euint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         indexed: true,
         internalType: "address",
         name: "requester",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "AmountDiscloseRequested",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -280,17 +280,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "euint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         indexed: false,
         internalType: "uint64",
         name: "amount",
-        type: "uint64"
-      }
+        type: "uint64",
+      },
     ],
     name: "AmountDisclosed",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -299,23 +299,23 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         indexed: true,
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         indexed: true,
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "ConfidentialTransfer",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -324,11 +324,11 @@ export const ERC20TOERC7984_ABI = [
         indexed: false,
         internalType: "uint64",
         name: "version",
-        type: "uint64"
-      }
+        type: "uint64",
+      },
     ],
     name: "Initialized",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -337,23 +337,23 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "holder",
-        type: "address"
+        type: "address",
       },
       {
         indexed: true,
         internalType: "address",
         name: "operator",
-        type: "address"
+        type: "address",
       },
       {
         indexed: false,
         internalType: "uint48",
         name: "until",
-        type: "uint48"
-      }
+        type: "uint48",
+      },
     ],
     name: "OperatorSet",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -362,17 +362,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "previousOwner",
-        type: "address"
+        type: "address",
       },
       {
         indexed: true,
         internalType: "address",
         name: "newOwner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "OwnershipTransferStarted",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -381,17 +381,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "previousOwner",
-        type: "address"
+        type: "address",
       },
       {
         indexed: true,
         internalType: "address",
         name: "newOwner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "OwnershipTransferred",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -400,17 +400,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: false,
         internalType: "bytes32[]",
         name: "handlesList",
-        type: "bytes32[]"
+        type: "bytes32[]",
       },
       {
         indexed: false,
         internalType: "bytes",
         name: "abiEncodedCleartexts",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "PublicDecryptionVerified",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -419,23 +419,23 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "receiver",
-        type: "address"
+        type: "address",
       },
       {
         indexed: false,
         internalType: "euint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         indexed: false,
         internalType: "uint64",
         name: "cleartextAmount",
-        type: "uint64"
-      }
+        type: "uint64",
+      },
     ],
     name: "UnwrapFinalized",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -444,17 +444,17 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "receiver",
-        type: "address"
+        type: "address",
       },
       {
         indexed: false,
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "UnwrapRequested",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -463,11 +463,11 @@ export const ERC20TOERC7984_ABI = [
         indexed: true,
         internalType: "address",
         name: "implementation",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "Upgraded",
-    type: "event"
+    type: "event",
   },
   {
     inputs: [],
@@ -476,37 +476,37 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "string",
         name: "",
-        type: "string"
-      }
+        type: "string",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "acceptOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "account",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "confidentialBalanceOf",
     outputs: [
       {
         internalType: "euint64",
         name: "",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -515,11 +515,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -528,263 +528,263 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "euint64",
         name: "",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "externalEuint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "inputProof",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransfer",
     outputs: [
       {
         internalType: "euint64",
         name: "",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "confidentialTransfer",
     outputs: [
       {
         internalType: "euint64",
         name: "",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransferAndCall",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "externalEuint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "inputProof",
-        type: "bytes"
+        type: "bytes",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransferAndCall",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "externalEuint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "inputProof",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransferFrom",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "confidentialTransferFrom",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "externalEuint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "inputProof",
-        type: "bytes"
+        type: "bytes",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransferFromAndCall",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "confidentialTransferFromAndCall",
     outputs: [
       {
         internalType: "euint64",
         name: "transferred",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -793,11 +793,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "string",
         name: "",
-        type: "string"
-      }
+        type: "string",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -806,114 +806,114 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "uint8",
         name: "",
-        type: "uint8"
-      }
+        type: "uint8",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "euint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "uint64",
         name: "cleartextAmount",
-        type: "uint64"
+        type: "uint64",
       },
       {
         internalType: "bytes",
         name: "decryptionProof",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "discloseEncryptedAmount",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "euint64",
         name: "burntAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "uint64",
         name: "burntAmountCleartext",
-        type: "uint64"
+        type: "uint64",
       },
       {
         internalType: "bytes",
         name: "decryptionProof",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "finalizeUnwrap",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "string",
         name: "name_",
-        type: "string"
+        type: "string",
       },
       {
         internalType: "string",
         name: "symbol_",
-        type: "string"
+        type: "string",
       },
       {
         internalType: "string",
         name: "contractURI_",
-        type: "string"
+        type: "string",
       },
       {
         internalType: "contract IERC20",
         name: "underlying_",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "owner_",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "holder",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "spender",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "isOperator",
     outputs: [
       {
         internalType: "bool",
         name: "",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -922,11 +922,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -935,45 +935,45 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "string",
         name: "",
-        type: "string"
-      }
+        type: "string",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "uint256",
         name: "amount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "onTransferReceived",
     outputs: [
       {
         internalType: "bytes4",
         name: "",
-        type: "bytes4"
-      }
+        type: "bytes4",
+      },
     ],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -982,11 +982,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "address",
         name: "",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -995,11 +995,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "address",
         name: "",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -1008,11 +1008,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "bytes32",
         name: "",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -1021,68 +1021,68 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "euint64",
         name: "encryptedAmount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "requestDiscloseEncryptedAmount",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "operator",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "uint48",
         name: "until",
-        type: "uint48"
-      }
+        type: "uint48",
+      },
     ],
     name: "setOperator",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "bytes4",
         name: "interfaceId",
-        type: "bytes4"
-      }
+        type: "bytes4",
+      },
     ],
     name: "supportsInterface",
     outputs: [
       {
         internalType: "bool",
         name: "",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -1091,11 +1091,11 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "string",
         name: "",
-        type: "string"
-      }
+        type: "string",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -1104,24 +1104,24 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "uint256",
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "newOwner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [],
@@ -1130,97 +1130,97 @@ export const ERC20TOERC7984_ABI = [
       {
         internalType: "address",
         name: "",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "externalEuint64",
         name: "encryptedAmount",
-        type: "bytes32"
+        type: "bytes32",
       },
       {
         internalType: "bytes",
         name: "inputProof",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "unwrap",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "from",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "euint64",
         name: "amount",
-        type: "bytes32"
-      }
+        type: "bytes32",
+      },
     ],
     name: "unwrap",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "newImplementation",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "bytes",
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "upgradeToAndCall",
     outputs: [],
     stateMutability: "payable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
         name: "to",
-        type: "address"
+        type: "address",
       },
       {
         internalType: "uint256",
         name: "amount",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "wrap",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
-  }
+    type: "function",
+  },
 ] as const;

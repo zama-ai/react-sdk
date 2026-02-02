@@ -86,8 +86,7 @@ export function useConfidentialTransfer(
   const isConfirming = status === "confirming";
   const isSuccess = status === "success";
   const isError = status === "error";
-  const isPending =
-    status !== "idle" && status !== "success" && status !== "error";
+  const isPending = status !== "idle" && status !== "success" && status !== "error";
 
   // Reset function
   const reset = useCallback(() => {
@@ -122,10 +121,7 @@ export function useConfidentialTransfer(
         setError(null);
         setTxHash(undefined);
 
-        const encryptResult = await encrypt(
-          [{ type: "uint64", value: amount }],
-          contractAddress
-        );
+        const encryptResult = await encrypt([{ type: "uint64", value: amount }], contractAddress);
 
         if (!encryptResult) {
           throw new Error("Encryption failed - no result returned");

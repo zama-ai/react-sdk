@@ -76,10 +76,7 @@ const typeToBuilderMethod: Record<FheTypeName, keyof RelayerEncryptedInput> = {
  * Add a value to the encryption builder based on its type.
  * @internal
  */
-function addToBuilder(
-  builder: RelayerEncryptedInput,
-  input: EncryptInput
-): void {
+function addToBuilder(builder: RelayerEncryptedInput, input: EncryptInput): void {
   const method = typeToBuilderMethod[input.type];
   (builder[method] as (value: unknown) => void)(input.value);
 }

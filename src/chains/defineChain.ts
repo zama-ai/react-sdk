@@ -25,9 +25,7 @@ export function defineChain<T extends FhevmChain>(chain: T): T {
  * Helper to define a mock chain (local development).
  * Mock chains auto-fetch contract addresses from the hardhat node.
  */
-export function defineMockChain(
-  chain: Omit<FhevmMockChain, "isMock">
-): FhevmMockChain {
+export function defineMockChain(chain: Omit<FhevmMockChain, "isMock">): FhevmMockChain {
   return {
     ...chain,
     isMock: true,

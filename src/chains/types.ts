@@ -55,9 +55,7 @@ export function isMockChain(chain: FhevmChain): chain is FhevmMockChain {
 /**
  * Type guard to check if a chain is a production chain
  */
-export function isProductionChain(
-  chain: FhevmChain
-): chain is FhevmProductionChain {
+export function isProductionChain(chain: FhevmChain): chain is FhevmProductionChain {
   return (
     chain.isMock === false &&
     typeof chain.aclAddress === "string" &&

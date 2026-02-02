@@ -1,9 +1,5 @@
 // Chain types
-export type {
-  FhevmChain,
-  FhevmMockChain,
-  FhevmProductionChain,
-} from "./types";
+export type { FhevmChain, FhevmMockChain, FhevmProductionChain } from "./types";
 export { isMockChain, isProductionChain } from "./types";
 
 // Chain definition helpers

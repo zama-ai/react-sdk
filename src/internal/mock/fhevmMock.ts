@@ -12,7 +12,7 @@ import { FhevmInstance } from "../../fhevmTypes";
 
 // ERC-5267 eip712Domain() ABI - returns the EIP712 domain info
 const EIP712_DOMAIN_ABI = [
-  "function eip712Domain() view returns (bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)"
+  "function eip712Domain() view returns (bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)",
 ];
 
 /**
@@ -26,7 +26,10 @@ const EIP712_DOMAIN_ABI = [
  * [5]: salt (bytes32)
  * [6]: extensions (uint256[])
  */
-async function getEip712Domain(provider: JsonRpcProvider, contractAddress: string): Promise<{
+async function getEip712Domain(
+  provider: JsonRpcProvider,
+  contractAddress: string
+): Promise<{
   chainId: number;
   verifyingContract: string;
 }> {
@@ -35,7 +38,9 @@ async function getEip712Domain(provider: JsonRpcProvider, contractAddress: strin
   // Access by index as the return is a tuple
   const chainId = Number(domain[3]);
   const verifyingContract = domain[4] as string;
-  console.log(`[fhevmMock] EIP712 domain for ${contractAddress}: chainId=${chainId}, verifyingContract=${verifyingContract}`);
+  console.log(
+    `[fhevmMock] EIP712 domain for ${contractAddress}: chainId=${chainId}, verifyingContract=${verifyingContract}`
+  );
   return {
     chainId,
     verifyingContract,
@@ -70,18 +75,24 @@ export const fhevmMockCreateInstance = async (parameters: {
     verifyingContractAddressInputVerification: inputVerifierDomain.verifyingContract,
   });
 
-  const instance = await MockFhevmInstance.create(provider, provider, {
-    aclContractAddress: parameters.metadata.ACLAddress,
-    chainId: parameters.chainId,
-    gatewayChainId: kmsVerifierDomain.chainId,
-    inputVerifierContractAddress: parameters.metadata.InputVerifierAddress,
-    kmsContractAddress: parameters.metadata.KMSVerifierAddress,
-    verifyingContractAddressDecryption: kmsVerifierDomain.verifyingContract as `0x${string}`,
-    verifyingContractAddressInputVerification: inputVerifierDomain.verifyingContract as `0x${string}`,
-  }, {
-    // Pass empty properties - the MockFhevmInstance will query the contracts directly
-    kmsVerifierProperties: {},
-    inputVerifierProperties: {},
-  });
+  const instance = await MockFhevmInstance.create(
+    provider,
+    provider,
+    {
+      aclContractAddress: parameters.metadata.ACLAddress,
+      chainId: parameters.chainId,
+      gatewayChainId: kmsVerifierDomain.chainId,
+      inputVerifierContractAddress: parameters.metadata.InputVerifierAddress,
+      kmsContractAddress: parameters.metadata.KMSVerifierAddress,
+      verifyingContractAddressDecryption: kmsVerifierDomain.verifyingContract as `0x${string}`,
+      verifyingContractAddressInputVerification:
+        inputVerifierDomain.verifyingContract as `0x${string}`,
+    },
+    {
+      // Pass empty properties - the MockFhevmInstance will query the contracts directly
+      kmsVerifierProperties: {},
+      inputVerifierProperties: {},
+    }
+  );
   return instance as unknown as FhevmInstance;
 };

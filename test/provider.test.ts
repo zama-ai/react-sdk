@@ -14,9 +14,7 @@ describe("FhevmProvider", () => {
     });
 
     it("should export FhevmContext and useFhevmContext", async () => {
-      const { FhevmContext, useFhevmContext } = await import(
-        "../src/react/context"
-      );
+      const { FhevmContext, useFhevmContext } = await import("../src/react/context");
       expect(FhevmContext).toBeDefined();
       expect(useFhevmContext).toBeDefined();
     });

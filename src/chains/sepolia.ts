@@ -19,10 +19,8 @@ export const sepolia: FhevmProductionChain = defineProductionChain({
   // at runtime to stay in sync with Zama's infrastructure
   aclAddress: "0x0000000000000000000000000000000000000000" as `0x${string}`,
   gatewayUrl: "https://gateway.sepolia.zama.ai",
-  kmsVerifierAddress:
-    "0x0000000000000000000000000000000000000000" as `0x${string}`,
-  inputVerifierAddress:
-    "0x0000000000000000000000000000000000000000" as `0x${string}`,
+  kmsVerifierAddress: "0x0000000000000000000000000000000000000000" as `0x${string}`,
+  inputVerifierAddress: "0x0000000000000000000000000000000000000000" as `0x${string}`,
   relayerUrl: "https://relayer.sepolia.zama.ai",
 });
 

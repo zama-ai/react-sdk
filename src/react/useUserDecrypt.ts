@@ -123,7 +123,15 @@ export interface UseDecryptReturn {
 export function useUserDecrypt(
   requestsOrParams: readonly DecryptRequest[] | DecryptParams | undefined
 ): UseDecryptReturn {
-  const { instance, config, chainId, status, address, provider, storage } = useFhevmContext();
+  const {
+    instance,
+    config: _config,
+    chainId,
+    status,
+    address,
+    provider,
+    storage,
+  } = useFhevmContext();
   const queryClient = useQueryClient();
 
   // Use noOpStorage if no storage is provided (no caching)
@@ -136,7 +144,11 @@ export function useUserDecrypt(
     if (!requestsOrParams) return undefined;
 
     // Check if it's a single-handle DecryptParams object
-    if ("handle" in requestsOrParams && "contractAddress" in requestsOrParams && !Array.isArray(requestsOrParams)) {
+    if (
+      "handle" in requestsOrParams &&
+      "contractAddress" in requestsOrParams &&
+      !Array.isArray(requestsOrParams)
+    ) {
       const params = requestsOrParams as DecryptParams;
       if (!params.handle || !params.contractAddress) return undefined;
       return [{ handle: params.handle, contractAddress: params.contractAddress }];
@@ -178,9 +190,7 @@ export function useUserDecrypt(
       };
 
       // Get unique contract addresses
-      const uniqueAddresses = Array.from(
-        new Set(decryptRequests.map((r) => r.contractAddress))
-      );
+      const uniqueAddresses = Array.from(new Set(decryptRequests.map((r) => r.contractAddress)));
 
       // Load or create decryption signature
       const sig = await FhevmDecryptionSignature.loadOrSign(

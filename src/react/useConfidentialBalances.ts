@@ -69,7 +69,7 @@ function makePendingResults(length: number): ConfidentialBalanceResult[] {
  * ```
  */
 export function useConfidentialBalances(
-  options: UseConfidentialBalancesOptions,
+  options: UseConfidentialBalancesOptions
 ): UseConfidentialBalancesReturn {
   const {
     contracts,
@@ -84,7 +84,7 @@ export function useConfidentialBalances(
   const defaultAccount = sharedAccount ?? contextAddress;
 
   const [data, setData] = useState<ConfidentialBalanceResult[]>(
-    makePendingResults(contracts.length),
+    makePendingResults(contracts.length)
   );
   const [status, setStatus] = useState<BalanceStatus>("idle");
   const [error, setError] = useState<Error | null>(null);
@@ -121,7 +121,9 @@ export function useConfidentialBalances(
           contracts.map(async (config) => {
             const account = config.account ?? defaultAccount;
             if (!account) {
-              throw new Error("No account address available for contract " + config.contractAddress);
+              throw new Error(
+                "No account address available for contract " + config.contractAddress
+              );
             }
             const abi = config.abi ?? ERC7984_ABI;
             const contract = new ethers.Contract(config.contractAddress, abi, provider);
@@ -133,7 +135,7 @@ export function useConfidentialBalances(
               isZeroHash: result === ethers.ZeroHash,
             });
             return result === ethers.ZeroHash ? undefined : (result as `0x${string}`);
-          }),
+          })
         );
 
         const results: ConfidentialBalanceResult[] = settled.map((s) => {
@@ -163,7 +165,7 @@ export function useConfidentialBalances(
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [provider, defaultAccount, contractsKey],
+    [provider, defaultAccount, contractsKey]
   );
 
   useEffect(() => {
@@ -241,7 +243,7 @@ export function useConfidentialBalances(
   // Stable key for the decrypt requests so we can reset the trigger ref
   const decryptRequestsKey = useMemo(
     () => (decryptRequests ? decryptRequests.map((r) => r.handle).join(",") : ""),
-    [decryptRequests],
+    [decryptRequests]
   );
 
   // Reset trigger when the set of handles changes
@@ -259,16 +261,14 @@ export function useConfidentialBalances(
     const userAddr = sharedAccount ?? contextAddress;
     if (!userAddr) return;
 
-    const contractAddresses = [
-      ...new Set(decryptRequests.map((r) => r.contractAddress)),
-    ];
+    const contractAddresses = [...new Set(decryptRequests.map((r) => r.contractAddress))];
 
     let cancelled = false;
     FhevmDecryptionSignature.loadFromGenericStringStorage(
       storage,
       instance,
       contractAddresses,
-      userAddr,
+      userAddr
     )
       .then((sig) => {
         if (!cancelled) setSignatureCached(sig !== null);

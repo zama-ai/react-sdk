@@ -132,9 +132,7 @@ export async function getChainId(provider: Eip1193Provider): Promise<number> {
 /**
  * Get connected accounts from an EIP-1193 provider.
  */
-export async function getAccounts(
-  provider: Eip1193Provider
-): Promise<`0x${string}`[]> {
+export async function getAccounts(provider: Eip1193Provider): Promise<`0x${string}`[]> {
   const accounts = await provider.request({ method: "eth_accounts" });
   return accounts as `0x${string}`[];
 }
@@ -142,9 +140,7 @@ export async function getAccounts(
 /**
  * Request account access from an EIP-1193 provider.
  */
-export async function requestAccounts(
-  provider: Eip1193Provider
-): Promise<`0x${string}`[]> {
+export async function requestAccounts(provider: Eip1193Provider): Promise<`0x${string}`[]> {
   const accounts = await provider.request({ method: "eth_requestAccounts" });
   return accounts as `0x${string}`[];
 }

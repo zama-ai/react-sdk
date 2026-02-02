@@ -64,9 +64,7 @@ type FhevmPkeCrsByCapacityType = {
   2048: FhevmPkeCrsType;
 };
 
-function assertFhevmStoredPublicKey(
-  value: unknown
-): asserts value is FhevmStoredPublicKey | null {
+function assertFhevmStoredPublicKey(value: unknown): asserts value is FhevmStoredPublicKey | null {
   if (typeof value !== "object") {
     throw new Error(`FhevmStoredPublicKey must be an object`);
   }
@@ -106,9 +104,7 @@ function assertFhevmStoredPublicParams(
     throw new Error(`FhevmStoredPublicParams.publicParams does not exist`);
   }
   if (!(value.publicParams instanceof Uint8Array)) {
-    throw new Error(
-      `FhevmStoredPublicParams.publicParams must be a Uint8Array`
-    );
+    throw new Error(`FhevmStoredPublicParams.publicParams must be a Uint8Array`);
   }
 }
 

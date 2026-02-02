@@ -162,7 +162,9 @@ export class FhevmDecryptionSignature {
     if (!("domain" in (s as any).eip712 && typeof (s as any).eip712.domain === "object")) {
       return false;
     }
-    if (!("primaryType" in (s as any).eip712 && typeof (s as any).eip712.primaryType === "string")) {
+    if (
+      !("primaryType" in (s as any).eip712 && typeof (s as any).eip712.primaryType === "string")
+    ) {
       return false;
     }
     if (!("message" in (s as any).eip712)) {
@@ -258,7 +260,10 @@ export class FhevmDecryptionSignature {
         publicKey
       );
 
-      console.log("[FhevmDecryptionSignature] Looking for cached signature with key:", storageKey.key);
+      console.log(
+        "[FhevmDecryptionSignature] Looking for cached signature with key:",
+        storageKey.key
+      );
       const result = await storage.getItem(storageKey.key);
 
       if (!result) {

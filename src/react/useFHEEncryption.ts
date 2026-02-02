@@ -83,19 +83,24 @@ export const useFHEEncryption = (params: {
 
   const canEncrypt = useMemo(
     () => Boolean(instance && userAddress && contractAddress),
-    [instance, userAddress, contractAddress],
+    [instance, userAddress, contractAddress]
   );
 
   const encryptWith = useCallback(
-    async (buildFn: (builder: RelayerEncryptedInput) => void): Promise<EncryptResult | undefined> => {
+    async (
+      buildFn: (builder: RelayerEncryptedInput) => void
+    ): Promise<EncryptResult | undefined> => {
       if (!instance || !userAddress || !contractAddress) return undefined;
 
-      const input = instance.createEncryptedInput(contractAddress, userAddress) as RelayerEncryptedInput;
+      const input = instance.createEncryptedInput(
+        contractAddress,
+        userAddress
+      ) as RelayerEncryptedInput;
       buildFn(input);
       const enc = await input.encrypt();
       return enc;
     },
-    [instance, userAddress, contractAddress],
+    [instance, userAddress, contractAddress]
   );
 
   return {

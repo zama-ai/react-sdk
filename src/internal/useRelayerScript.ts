@@ -98,9 +98,7 @@ export function useRelayerScript(): UseRelayerScriptReturn {
 
     script.onerror = () => {
       setStatus("error");
-      setError(
-        new Error(`Failed to load relayer SDK from ${RELAYER_SDK_URL}`)
-      );
+      setError(new Error(`Failed to load relayer SDK from ${RELAYER_SDK_URL}`));
     };
 
     document.head.appendChild(script);

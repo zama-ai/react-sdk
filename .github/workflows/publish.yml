@@ -1,0 +1,77 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (do not actually publish)'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript type check
+        run: pnpm run typecheck
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Set npm tag for stable release
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
+        run: echo "NPM_TAG=latest" >> $GITHUB_ENV
+
+      - name: Set npm tag for prerelease
+        if: ${{ github.event_name == 'release' && github.event.release.prerelease }}
+        run: echo "NPM_TAG=next" >> $GITHUB_ENV
+
+      - name: Set npm tag for manual trigger
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "NPM_TAG=test" >> $GITHUB_ENV
+
+      - name: Publish to npm (dry run)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: pnpm publish --access public --tag ${{ env.NPM_TAG }} --dry-run --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
+        run: pnpm publish --access public --tag ${{ env.NPM_TAG }} --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

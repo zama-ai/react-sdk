@@ -39,10 +39,7 @@ export function createMemoryStorage(): FhevmStorage {
 /**
  * Create a storage wrapper around a Web Storage API compliant object.
  */
-export function createStorage(options?: {
-  storage?: Storage;
-  key?: string;
-}): FhevmStorage {
+export function createStorage(options?: { storage?: Storage; key?: string }): FhevmStorage {
   const storage = options?.storage;
   const prefix = options?.key ?? "fhevm";
 
@@ -198,5 +195,4 @@ export function createFhevmConfig(options: FhevmConfigOptions): FhevmConfig {
  * Type helper to extract chain IDs from a config.
  * Useful for type-safe chain selection.
  */
-export type ConfigChainId<C extends FhevmConfig> =
-  C["chains"][number]["id"];
+export type ConfigChainId<C extends FhevmConfig> = C["chains"][number]["id"];

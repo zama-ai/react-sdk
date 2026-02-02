@@ -5,11 +5,7 @@ import { ethers } from "ethers";
 import { useFhevmContext } from "./context";
 import { useEthersSigner } from "./useEthersSigner";
 import { ERC20TOERC7984_ABI, ERC20_ABI } from "../abi/index";
-import type {
-  ShieldStatus,
-  UseShieldOptions,
-  UseShieldReturn,
-} from "../types/shield";
+import type { ShieldStatus, UseShieldOptions, UseShieldReturn } from "../types/shield";
 
 // Re-export types for convenience
 export type { ShieldStatus, UseShieldOptions, UseShieldReturn };
@@ -58,23 +54,18 @@ export type { ShieldStatus, UseShieldOptions, UseShieldReturn };
  * ```
  */
 export function useShield(options: UseShieldOptions): UseShieldReturn {
-  const {
-    wrapperAddress,
-    underlyingAddress: providedUnderlying,
-    onSuccess,
-    onError,
-  } = options;
+  const { wrapperAddress, underlyingAddress: providedUnderlying, onSuccess, onError } = options;
 
   const { address } = useFhevmContext();
-  const { signer, provider, isReady } = useEthersSigner();
+  const { signer, provider, isReady: _isReady } = useEthersSigner();
 
   const [status, setStatus] = useState<ShieldStatus>("idle");
   const [error, setError] = useState<Error | null>(null);
   const [txHash, setTxHash] = useState<string | undefined>();
   const [allowance, setAllowance] = useState<bigint | undefined>();
-  const [underlyingAddress, setUnderlyingAddress] = useState<
-    `0x${string}` | undefined
-  >(providedUnderlying);
+  const [underlyingAddress, setUnderlyingAddress] = useState<`0x${string}` | undefined>(
+    providedUnderlying
+  );
 
   // Zero address constant for comparison
   const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -89,21 +80,12 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
   // Fetch underlying address from wrapper if not provided
   useEffect(() => {
     // Skip if underlying is provided, provider not ready, or wrapper is zero/empty
-    if (
-      providedUnderlying ||
-      !provider ||
-      !wrapperAddress ||
-      wrapperAddress === ZERO_ADDRESS
-    ) {
+    if (providedUnderlying || !provider || !wrapperAddress || wrapperAddress === ZERO_ADDRESS) {
       return;
     }
 
     let cancelled = false;
-    const wrapper = new ethers.Contract(
-      wrapperAddress,
-      ERC20TOERC7984_ABI,
-      provider
-    );
+    const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, provider);
 
     wrapper
       .underlying()
@@ -148,9 +130,7 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
   const shield = useCallback(
     async (amount: bigint, to?: `0x${string}`): Promise<void> => {
       if (!signer || !underlyingAddress || !address) {
-        const err = new Error(
-          "Not ready. Please connect your wallet and wait for initialization."
-        );
+        const err = new Error("Not ready. Please connect your wallet and wait for initialization.");
         setError(err);
         setStatus("error");
         onError?.(err);
@@ -166,9 +146,7 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
         setTxHash(undefined);
 
         const erc20 = new ethers.Contract(underlyingAddress, ERC20_ABI, signer);
-        const currentAllowance = BigInt(
-          await erc20.allowance(address, wrapperAddress)
-        );
+        const currentAllowance = BigInt(await erc20.allowance(address, wrapperAddress));
 
         // Step 2: Approve if needed
         if (currentAllowance < amount) {
@@ -180,11 +158,7 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
 
         // Step 3: Wrap
         setStatus("wrapping");
-        const wrapper = new ethers.Contract(
-          wrapperAddress,
-          ERC20TOERC7984_ABI,
-          signer
-        );
+        const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
         const tx = await wrapper.wrap(recipient, amount);
         setTxHash(tx.hash);
 
@@ -216,23 +190,13 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
         onError?.(e);
       }
     },
-    [
-      signer,
-      underlyingAddress,
-      address,
-      wrapperAddress,
-      onSuccess,
-      onError,
-      refetchAllowance,
-    ]
+    [signer, underlyingAddress, address, wrapperAddress, onSuccess, onError, refetchAllowance]
   );
 
   // Derived state
-  const isApproving =
-    status === "checking-allowance" || status === "approving";
+  const isApproving = status === "checking-allowance" || status === "approving";
   const isWrapping = status === "wrapping";
-  const isPending =
-    status !== "idle" && status !== "success" && status !== "error";
+  const isPending = status !== "idle" && status !== "success" && status !== "error";
   const isSuccess = status === "success";
   const isError = status === "error";
 

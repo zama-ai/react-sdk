@@ -23,7 +23,8 @@ export const useFHEDecrypt = (params: {
   chainId: number | undefined;
   requests: readonly FHEDecryptRequest[] | undefined;
 }) => {
-  const { instance, provider, address, fhevmDecryptionSignatureStorage, chainId, requests } = params;
+  const { instance, provider, address, fhevmDecryptionSignatureStorage, chainId, requests } =
+    params;
 
   const [isDecrypting, setIsDecrypting] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -36,13 +37,15 @@ export const useFHEDecrypt = (params: {
   const requestsKey = useMemo(() => {
     if (!requests || requests.length === 0) return "";
     const sorted = [...requests].sort((a, b) =>
-      (a.handle + a.contractAddress).localeCompare(b.handle + b.contractAddress),
+      (a.handle + a.contractAddress).localeCompare(b.handle + b.contractAddress)
     );
     return JSON.stringify(sorted);
   }, [requests]);
 
   const canDecrypt = useMemo(() => {
-    return Boolean(instance && provider && address && requests && requests.length > 0 && !isDecrypting);
+    return Boolean(
+      instance && provider && address && requests && requests.length > 0 && !isDecrypting
+    );
   }, [instance, provider, address, requests, isDecrypting]);
 
   const decrypt = useCallback(() => {
@@ -64,11 +67,14 @@ export const useFHEDecrypt = (params: {
 
     const run = async () => {
       const isStale = () =>
-        thisChainId !== chainId || thisProvider !== provider || thisAddress !== address || requestsKey !== lastReqKeyRef.current;
+        thisChainId !== chainId ||
+        thisProvider !== provider ||
+        thisAddress !== address ||
+        requestsKey !== lastReqKeyRef.current;
 
       try {
         console.log("[useFHEDecrypt] Starting decrypt...");
-        const uniqueAddresses = Array.from(new Set(thisRequests.map(r => r.contractAddress)));
+        const uniqueAddresses = Array.from(new Set(thisRequests.map((r) => r.contractAddress)));
         console.log("[useFHEDecrypt] Unique addresses:", uniqueAddresses);
 
         const signer: SignerParams = {
@@ -80,7 +86,7 @@ export const useFHEDecrypt = (params: {
           instance,
           uniqueAddresses as `0x${string}`[],
           signer,
-          fhevmDecryptionSignatureStorage,
+          fhevmDecryptionSignatureStorage
         );
         console.log("[useFHEDecrypt] Signature loaded:", !!sig);
 
@@ -97,7 +103,10 @@ export const useFHEDecrypt = (params: {
 
         setMessage("Call FHEVM userDecrypt...");
 
-        const mutableReqs = thisRequests.map(r => ({ handle: r.handle, contractAddress: r.contractAddress }));
+        const mutableReqs = thisRequests.map((r) => ({
+          handle: r.handle,
+          contractAddress: r.contractAddress,
+        }));
 
         let res: Record<string, string | bigint | boolean> = {};
         try {
@@ -109,13 +118,19 @@ export const useFHEDecrypt = (params: {
             sig.contractAddresses,
             sig.userAddress,
             sig.startTimestamp,
-            sig.durationDays,
+            sig.durationDays
           );
         } catch (e) {
           console.error("[useFHEDecrypt] userDecrypt FAILED:", e);
           const err = e as unknown as { name?: string; message?: string };
-          const code = err && typeof err === "object" && "name" in (err as any) ? (err as any).name : "DECRYPT_ERROR";
-          const msg = err && typeof err === "object" && "message" in (err as any) ? (err as any).message : "Decryption failed";
+          const code =
+            err && typeof err === "object" && "name" in (err as any)
+              ? (err as any).name
+              : "DECRYPT_ERROR";
+          const msg =
+            err && typeof err === "object" && "message" in (err as any)
+              ? (err as any).message
+              : "Decryption failed";
           setError(`${code}: ${msg}`);
           setMessage("FHEVM userDecrypt failed");
           return;
@@ -132,8 +147,14 @@ export const useFHEDecrypt = (params: {
         setResults(res);
       } catch (e) {
         const err = e as unknown as { name?: string; message?: string };
-        const code = err && typeof err === "object" && "name" in (err as any) ? (err as any).name : "UNKNOWN_ERROR";
-        const msg = err && typeof err === "object" && "message" in (err as any) ? (err as any).message : "Unknown error";
+        const code =
+          err && typeof err === "object" && "name" in (err as any)
+            ? (err as any).name
+            : "UNKNOWN_ERROR";
+        const msg =
+          err && typeof err === "object" && "message" in (err as any)
+            ? (err as any).message
+            : "Unknown error";
         setError(`${code}: ${msg}`);
         setMessage("FHEVM decryption errored");
       } finally {
@@ -144,7 +165,24 @@ export const useFHEDecrypt = (params: {
     };
 
     run();
-  }, [instance, provider, address, fhevmDecryptionSignatureStorage, chainId, requests, requestsKey]);
+  }, [
+    instance,
+    provider,
+    address,
+    fhevmDecryptionSignatureStorage,
+    chainId,
+    requests,
+    requestsKey,
+  ]);
 
-  return { canDecrypt, decrypt, isDecrypting, message, results, error, setMessage, setError } as const;
+  return {
+    canDecrypt,
+    decrypt,
+    isDecrypting,
+    message,
+    results,
+    error,
+    setMessage,
+    setError,
+  } as const;
 };

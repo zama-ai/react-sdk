@@ -60,10 +60,7 @@ export async function rpcCall<T = unknown>(
   });
 
   if (!response.ok) {
-    throw new JsonRpcError(
-      `HTTP error: ${response.status} ${response.statusText}`,
-      -32000
-    );
+    throw new JsonRpcError(`HTTP error: ${response.status} ${response.statusText}`, -32000);
   }
 
   const json: JsonRpcResponse<T> = await response.json();
@@ -114,10 +111,7 @@ export async function getFhevmRelayerMetadata(rpcUrl: string): Promise<
       return undefined;
     }
 
-    if (
-      typeof metadata.ACLAddress !== "string" ||
-      !metadata.ACLAddress.startsWith("0x")
-    ) {
+    if (typeof metadata.ACLAddress !== "string" || !metadata.ACLAddress.startsWith("0x")) {
       return undefined;
     }
 

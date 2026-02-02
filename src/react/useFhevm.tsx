@@ -52,7 +52,7 @@ export function useFhevm(parameters: {
     _setStatus("idle");
 
     if (provider !== undefined) {
-      _setProviderChanged(prev => prev + 1);
+      _setProviderChanged((prev) => prev + 1);
     }
   }, [provider, chainId]);
 
@@ -101,9 +101,9 @@ export function useFhevm(parameters: {
         signal: thisSignal,
         provider: thisProvider as any,
         mockChains: thisRpcUrlsByChainId as any,
-        onStatusChange: s => console.log(`[useFhevm] createFhevmInstance status changed: ${s}`),
+        onStatusChange: (s) => console.log(`[useFhevm] createFhevmInstance status changed: ${s}`),
       })
-        .then(i => {
+        .then((i) => {
           if (thisSignal.aborted) return;
           _assert(thisProvider === _providerRef.current, "thisProvider === _providerRef.current");
 
@@ -111,7 +111,7 @@ export function useFhevm(parameters: {
           _setError(undefined);
           _setStatus("ready");
         })
-        .catch(e => {
+        .catch((e) => {
           if (thisSignal.aborted) return;
 
           _assert(thisProvider === _providerRef.current, "thisProvider === _providerRef.current");
@@ -125,4 +125,3 @@ export function useFhevm(parameters: {
 
   return { instance, refresh, error, status };
 }
-
