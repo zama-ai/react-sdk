@@ -54,6 +54,17 @@ export default tseslint.config(
       "import/no-duplicates": "error",
     },
   },
+  // Relaxed rules for test files
+  {
+    files: ["test/**/*.ts", "test/**/*.tsx", "e2e/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "import/order": "off",
+      "no-console": "off",
+    },
+  },
   {
     ignores: [
       "dist/**",
@@ -62,6 +73,7 @@ export default tseslint.config(
       "*.config.js",
       "*.config.ts",
       "notes/**",
+      "e2e/test-app/**",
     ],
   }
 );
