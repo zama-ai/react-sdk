@@ -5,7 +5,7 @@ Hook for reading cached decrypted values without triggering new decryption.
 ## Import
 
 ```tsx
-import { useUserDecryptedValue, useUserDecryptedValues } from "fhevm-sdk";
+import { useUserDecryptedValue, useUserDecryptedValues } from "@zama-fhe/sdk";
 ```
 
 ## useUserDecryptedValue

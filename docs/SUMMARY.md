@@ -27,13 +27,14 @@
 * [usePublicDecrypt](hooks/use-public-decrypt.md)
 * [useFhevmStatus](hooks/use-fhevm-status.md)
 * [useFhevmClient](hooks/use-fhevm-client.md)
-* [useEthersSigner](hooks/use-ethers-signer.md)
+* [useEthersSigner](hooks/use-ethers-signer.md) *(deprecated)*
 * [useUserDecryptedValue](hooks/use-user-decrypted-value.md)
 
 ## Guides
 
 * [Security](guides/security.md)
 * [Error Handling](guides/error-handling.md)
+* [Troubleshooting](guides/troubleshooting.md)
 
 ## Reference
 

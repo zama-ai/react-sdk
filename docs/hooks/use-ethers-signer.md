@@ -9,7 +9,7 @@ The SDK no longer requires ethers.js. Instead, pass an EIP-1193 provider directl
 ### Before (Deprecated)
 
 ```tsx
-import { useEthersSigner } from "fhevm-sdk";
+import { useEthersSigner } from "@zama-fhe/sdk";
 
 function MyComponent() {
   const { signer, isReady } = useEthersSigner();
@@ -22,7 +22,7 @@ function MyComponent() {
 The SDK handles signing internally using the provider passed to FhevmProvider:
 
 ```tsx
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/sdk";
 import { useAccount, useConnectorClient } from "wagmi";
 
 function FhevmWrapper({ children }) {
@@ -46,7 +46,7 @@ function FhevmWrapper({ children }) {
 
 ### Using viem or ethers directly
 
-If you still need a signer for your own operations (outside of fhevm-sdk), create one directly:
+If you still need a signer for your own operations (outside of @zama-fhe/sdk), create one directly:
 
 #### With viem
 
@@ -84,7 +84,7 @@ The SDK now uses `eth_signTypedData_v4` directly via the EIP-1193 provider for a
 For decryption, simply use:
 
 ```tsx
-import { useUserDecrypt } from "fhevm-sdk";
+import { useUserDecrypt } from "@zama-fhe/sdk";
 
 function Balance({ handle, contractAddress }) {
   // Signing is handled automatically using the provider from FhevmProvider

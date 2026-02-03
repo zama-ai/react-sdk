@@ -10,24 +10,24 @@
 ## Install the Package
 
 ```bash
-pnpm add fhevm-sdk
+pnpm add @zama-fhe/sdk
 ```
 
 Or with npm:
 
 ```bash
-npm install fhevm-sdk
+npm install @zama-fhe/sdk
 ```
 
 Or with yarn:
 
 ```bash
-yarn add fhevm-sdk
+yarn add @zama-fhe/sdk
 ```
 
 ## Peer Dependencies
 
-fhevm-sdk requires the following peer dependencies:
+@zama-fhe/sdk requires the following peer dependencies:
 
 ```bash
 pnpm add wagmi viem @tanstack/react-query ethers

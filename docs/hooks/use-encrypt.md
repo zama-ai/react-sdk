@@ -5,7 +5,7 @@ Hook for encrypting values for FHE contract calls.
 ## Import
 
 ```tsx
-import { useEncrypt } from "fhevm-sdk";
+import { useEncrypt } from "@zama-fhe/sdk";
 ```
 
 ## Usage
@@ -124,7 +124,7 @@ encrypt([{ type: "address", value: "notHex" }], contract);
 ## Complete Example
 
 ```tsx
-import { useEncrypt } from "fhevm-sdk";
+import { useEncrypt } from "@zama-fhe/sdk";
 import { useWriteContract } from "wagmi";
 
 function ConfidentialTransfer({ contractAddress, tokenAbi }) {

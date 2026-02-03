@@ -1,6 +1,6 @@
 # Chains
 
-fhevm-sdk supports multiple chains for FHE operations.
+@zama-fhe/sdk supports multiple chains for FHE operations.
 
 ## Pre-configured Chains
 
@@ -9,7 +9,7 @@ fhevm-sdk supports multiple chains for FHE operations.
 Ethereum Sepolia testnet with Zama's FHE infrastructure:
 
 ```tsx
-import { sepolia } from "fhevm-sdk";
+import { sepolia } from "@zama-fhe/sdk";
 
 // Chain ID: 11155111
 // Gateway: https://gateway.sepolia.zama.ai
@@ -21,7 +21,7 @@ import { sepolia } from "fhevm-sdk";
 Local Hardhat node for development:
 
 ```tsx
-import { hardhatLocal } from "fhevm-sdk";
+import { hardhatLocal } from "@zama-fhe/sdk";
 
 // Chain ID: 31337
 // RPC: http://localhost:8545
@@ -35,7 +35,7 @@ import { hardhatLocal } from "fhevm-sdk";
 For local development without real FHE infrastructure:
 
 ```tsx
-import { defineMockChain } from "fhevm-sdk";
+import { defineMockChain } from "@zama-fhe/sdk";
 
 const myLocalChain = defineMockChain({
   id: 31337,
@@ -56,7 +56,7 @@ Mock chains:
 For production deployments with real FHE infrastructure:
 
 ```tsx
-import { defineProductionChain } from "fhevm-sdk";
+import { defineProductionChain } from "@zama-fhe/sdk";
 
 const myProductionChain = defineProductionChain({
   id: 1,
@@ -85,7 +85,7 @@ Production chains require:
 Create a Hardhat chain with a custom RPC URL:
 
 ```tsx
-import { createHardhatChain } from "fhevm-sdk";
+import { createHardhatChain } from "@zama-fhe/sdk";
 
 const customHardhat = createHardhatChain({
   rpcUrl: "http://192.168.1.100:8545",
@@ -112,7 +112,7 @@ type FhevmChain = {
 ## Type Guards
 
 ```tsx
-import { isMockChain, isProductionChain } from "fhevm-sdk";
+import { isMockChain, isProductionChain } from "@zama-fhe/sdk";
 
 if (isMockChain(chain)) {
   // chain.rpcUrl is available

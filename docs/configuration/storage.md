@@ -24,7 +24,7 @@ The `storage` prop on FhevmProvider controls how decryption signatures are cache
 For most applications, use `localStorageAdapter` for the best user experience:
 
 ```tsx
-import { FhevmProvider, localStorageAdapter } from "fhevm-sdk";
+import { FhevmProvider, localStorageAdapter } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -37,7 +37,7 @@ import { FhevmProvider, localStorageAdapter } from "fhevm-sdk";
 
 ## Built-in Storage Adapters
 
-fhevm-sdk provides four built-in storage adapters:
+@zama-fhe/sdk provides four built-in storage adapters:
 
 ```tsx
 import {
@@ -45,7 +45,7 @@ import {
   localStorageAdapter,   // Persistent in localStorage
   sessionStorageAdapter, // Cleared when tab closes
   noOpStorage,           // No caching
-} from "fhevm-sdk";
+} from "@zama-fhe/sdk";
 ```
 
 ### localStorage Adapter (Recommended for UX)
@@ -53,7 +53,7 @@ import {
 Persistent storage using browser's localStorage. Best user experience.
 
 ```tsx
-import { FhevmProvider, localStorageAdapter } from "fhevm-sdk";
+import { FhevmProvider, localStorageAdapter } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -80,7 +80,7 @@ import { FhevmProvider, localStorageAdapter } from "fhevm-sdk";
 Storage that clears when the browser tab closes.
 
 ```tsx
-import { FhevmProvider, sessionStorageAdapter } from "fhevm-sdk";
+import { FhevmProvider, sessionStorageAdapter } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -107,7 +107,7 @@ import { FhevmProvider, sessionStorageAdapter } from "fhevm-sdk";
 In-memory storage that clears on page refresh.
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -134,7 +134,7 @@ import { FhevmProvider, memoryStorage } from "fhevm-sdk";
 Disables caching entirely. User must sign for every decryption.
 
 ```tsx
-import { FhevmProvider, noOpStorage } from "fhevm-sdk";
+import { FhevmProvider, noOpStorage } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -172,7 +172,7 @@ Or simply pass `undefined`:
 Create storage adapters with custom prefixes to isolate different apps or environments:
 
 ```tsx
-import { createLocalStorageAdapter, createSessionStorageAdapter } from "fhevm-sdk";
+import { createLocalStorageAdapter, createSessionStorageAdapter } from "@zama-fhe/sdk";
 
 // Isolate staging from production
 const stagingStorage = createLocalStorageAdapter("fhevm-staging:");

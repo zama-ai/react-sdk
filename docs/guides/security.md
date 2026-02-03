@@ -83,7 +83,7 @@ const stolenData = Object.keys(localStorage)
 For applications handling highly sensitive data, use `memoryStorage`:
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -214,7 +214,7 @@ This fallback happens automatically in:
 You can check which storage is being used:
 
 ```tsx
-import { getPublicKeyStorageType } from "fhevm-sdk";
+import { getPublicKeyStorageType } from "@zama-fhe/sdk";
 
 const storageType = getPublicKeyStorageType();
 // Returns: "indexeddb" | "memory" | "none"
@@ -229,7 +229,7 @@ The SDK includes a configurable logger. By default:
 To enable debug logs in production (not recommended):
 
 ```tsx
-import { configureLogger } from "fhevm-sdk";
+import { configureLogger } from "@zama-fhe/sdk";
 
 configureLogger({
   enabled: true,
@@ -251,7 +251,7 @@ The SDK loads the relayer-sdk from Zama's CDN. The loader includes:
 For enhanced security, consider self-hosting the relayer SDK:
 
 ```tsx
-import { RelayerSDKLoader } from "fhevm-sdk";
+import { RelayerSDKLoader } from "@zama-fhe/sdk";
 
 const loader = new RelayerSDKLoader({
   cdnUrl: "https://your-cdn.com/relayer-sdk.min.js",
@@ -289,7 +289,7 @@ Before deploying to production:
 
 ## Reporting Security Issues
 
-If you discover a security vulnerability in fhevm-sdk:
+If you discover a security vulnerability in @zama-fhe/sdk:
 
 1. **Do not** open a public issue
 2. Email security@zama.ai with details

@@ -5,7 +5,7 @@ Hook for direct access to the FHEVM instance.
 ## Import
 
 ```tsx
-import { useFhevmClient } from "fhevm-sdk";
+import { useFhevmClient } from "@zama-fhe/sdk";
 ```
 
 ## Usage

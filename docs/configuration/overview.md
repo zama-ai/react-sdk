@@ -1,13 +1,13 @@
 # Configuration Overview
 
-fhevm-sdk uses a configuration object to define supported chains and storage options.
+@zama-fhe/sdk uses a configuration object to define supported chains and storage options.
 
 ## Creating a Config
 
 Use `createFhevmConfig` to create a configuration:
 
 ```tsx
-import { createFhevmConfig, sepolia, hardhatLocal } from "fhevm-sdk";
+import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/sdk";
 
 const config = createFhevmConfig({
   chains: [sepolia, hardhatLocal],
@@ -30,7 +30,7 @@ import {
   sepolia,
   hardhatLocal,
   createStorage,
-} from "fhevm-sdk";
+} from "@zama-fhe/sdk";
 
 const config = createFhevmConfig({
   // Supported chains

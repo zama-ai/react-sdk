@@ -1,13 +1,13 @@
 # Error Handling Guide
 
-This guide documents common errors in fhevm-sdk and how to handle them effectively.
+This guide documents common errors in @zama-fhe/sdk and how to handle them effectively.
 
 ## Error Types
 
 The SDK provides structured error types for different failure scenarios:
 
 ```tsx
-import { FhevmReactError, FhevmAbortError } from "fhevm-sdk";
+import { FhevmReactError, FhevmAbortError } from "@zama-fhe/sdk";
 
 // FhevmReactError - General SDK errors
 // FhevmAbortError - Operation was cancelled
@@ -375,7 +375,7 @@ class FHEErrorBoundary extends Component<Props, State> {
 ### Enable Debug Logging
 
 ```tsx
-import { configureLogger } from "fhevm-sdk";
+import { configureLogger } from "@zama-fhe/sdk";
 
 // Enable in development only
 if (process.env.NODE_ENV === "development") {

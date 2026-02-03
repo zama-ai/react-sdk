@@ -24,7 +24,7 @@
 ## Quick Example
 
 ```tsx
-import { useEncrypt, useFhevmStatus } from "fhevm-sdk";
+import { useEncrypt, useFhevmStatus } from "@zama-fhe/sdk";
 import { useWriteContract } from "wagmi";
 
 function EncryptedTransfer({ contractAddress, tokenAbi }) {
@@ -111,12 +111,13 @@ yarn add @zama-fhe/sdk wagmi viem @tanstack/react-query
 **Utilities:**
 - [useFhevmStatus](hooks/use-fhevm-status.md) - Check FHEVM initialization status
 - [useFhevmClient](hooks/use-fhevm-client.md) - Access FHEVM instance directly
-- [useEthersSigner](hooks/use-ethers-signer.md) - Get ethers.js signer from wagmi
+- [useEthersSigner](hooks/use-ethers-signer.md) - Get ethers.js signer from wagmi *(deprecated)*
 
 ### Guides
 
 - **[Security](guides/security.md)** ⭐ - Essential security considerations for production
 - **[Error Handling](guides/error-handling.md)** - Handle errors gracefully
+- **[Troubleshooting](guides/troubleshooting.md)** - Common issues and solutions
 
 ### Reference
 

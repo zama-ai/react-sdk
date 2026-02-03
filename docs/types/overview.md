@@ -1,6 +1,6 @@
 # Types Reference
 
-This page documents all TypeScript types exported by fhevm-sdk.
+This page documents all TypeScript types exported by @zama-fhe/sdk.
 
 ## Core Types
 

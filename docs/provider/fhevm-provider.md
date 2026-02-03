@@ -13,7 +13,7 @@ The FhevmProvider component wraps your application to provide FHEVM context to a
 ## Basic Usage
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 import { useAccount, useConnectorClient } from "wagmi";
 
 function FhevmWrapper({ children }) {
@@ -64,7 +64,7 @@ import {
   localStorageAdapter,  // Persistent in localStorage
   sessionStorageAdapter,// Cleared when tab closes
   noOpStorage,          // No caching, re-sign every time
-} from "fhevm-sdk";
+} from "@zama-fhe/sdk";
 
 // Most secure - keys cleared on refresh
 <FhevmProvider storage={memoryStorage} ... />
@@ -98,7 +98,7 @@ Place FhevmProvider after WagmiProvider and QueryClientProvider:
 
 ```tsx
 import { useAccount, useConnectorClient } from "wagmi";
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 
 function FhevmWrapper({ children }) {
   const { address, chainId, isConnected } = useAccount();
@@ -122,7 +122,7 @@ function FhevmWrapper({ children }) {
 ### With viem only
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 import { useWallet } from "./useWallet"; // Custom hook
 
 function App() {
@@ -146,7 +146,7 @@ function App() {
 ### With ethers only
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "fhevm-sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
 import { useWallet } from "./useWallet"; // Custom hook using ethers
 
 function App() {
@@ -172,7 +172,7 @@ function App() {
 Disable auto-initialization for manual control:
 
 ```tsx
-import { useFhevmClient } from "fhevm-sdk";
+import { useFhevmClient } from "@zama-fhe/sdk";
 
 function App() {
   return (
@@ -211,7 +211,7 @@ interface FhevmContextValue {
 Access context directly with `useFhevmContext`:
 
 ```tsx
-import { useFhevmContext } from "fhevm-sdk";
+import { useFhevmContext } from "@zama-fhe/sdk";
 
 function MyComponent() {
   const { instance, status, chainId, provider } = useFhevmContext();
@@ -234,7 +234,7 @@ The script version is locked internally and managed by the SDK.
 Handle initialization errors (including script loading failures):
 
 ```tsx
-import { useFhevmStatus } from "fhevm-sdk";
+import { useFhevmStatus } from "@zama-fhe/sdk";
 
 function FHEStatus() {
   const { status, error, isError } = useFhevmStatus();

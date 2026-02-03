@@ -5,7 +5,7 @@ Hook for decrypting FHE encrypted values.
 ## Import
 
 ```tsx
-import { useUserDecrypt } from "fhevm-sdk";
+import { useUserDecrypt } from "@zama-fhe/sdk";
 ```
 
 ## Usage
@@ -186,17 +186,25 @@ function Balance({ handle, contractAddress }) {
 
 ## Signer Override
 
-Provide a custom signer instead of auto-detection:
+> **Note:** The `useEthersSigner` hook is deprecated. The SDK now handles signing automatically using the EIP-1193 provider from FhevmProvider. You typically don't need to provide a signer override.
+
+If you still need to provide a custom signer for advanced use cases:
 
 ```tsx
-import { useEthersSigner } from "fhevm-sdk";
+import { BrowserProvider } from "ethers";
 
 function Balance({ handle, contractAddress }) {
-  const { signer } = useEthersSigner();
+  // Create signer directly if needed
+  const [signer, setSigner] = useState();
+
+  useEffect(() => {
+    const provider = new BrowserProvider(window.ethereum);
+    provider.getSigner().then(setSigner);
+  }, []);
 
   const { decrypt, results } = useUserDecrypt(
     [{ handle, contractAddress }],
-    signer // explicit signer
+    signer // explicit signer (optional)
   );
 }
 ```
