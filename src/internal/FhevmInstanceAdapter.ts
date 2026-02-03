@@ -67,16 +67,14 @@ export interface IFhevmInstanceAdapter {
 
   /**
    * Create EIP-712 typed data for user decryption authorization.
-   * @param publicKey - The user's public key for decryption
+   * @param publicKey - The user's public key for decryption (hex string)
    * @param contractAddresses - Contract addresses authorized for decryption
-   * @param userAddress - The user's wallet address
    * @param startTimestamp - Unix timestamp when the authorization starts (seconds)
    * @param durationDays - Number of days the authorization is valid
    */
   createEIP712(
-    publicKey: Uint8Array,
-    contractAddresses: `0x${string}`[],
-    userAddress: `0x${string}`,
+    publicKey: string,
+    contractAddresses: string[],
     startTimestamp: number,
     durationDays: number
   ): DecryptionEIP712Data;
@@ -84,8 +82,8 @@ export interface IFhevmInstanceAdapter {
   /**
    * Decrypt values using user authorization.
    * @param requests - Array of handle/contract pairs to decrypt
-   * @param privateKey - User's private key for decryption
-   * @param publicKey - User's public key for decryption
+   * @param privateKey - User's private key for decryption (hex string)
+   * @param publicKey - User's public key for decryption (hex string)
    * @param signature - EIP-712 signature authorizing decryption
    * @param contractAddresses - Authorized contract addresses
    * @param userAddress - User's wallet address
@@ -94,8 +92,8 @@ export interface IFhevmInstanceAdapter {
    */
   userDecrypt(
     requests: HandleContractPair[],
-    privateKey: Uint8Array,
-    publicKey: Uint8Array,
+    privateKey: string,
+    publicKey: string,
     signature: string,
     contractAddresses: `0x${string}`[],
     userAddress: `0x${string}`,
@@ -105,9 +103,9 @@ export interface IFhevmInstanceAdapter {
 
   /**
    * Decrypt values using public (on-chain) decryption.
-   * @param requests - Array of handle/contract pairs to decrypt
+   * @param handles - Array of encrypted value handles to decrypt
    */
-  publicDecrypt(requests: HandleContractPair[]): Promise<UserDecryptResults>;
+  publicDecrypt(handles: string[]): Promise<UserDecryptResults>;
 
   /**
    * Get the chain ID this instance is configured for.
@@ -152,16 +150,14 @@ export class FhevmInstanceAdapter implements IFhevmInstanceAdapter {
   }
 
   createEIP712(
-    publicKey: Uint8Array,
-    contractAddresses: `0x${string}`[],
-    userAddress: `0x${string}`,
+    publicKey: string,
+    contractAddresses: string[],
     startTimestamp: number,
     durationDays: number
   ): DecryptionEIP712Data {
     const result = this._instance.createEIP712(
       publicKey,
       contractAddresses,
-      userAddress,
       startTimestamp,
       durationDays
     );
@@ -170,8 +166,8 @@ export class FhevmInstanceAdapter implements IFhevmInstanceAdapter {
 
   async userDecrypt(
     requests: HandleContractPair[],
-    privateKey: Uint8Array,
-    publicKey: Uint8Array,
+    privateKey: string,
+    publicKey: string,
     signature: string,
     contractAddresses: `0x${string}`[],
     userAddress: `0x${string}`,
@@ -190,8 +186,8 @@ export class FhevmInstanceAdapter implements IFhevmInstanceAdapter {
     );
   }
 
-  async publicDecrypt(requests: HandleContractPair[]): Promise<UserDecryptResults> {
-    return this._instance.publicDecrypt(requests);
+  async publicDecrypt(handles: string[]): Promise<UserDecryptResults> {
+    return this._instance.publicDecrypt(handles);
   }
 
   getChainId(): number {

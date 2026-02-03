@@ -262,7 +262,7 @@ export function FhevmProvider({
   }, [scriptStatus, instanceStatus]);
 
   // Combine script and instance errors
-  const error = scriptError ?? instanceError;
+  const error = scriptError ?? instanceError ?? undefined;
 
   // Build context value
   const contextValue = useMemo<FhevmContextValue>(

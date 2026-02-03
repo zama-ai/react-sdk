@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ERC7984_ABI } from "../abi/index";
 import type {
   TransferStatus,
@@ -154,7 +154,15 @@ export function useConfidentialTransfer(
   });
 
   // Convenience wrapper for the mutation (using utility)
-  const transfer = useMutationWrapper(mutation);
+  const mutationWrapper = useMutationWrapper(mutation);
+
+  // Create transfer function with expected signature (to, amount) -> Promise<void>
+  const transfer = useCallback(
+    async (to: `0x${string}`, amount: bigint): Promise<void> => {
+      return mutationWrapper({ to, amount });
+    },
+    [mutationWrapper]
+  );
 
   // Derive detailed status from mutation state
   // Note: We can't track "encrypting", "signing", "confirming" separately with useMutation

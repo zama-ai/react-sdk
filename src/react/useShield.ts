@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ERC20TOERC7984_ABI, ERC20_ABI } from "../abi/index";
 import type { ShieldStatus, UseShieldOptions, UseShieldReturn } from "../types/shield";
 import { useFhevmContext } from "./context";
@@ -191,7 +191,15 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
   });
 
   // Convenience wrapper for the mutation (using utility)
-  const shield = useMutationWrapper(mutation);
+  const mutationWrapper = useMutationWrapper(mutation);
+
+  // Create shield function with expected signature (amount, to?) -> Promise<void>
+  const shield = useCallback(
+    async (amount: bigint, to?: `0x${string}`): Promise<void> => {
+      return mutationWrapper({ amount, to });
+    },
+    [mutationWrapper]
+  );
 
   // Derive status from mutation state (using utility)
   const status = useMutationStatus(mutation, {

@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ERC20TOERC7984_ABI } from "../abi/index";
 import type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn } from "../types/shield";
 import { useFhevmContext } from "./context";
@@ -11,7 +11,6 @@ import { useEncrypt } from "./useEncrypt";
 import { useEthersSigner } from "./useEthersSigner";
 import { useMutationWrapper } from "./utils/useMutationWrapper";
 import { normalizeTransactionError } from "./utils/errorHandling";
-import { useMutationStatus } from "./utils/useMutationStatus";
 
 // Re-export types for convenience
 export type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn };
@@ -204,7 +203,15 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
   });
 
   // Convenience wrapper for the mutation (using utility)
-  const unshield = useMutationWrapper(mutation);
+  const mutationWrapper = useMutationWrapper(mutation);
+
+  // Create unshield function with expected signature (amount, to?) -> Promise<void>
+  const unshield = useCallback(
+    async (amount: bigint, to?: `0x${string}`): Promise<void> => {
+      return mutationWrapper({ amount, to });
+    },
+    [mutationWrapper]
+  );
 
   // Derive status from mutation state
   // Note: Can't distinguish between encrypting/signing/decrypting/finalizing with useMutation
