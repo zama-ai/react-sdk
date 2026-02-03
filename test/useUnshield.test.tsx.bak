@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { useUnshield } from "../src/react/useUnshield";
 import {
   createTestWrapper,
@@ -123,20 +123,10 @@ describe("useUnshield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.unshield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n);
       });
 
-      await waitFor(() => {
-
-
-        expect(result.current.isError).toBe(true);
-
-
-      });
+      expect(result.current.isError).toBe(true);
       expect(result.current.error).toBeDefined();
       expect(result.current.error?.message).toContain("not ready");
     });
@@ -147,20 +137,10 @@ describe("useUnshield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.unshield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n);
       });
 
-      await waitFor(() => {
-
-
-        expect(result.current.isError).toBe(true);
-
-
-      });
+      expect(result.current.isError).toBe(true);
       expect(result.current.error).toBeDefined();
     });
   });
@@ -181,33 +161,21 @@ describe("useUnshield", () => {
 
       // Trigger an error state
       await act(async () => {
-        try {
-          await result.current.unshield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n);
       });
 
-      await waitFor(() => {
-
-
-        expect(result.current.isError).toBe(true);
-
-
-      });
+      expect(result.current.isError).toBe(true);
 
       // Reset
       act(() => {
         result.current.reset();
       });
 
-      await waitFor(() => {
-        expect(result.current.status).toBe("idle");
-        expect(result.current.error).toBeNull();
-        expect(result.current.txHash).toBeUndefined();
-        expect(result.current.finalizeTxHash).toBeUndefined();
-        expect(result.current.isError).toBe(false);
-      });
+      expect(result.current.status).toBe("idle");
+      expect(result.current.error).toBeNull();
+      expect(result.current.txHash).toBeUndefined();
+      expect(result.current.finalizeTxHash).toBeUndefined();
+      expect(result.current.isError).toBe(false);
     });
   });
 
@@ -220,11 +188,7 @@ describe("useUnshield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.unshield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n);
       });
 
       expect(onError).toHaveBeenCalled();
@@ -252,19 +216,13 @@ describe("useUnshield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.unshield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n);
       });
 
-      await waitFor(() => {
-        expect(result.current.status).toBe("error");
-        expect(result.current.isError).toBe(true);
-        expect(result.current.isSuccess).toBe(false);
-        expect(result.current.isPending).toBe(false);
-      });
+      expect(result.current.status).toBe("error");
+      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(false);
+      expect(result.current.isPending).toBe(false);
     });
   });
 
@@ -304,19 +262,11 @@ describe("useUnshield", () => {
 
       // Even though this will fail (disconnected), it should accept the parameter
       await act(async () => {
-        try {
-          await result.current.unshield(100n, recipientAddress);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.unshield(100n, recipientAddress);
       });
 
       // Should still error due to disconnected state, but function accepts the param
-      await waitFor(() => {
-
-        expect(result.current.isError).toBe(true);
-
-      });
+      expect(result.current.isError).toBe(true);
     });
   });
 });

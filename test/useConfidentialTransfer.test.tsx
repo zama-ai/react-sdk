@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { useConfidentialTransfer } from "../src/react/useConfidentialTransfer";
 import {
   createTestWrapper,
@@ -108,10 +108,20 @@ describe("useConfidentialTransfer", () => {
       });
 
       await act(async () => {
-        await result.current.transfer(recipientAddress, 100n);
+        try {
+          await result.current.transfer(recipientAddress, 100n);
+        } catch {
+          // Expected to throw
+        }
       });
 
-      expect(result.current.isError).toBe(true);
+      await waitFor(() => {
+
+
+        expect(result.current.isError).toBe(true);
+
+
+      });
       expect(result.current.error).toBeDefined();
       expect(result.current.error?.message).toContain("not ready");
     });
@@ -122,10 +132,20 @@ describe("useConfidentialTransfer", () => {
       });
 
       await act(async () => {
-        await result.current.transfer(recipientAddress, 100n);
+        try {
+          await result.current.transfer(recipientAddress, 100n);
+        } catch {
+          // Expected to throw
+        }
       });
 
-      expect(result.current.isError).toBe(true);
+      await waitFor(() => {
+
+
+        expect(result.current.isError).toBe(true);
+
+
+      });
       expect(result.current.error).toBeDefined();
     });
   });
@@ -146,20 +166,32 @@ describe("useConfidentialTransfer", () => {
 
       // Trigger an error state
       await act(async () => {
-        await result.current.transfer(recipientAddress, 100n);
+        try {
+          await result.current.transfer(recipientAddress, 100n);
+        } catch {
+          // Expected to throw
+        }
       });
 
-      expect(result.current.isError).toBe(true);
+      await waitFor(() => {
+
+
+        expect(result.current.isError).toBe(true);
+
+
+      });
 
       // Reset
       act(() => {
         result.current.reset();
       });
 
-      expect(result.current.status).toBe("idle");
-      expect(result.current.error).toBeNull();
-      expect(result.current.txHash).toBeUndefined();
-      expect(result.current.isError).toBe(false);
+      await waitFor(() => {
+        expect(result.current.status).toBe("idle");
+        expect(result.current.error).toBeNull();
+        expect(result.current.txHash).toBeUndefined();
+        expect(result.current.isError).toBe(false);
+      });
     });
   });
 
@@ -203,13 +235,19 @@ describe("useConfidentialTransfer", () => {
       });
 
       await act(async () => {
-        await result.current.transfer(recipientAddress, 100n);
+        try {
+          await result.current.transfer(recipientAddress, 100n);
+        } catch {
+          // Expected to throw
+        }
       });
 
-      expect(result.current.status).toBe("error");
-      expect(result.current.isError).toBe(true);
-      expect(result.current.isSuccess).toBe(false);
-      expect(result.current.isPending).toBe(false);
+      await waitFor(() => {
+        expect(result.current.status).toBe("error");
+        expect(result.current.isError).toBe(true);
+        expect(result.current.isSuccess).toBe(false);
+        expect(result.current.isPending).toBe(false);
+      });
     });
   });
 
@@ -288,10 +326,20 @@ describe("useConfidentialTransfer", () => {
 
       // Even though this will fail (disconnected), it should accept bigint
       await act(async () => {
-        await result.current.transfer(recipientAddress, 100n);
+        try {
+          await result.current.transfer(recipientAddress, 100n);
+        } catch {
+          // Expected to throw
+        }
       });
 
-      expect(result.current.isError).toBe(true);
+      await waitFor(() => {
+
+
+        expect(result.current.isError).toBe(true);
+
+
+      });
     });
 
     it("should accept large bigint amounts", async () => {
@@ -302,11 +350,19 @@ describe("useConfidentialTransfer", () => {
       const largeAmount = 10n ** 18n; // 1 with 18 zeros
 
       await act(async () => {
-        await result.current.transfer(recipientAddress, largeAmount);
+        try {
+          await result.current.transfer(recipientAddress, largeAmount);
+        } catch {
+          // Expected to throw
+        }
       });
 
       // Should error because of disconnected state, but accepts large amounts
-      expect(result.current.isError).toBe(true);
+      await waitFor(() => {
+
+        expect(result.current.isError).toBe(true);
+
+      });
     });
   });
 });

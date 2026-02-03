@@ -1,17 +1,41 @@
 "use client";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ERC20TOERC7984_ABI, ERC20_ABI } from "../abi/index";
 import type { ShieldStatus, UseShieldOptions, UseShieldReturn } from "../types/shield";
 import { useFhevmContext } from "./context";
+import { FHEVM_QUERY_DEFAULTS, ZERO_ADDRESS } from "./core/constants";
+import { fhevmKeys } from "./queryKeys";
 import { useEthersSigner } from "./useEthersSigner";
+import { useMutationWrapper } from "./utils/useMutationWrapper";
+import { normalizeTransactionError } from "./utils/errorHandling";
+import { useMutationStatus } from "./utils/useMutationStatus";
 
 // Re-export types for convenience
 export type { ShieldStatus, UseShieldOptions, UseShieldReturn };
 
 /**
+ * Parameters for the shield mutation function.
+ */
+interface ShieldParams {
+  amount: bigint;
+  to?: `0x${string}`;
+}
+
+/**
+ * Result data from a successful shield operation.
+ */
+interface ShieldResult {
+  txHash: string;
+  status: ShieldStatus;
+}
+
+/**
  * Hook for shielding ERC20 tokens into confidential ERC7984 tokens.
+ *
+ * Now powered by TanStack Query's `useMutation` for automatic state management.
  *
  * Handles the full flow:
  * 1. Check ERC20 allowance for the wrapper contract
@@ -56,19 +80,14 @@ export type { ShieldStatus, UseShieldOptions, UseShieldReturn };
 export function useShield(options: UseShieldOptions): UseShieldReturn {
   const { wrapperAddress, underlyingAddress: providedUnderlying, onSuccess, onError } = options;
 
-  const { address } = useFhevmContext();
+  const { address, chainId } = useFhevmContext();
   const { signer, provider, isReady: _isReady } = useEthersSigner();
 
-  const [status, setStatus] = useState<ShieldStatus>("idle");
-  const [error, setError] = useState<Error | null>(null);
-  const [txHash, setTxHash] = useState<string | undefined>();
-  const [allowance, setAllowance] = useState<bigint | undefined>();
   const [underlyingAddress, setUnderlyingAddress] = useState<`0x${string}` | undefined>(
     providedUnderlying
   );
 
-  // Zero address constant for comparison
-  const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+  // ZERO_ADDRESS is now imported from constants
 
   // Sync state when providedUnderlying prop changes
   useEffect(() => {
@@ -101,104 +120,97 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
     };
   }, [providedUnderlying, provider, wrapperAddress]);
 
-  // Fetch allowance
-  const refetchAllowance = useCallback(async () => {
-    if (!provider || !underlyingAddress || !address) return;
-
-    try {
+  // Fetch allowance using useQuery (not a mutation, but a read operation)
+  const allowanceQuery = useQuery({
+    queryKey: ["allowance", wrapperAddress, underlyingAddress, address],
+    queryFn: async (): Promise<bigint> => {
+      if (!provider || !underlyingAddress || !address) {
+        throw new Error("Provider, underlying address, or account not available");
+      }
       const erc20 = new ethers.Contract(underlyingAddress, ERC20_ABI, provider);
       const allowanceValue = await erc20.allowance(address, wrapperAddress);
-      setAllowance(BigInt(allowanceValue));
-    } catch (err) {
-      console.error("[useShield] Failed to fetch allowance:", err);
-    }
-  }, [provider, underlyingAddress, address, wrapperAddress]);
+      return BigInt(allowanceValue);
+    },
+    enabled: !!provider && !!underlyingAddress && !!address,
+    staleTime: FHEVM_QUERY_DEFAULTS.ALLOWANCE_STALE_TIME,
+  });
 
-  // Refetch allowance when dependencies change
-  useEffect(() => {
-    refetchAllowance();
-  }, [refetchAllowance]);
+  // TanStack Query mutation for the shield operation
+  const mutation = useMutation<ShieldResult, Error, ShieldParams>({
+    mutationKey: chainId
+      ? fhevmKeys.shieldFor(chainId, wrapperAddress)
+      : ["fhevm", "shield", "disabled"],
 
-  // Reset function
-  const reset = useCallback(() => {
-    setStatus("idle");
-    setError(null);
-    setTxHash(undefined);
-  }, []);
-
-  // Main shield function
-  const shield = useCallback(
-    async (amount: bigint, to?: `0x${string}`): Promise<void> => {
+    mutationFn: async ({ amount, to }: ShieldParams): Promise<ShieldResult> => {
       if (!signer || !underlyingAddress || !address) {
-        const err = new Error("Not ready. Please connect your wallet and wait for initialization.");
-        setError(err);
-        setStatus("error");
-        onError?.(err);
-        return;
+        throw new Error("Not ready. Please connect your wallet and wait for initialization.");
       }
 
       const recipient = to ?? address;
 
-      try {
-        // Step 1: Check allowance
-        setStatus("checking-allowance");
-        setError(null);
-        setTxHash(undefined);
+      // Step 1: Check allowance
+      const erc20 = new ethers.Contract(underlyingAddress, ERC20_ABI, signer);
+      const currentAllowance = BigInt(await erc20.allowance(address, wrapperAddress));
 
-        const erc20 = new ethers.Contract(underlyingAddress, ERC20_ABI, signer);
-        const currentAllowance = BigInt(await erc20.allowance(address, wrapperAddress));
-
-        // Step 2: Approve if needed
-        if (currentAllowance < amount) {
-          setStatus("approving");
-          const approveTx = await erc20.approve(wrapperAddress, amount);
-          await approveTx.wait();
-          await refetchAllowance();
-        }
-
-        // Step 3: Wrap
-        setStatus("wrapping");
-        const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
-        const tx = await wrapper.wrap(recipient, amount);
-        setTxHash(tx.hash);
-
-        // Step 4: Confirm
-        setStatus("confirming");
-        const receipt = await tx.wait();
-
-        if (receipt.status === 0) {
-          throw new Error("Transaction reverted");
-        }
-
-        setStatus("success");
-        onSuccess?.(tx.hash);
-      } catch (err) {
-        const e = err instanceof Error ? err : new Error(String(err));
-
-        // Check if user rejected
-        if (
-          e.message.includes("User rejected") ||
-          e.message.includes("user rejected") ||
-          e.message.includes("ACTION_REJECTED")
-        ) {
-          setError(new Error("Transaction rejected by user"));
-        } else {
-          setError(e);
-        }
-
-        setStatus("error");
-        onError?.(e);
+      // Step 2: Approve if needed
+      if (currentAllowance < amount) {
+        const approveTx = await erc20.approve(wrapperAddress, amount);
+        await approveTx.wait();
+        // Refetch allowance query
+        await allowanceQuery.refetch();
       }
-    },
-    [signer, underlyingAddress, address, wrapperAddress, onSuccess, onError, refetchAllowance]
-  );
 
-  // Derived state
-  const isApproving = status === "checking-allowance" || status === "approving";
-  const isWrapping = status === "wrapping";
-  const isPending = status !== "idle" && status !== "success" && status !== "error";
-  const isSuccess = status === "success";
-  const isError = status === "error";
+      // Step 3: Wrap
+      const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
+      const tx = await wrapper.wrap(recipient, amount);
+
+      // Step 4: Confirm
+      const receipt = await tx.wait();
+
+      if (receipt.status === 0) {
+        throw new Error("Transaction reverted");
+      }
+
+      return {
+        txHash: tx.hash,
+        status: "success",
+      };
+    },
+
+    onSuccess: (data) => {
+      // Refetch allowance after successful shield
+      allowanceQuery.refetch();
+      onSuccess?.(data.txHash);
+    },
+
+    onError: (err) => {
+      // Normalize error to user-friendly message
+      const normalizedError = normalizeTransactionError(err);
+      onError?.(normalizedError);
+    },
+  });
+
+  // Convenience wrapper for the mutation (using utility)
+  const shield = useMutationWrapper(mutation);
+
+  // Derive status from mutation state (using utility)
+  const status = useMutationStatus(mutation, {
+    pending: "wrapping",
+    success: "success",
+    error: "error",
+    idle: "idle",
+  });
+
+  const isApproving = mutation.isPending; // Can't distinguish between approving/wrapping
+  const isWrapping = mutation.isPending;
+  const isPending = mutation.isPending;
+  const isSuccess = mutation.isSuccess;
+  const isError = mutation.isError;
+
+  // Wrap refetch to match expected signature
+  const refetchAllowance = useCallback(async (): Promise<void> => {
+    await allowanceQuery.refetch();
+  }, [allowanceQuery]);
 
   return {
     shield,
@@ -208,10 +220,10 @@ export function useShield(options: UseShieldOptions): UseShieldReturn {
     isWrapping,
     isSuccess,
     isError,
-    error,
-    txHash,
-    reset,
-    allowance,
+    error: mutation.error ?? null,
+    txHash: mutation.data?.txHash,
+    reset: mutation.reset,
+    allowance: allowanceQuery.data,
     refetchAllowance,
   };
 }

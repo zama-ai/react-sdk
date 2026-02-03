@@ -71,36 +71,3 @@ describe("useFhevmClient", () => {
   });
 });
 
-describe("legacy hooks (backward compatibility)", () => {
-  it("should export getEncryptionMethod from useFHEEncryption", async () => {
-    const { getEncryptionMethod } = await import("../src/react/useFHEEncryption");
-    expect(getEncryptionMethod).toBeDefined();
-  });
-
-  it("should map external types to builder methods", async () => {
-    const { getEncryptionMethod } = await import("../src/react/useFHEEncryption");
-
-    expect(getEncryptionMethod("externalEbool")).toBe("addBool");
-    expect(getEncryptionMethod("externalEuint8")).toBe("add8");
-    expect(getEncryptionMethod("externalEuint16")).toBe("add16");
-    expect(getEncryptionMethod("externalEuint32")).toBe("add32");
-    expect(getEncryptionMethod("externalEuint64")).toBe("add64");
-    expect(getEncryptionMethod("externalEuint128")).toBe("add128");
-    expect(getEncryptionMethod("externalEuint256")).toBe("add256");
-    expect(getEncryptionMethod("externalEaddress")).toBe("addAddress");
-  });
-
-  it("should default to add64 for unknown types", async () => {
-    const { getEncryptionMethod } = await import("../src/react/useFHEEncryption");
-    expect(getEncryptionMethod("unknown")).toBe("add64");
-  });
-
-  it("should export toHex utility", async () => {
-    const { toHex } = await import("../src/react/useFHEEncryption");
-
-    const bytes = new Uint8Array([0x12, 0x34, 0x56]);
-    expect(toHex(bytes)).toBe("0x123456");
-    expect(toHex("0xabc123")).toBe("0xabc123");
-    expect(toHex("abc123")).toBe("0xabc123");
-  });
-});

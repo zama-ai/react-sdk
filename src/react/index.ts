@@ -60,13 +60,20 @@ export {
   useUserDecryptedValues,
   type UseDecryptedValueReturn,
 } from "./useUserDecryptedValue";
+export {
+  useSignature,
+  type UseSignatureOptions,
+  type UseSignatureReturn,
+} from "./useSignature";
+export {
+  useFhevmInstance,
+  type UseFhevmInstanceOptions,
+  type UseFhevmInstanceReturn,
+} from "./useFhevmInstance";
 
 // TanStack Query utilities
 export { fhevmQueryClient, createFhevmQueryClient } from "./queryClient";
 export { fhevmKeys, type FhevmQueryKey } from "./queryKeys";
 
-// Legacy hooks (backward compatibility - consider migrating to new API)
-export * from "./useFhevm";
-export * from "./useFHEEncryption";
-export * from "./useFHEDecrypt";
-export * from "./useInMemoryStorage";
+// Internal utilities (exported for advanced use cases)
+export { InMemoryStorageProvider } from "./useInMemoryStorage";

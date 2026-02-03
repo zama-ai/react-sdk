@@ -1,14 +1,13 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import type { FhevmConfig } from "../config";
-import type { FhevmInstance } from "../fhevmTypes";
 import type { Eip1193Provider } from "../internal/eip1193";
-import { createFhevmInstance, FhevmAbortError } from "../internal/fhevm";
 import { logger } from "../internal/logger";
 import { useRelayerScript } from "../internal/useRelayerScript";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
 import { FhevmContext, type FhevmContextValue, type FhevmStatus } from "./context";
 import { fhevmQueryClient } from "./queryClient";
+import { useFhevmInstance } from "./useFhevmInstance";
 import { InMemoryStorageProvider } from "./useInMemoryStorage";
 
 /**
@@ -210,29 +209,6 @@ export function FhevmProvider({
   // Load relayer SDK script automatically
   const { status: scriptStatus, error: scriptError, isReady: scriptReady } = useRelayerScript();
 
-  const [instance, setInstance] = useState<FhevmInstance | undefined>(undefined);
-  const [fhevmStatus, setFhevmStatus] = useState<FhevmStatus>("idle");
-  const [fhevmError, setFhevmError] = useState<Error | undefined>(undefined);
-
-  // Track initialization to prevent duplicate inits
-  const initRef = useRef<{
-    chainId: number | undefined;
-    abortController: AbortController | null;
-  }>({
-    chainId: undefined,
-    abortController: null,
-  });
-
-  // Combine script and fhevm status
-  const status: FhevmStatus = useMemo(() => {
-    if (scriptStatus === "loading") return "initializing";
-    if (scriptStatus === "error") return "error";
-    return fhevmStatus;
-  }, [scriptStatus, fhevmStatus]);
-
-  // Combine script and fhevm errors
-  const error = scriptError ?? fhevmError;
-
   // Get provider - prefer prop, fallback to window.ethereum
   const provider = useMemo((): Eip1193Provider | undefined => {
     if (providerProp) return providerProp;
@@ -253,167 +229,40 @@ export function FhevmProvider({
     return map;
   }, [config.chains]);
 
-  // Initialize FHEVM instance
-  const initializeFhevm = useCallback(
-    async (targetChainId: number) => {
-      // Abort any existing initialization
-      if (initRef.current.abortController) {
-        initRef.current.abortController.abort();
-      }
+  // Check if we should skip initialization in SSR
+  const shouldInitialize = useMemo(() => {
+    if (!autoInit) return false;
+    if (config.ssr && typeof window === "undefined") return false;
+    return true;
+  }, [autoInit, config.ssr]);
 
-      // Check if chain is supported
-      const chain = config.getChain(targetChainId);
-      if (!chain) {
-        logger.warn(
-          "[FhevmProvider]",
-          `Chain ${targetChainId} is not configured. Skipping initialization.`
-        );
-        setFhevmStatus("idle");
-        return;
-      }
+  // Use the new useFhevmInstance hook for instance management
+  const {
+    instance,
+    status: instanceStatus,
+    error: instanceError,
+    refresh,
+  } = useFhevmInstance({
+    config,
+    provider,
+    chainId,
+    isConnected,
+    scriptReady,
+    mockChains,
+    apiKey,
+    initTimeout,
+    enabled: shouldInitialize,
+  });
 
-      // Check if provider is available
-      if (!provider) {
-        logger.warn("[FhevmProvider]", "No provider available. Skipping initialization.");
-        setFhevmStatus("idle");
-        return;
-      }
+  // Combine script and instance status
+  const status: FhevmStatus = useMemo(() => {
+    if (scriptStatus === "loading") return "initializing";
+    if (scriptStatus === "error") return "error";
+    return instanceStatus;
+  }, [scriptStatus, instanceStatus]);
 
-      const abortController = new AbortController();
-      initRef.current = {
-        chainId: targetChainId,
-        abortController,
-      };
-
-      setFhevmStatus("initializing");
-      setFhevmError(undefined);
-      setInstance(undefined);
-
-      // Set up initialization timeout
-      let timeoutId: ReturnType<typeof setTimeout> | undefined;
-      if (initTimeout > 0) {
-        timeoutId = setTimeout(() => {
-          if (!abortController.signal.aborted) {
-            logger.warn(
-              "[FhevmProvider]",
-              `Initialization timed out after ${initTimeout}ms for chain ${targetChainId}`
-            );
-            abortController.abort();
-            setFhevmError(
-              new Error(
-                `FHEVM initialization timed out after ${initTimeout}ms. ` +
-                  `This may indicate network issues or an unresponsive relayer. ` +
-                  `You can increase the timeout via the initTimeout prop.`
-              )
-            );
-            setFhevmStatus("error");
-          }
-        }, initTimeout);
-      }
-
-      try {
-        const newInstance = await createFhevmInstance({
-          provider,
-          mockChains,
-          signal: abortController.signal,
-          onStatusChange: (sdkStatus) => {
-            logger.debug("[FhevmProvider]", `SDK status: ${sdkStatus}`);
-          },
-          apiKey,
-        });
-
-        // Clear timeout on successful initialization
-        if (timeoutId !== undefined) {
-          clearTimeout(timeoutId);
-        }
-
-        // Check if we were aborted during initialization
-        if (abortController.signal.aborted) {
-          return;
-        }
-
-        // Check if chain changed during initialization
-        if (initRef.current.chainId !== targetChainId) {
-          logger.debug(
-            "[FhevmProvider]",
-            "Chain changed during initialization. Discarding instance."
-          );
-          return;
-        }
-
-        setInstance(newInstance);
-        setFhevmStatus("ready");
-        logger.debug("[FhevmProvider]", `FHEVM instance ready for chain ${targetChainId}`);
-      } catch (err) {
-        // Clear timeout on error
-        if (timeoutId !== undefined) {
-          clearTimeout(timeoutId);
-        }
-
-        if (err instanceof FhevmAbortError) {
-          // Initialization was cancelled, ignore
-          return;
-        }
-
-        logger.error("[FhevmProvider]", "Failed to initialize FHEVM:", err);
-        setFhevmError(err instanceof Error ? err : new Error(String(err)));
-        setFhevmStatus("error");
-      }
-    },
-    [provider, config, mockChains, apiKey, initTimeout]
-  );
-
-  // Refresh function for manual re-initialization
-  const refresh = useCallback(() => {
-    if (chainId !== undefined) {
-      initializeFhevm(chainId);
-    }
-  }, [chainId, initializeFhevm]);
-
-  // Auto-initialize when wallet connects or chain changes
-  useEffect(() => {
-    if (!autoInit) return;
-
-    // Don't initialize in SSR
-    if (config.ssr && typeof window === "undefined") return;
-
-    // Don't initialize until script is ready
-    if (!scriptReady) return;
-
-    // Don't initialize if not connected
-    if (!isConnected || chainId === undefined) {
-      // Clean up existing instance if disconnected
-      if (initRef.current.abortController) {
-        initRef.current.abortController.abort();
-        initRef.current.abortController = null;
-      }
-      setInstance(undefined);
-      setFhevmStatus("idle");
-      setFhevmError(undefined);
-      return;
-    }
-
-    // Don't re-initialize for the same chain
-    if (initRef.current.chainId === chainId && fhevmStatus === "ready") {
-      return;
-    }
-
-    // Small delay to ensure provider is stable
-    const timeoutId = setTimeout(() => {
-      initializeFhevm(chainId);
-    }, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, [autoInit, isConnected, chainId, config.ssr, initializeFhevm, fhevmStatus, scriptReady]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (initRef.current.abortController) {
-        initRef.current.abortController.abort();
-      }
-    };
-  }, []);
+  // Combine script and instance errors
+  const error = scriptError ?? instanceError;
 
   // Build context value
   const contextValue = useMemo<FhevmContextValue>(

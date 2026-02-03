@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { RelayerEncryptedInput } from "@zama-fhe/relayer-sdk/web";
 import { useCallback, useMemo } from "react";
 import type {
@@ -9,6 +10,7 @@ import type {
   FheTypeName,
 } from "../types/encryption";
 import { useFhevmContext } from "./context";
+import { fhevmKeys } from "./queryKeys";
 
 // Re-export types for convenience
 export type { EncryptInput, EncryptResult, EncryptedOutput, FheTypeName };
@@ -99,10 +101,22 @@ function addToBuilder(builder: RelayerEncryptedInput, input: EncryptInput): void
 }
 
 /**
+ * Parameters for the encryption mutation.
+ * @internal
+ */
+interface EncryptParams {
+  inputs: readonly EncryptInput[];
+  contractAddress: `0x${string}`;
+}
+
+/**
  * Hook for encrypting values for FHE contract calls.
  *
  * Provides type-safe encryption with compile-time checking of value types.
  * Returns a tuple for easy destructuring into handles and proof.
+ *
+ * Now uses TanStack Query's useMutation internally for DevTools visibility
+ * and tracking, while maintaining the same external API.
  *
  * @example
  * ```tsx
@@ -136,19 +150,23 @@ function addToBuilder(builder: RelayerEncryptedInput, input: EncryptInput): void
  * ```
  */
 export function useEncrypt(): UseEncryptReturn {
-  const { instance, status, address } = useFhevmContext();
+  const { instance, status, address, chainId } = useFhevmContext();
 
   const isReady = useMemo(
     () => status === "ready" && instance !== undefined && address !== undefined,
     [status, instance, address]
   );
 
-  const encrypt = useCallback(
-    async <T extends readonly EncryptInput[]>(
-      inputs: T,
-      contractAddress: `0x${string}`
-    ): Promise<EncryptResult<T> | undefined> => {
-      if (!instance || !address) return undefined;
+  // TanStack Query mutation for encryption (for DevTools visibility)
+  const mutation = useMutation<EncryptedOutput, Error, EncryptParams>({
+    mutationKey: chainId
+      ? fhevmKeys.encrypt()
+      : ["fhevm", "encrypt", "disabled"],
+
+    mutationFn: async ({ inputs, contractAddress }: EncryptParams): Promise<EncryptedOutput> => {
+      if (!instance || !address) {
+        throw new Error("FHEVM instance or address not available");
+      }
 
       const builder = instance.createEncryptedInput(
         contractAddress,
@@ -171,11 +189,30 @@ export function useEncrypt(): UseEncryptReturn {
         );
       }
 
-      // Return as tuple: [...handles, proof]
-      // Cast through unknown to satisfy TypeScript's strict tuple checking
-      return [...result.handles, result.inputProof] as unknown as EncryptResult<T>;
+      return result;
     },
-    [instance, address]
+  });
+
+  // Wrapper that maintains the original API signature
+  const encrypt = useCallback(
+    async <T extends readonly EncryptInput[]>(
+      inputs: T,
+      contractAddress: `0x${string}`
+    ): Promise<EncryptResult<T> | undefined> => {
+      if (!instance || !address) return undefined;
+
+      try {
+        // Trigger mutation and wait for result
+        const result = await mutation.mutateAsync({ inputs, contractAddress });
+
+        // Return as tuple: [...handles, proof]
+        return [...result.handles, result.inputProof] as unknown as EncryptResult<T>;
+      } catch (error) {
+        // Re-throw so calling code can handle errors
+        throw error;
+      }
+    },
+    [instance, address, mutation.mutateAsync]
   );
 
   return {

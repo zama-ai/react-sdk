@@ -83,6 +83,52 @@ export const fhevmKeys = {
 
   /** Key for instance on a specific chain */
   instanceFor: (chainId: number) => [...fhevmKeys.instance(), chainId] as const,
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Transaction Mutations (Phase 1: useConfidentialTransfer, useShield, useUnshield)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /** Base key for all confidential transfer mutations */
+  transfer: () => [...fhevmKeys.all, "transfer"] as const,
+
+  /** Key for transfers to a specific ERC7984 contract */
+  transferFor: (chainId: number, contractAddress: string) =>
+    [...fhevmKeys.transfer(), chainId, contractAddress.toLowerCase()] as const,
+
+  /** Base key for all shield (ERC20 → ERC7984) mutations */
+  shield: () => [...fhevmKeys.all, "shield"] as const,
+
+  /** Key for shield operations to a specific wrapper contract */
+  shieldFor: (chainId: number, wrapperAddress: string) =>
+    [...fhevmKeys.shield(), chainId, wrapperAddress.toLowerCase()] as const,
+
+  /** Base key for all unshield (ERC7984 → ERC20) mutations */
+  unshield: () => [...fhevmKeys.all, "unshield"] as const,
+
+  /** Key for unshield operations from a specific wrapper contract */
+  unshieldFor: (chainId: number, wrapperAddress: string) =>
+    [...fhevmKeys.unshield(), chainId, wrapperAddress.toLowerCase()] as const,
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Balance Queries (Phase 2: useConfidentialBalances)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /** Base key for all balance queries */
+  balance: () => [...fhevmKeys.all, "balance"] as const,
+
+  /** Key for a single confidential balance */
+  balanceFor: (chainId: number, contractAddress: string, account: string) =>
+    [...fhevmKeys.balance(), chainId, contractAddress.toLowerCase(), account.toLowerCase()] as const,
+
+  /** Key for batch confidential balance queries */
+  balances: (chainId: number, contractAddresses: string[], account: string) =>
+    [
+      ...fhevmKeys.balance(),
+      chainId,
+      "batch",
+      account.toLowerCase(),
+      contractAddresses.map(a => a.toLowerCase()).sort().join(",")
+    ] as const,
 } as const;
 
 /** Type helper for query key arrays */
@@ -99,4 +145,13 @@ export type FhevmQueryKey =
   | ReturnType<typeof fhevmKeys.encrypt>
   | ReturnType<typeof fhevmKeys.encryptFor>
   | ReturnType<typeof fhevmKeys.instance>
-  | ReturnType<typeof fhevmKeys.instanceFor>;
+  | ReturnType<typeof fhevmKeys.instanceFor>
+  | ReturnType<typeof fhevmKeys.transfer>
+  | ReturnType<typeof fhevmKeys.transferFor>
+  | ReturnType<typeof fhevmKeys.shield>
+  | ReturnType<typeof fhevmKeys.shieldFor>
+  | ReturnType<typeof fhevmKeys.unshield>
+  | ReturnType<typeof fhevmKeys.unshieldFor>
+  | ReturnType<typeof fhevmKeys.balance>
+  | ReturnType<typeof fhevmKeys.balanceFor>
+  | ReturnType<typeof fhevmKeys.balances>;

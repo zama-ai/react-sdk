@@ -1,9 +1,9 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ERC7984_ABI } from "../abi/index";
-import { FhevmDecryptionSignature } from "../FhevmDecryptionSignature";
 import { logger } from "../internal/logger";
 import type {
   BalanceStatus,
@@ -14,9 +14,12 @@ import type {
   UseConfidentialBalancesReturn,
 } from "../types/balance";
 import { useFhevmContext } from "./context";
+import { FHEVM_QUERY_DEFAULTS } from "./core/constants";
+import { fhevmKeys } from "./queryKeys";
 import { useEthersSigner } from "./useEthersSigner";
 import { useUserDecrypt, type DecryptRequest } from "./useUserDecrypt";
 import { useUserDecryptedValues } from "./useUserDecryptedValue";
+import { useSignature } from "./useSignature";
 
 export type {
   BalanceStatus,
@@ -79,122 +82,98 @@ export function useConfidentialBalances(
     decrypt: autoDecrypt = false,
   } = options;
 
-  const { address: contextAddress, storage, instance } = useFhevmContext();
+  const { address: contextAddress, chainId } = useFhevmContext();
   const { provider, isReady: providerReady } = useEthersSigner();
 
   const defaultAccount = sharedAccount ?? contextAddress;
 
-  const [data, setData] = useState<ConfidentialBalanceResult[]>(
-    makePendingResults(contracts.length)
+  // Extract contract addresses for query key
+  const contractAddresses = useMemo(
+    () => contracts.map((c) => c.contractAddress),
+    [contracts]
   );
-  const [status, setStatus] = useState<BalanceStatus>("idle");
-  const [error, setError] = useState<Error | null>(null);
-  const [isRefetching, setIsRefetching] = useState(false);
 
-  const hasFetchedRef = useRef(false);
+  // TanStack Query for balance fetching
+  const balanceQuery = useQuery({
+    queryKey: chainId && defaultAccount
+      ? fhevmKeys.balances(chainId, contractAddresses, defaultAccount)
+      : ["fhevm", "balance", "disabled"],
 
-  // Stable serialization of contracts for effect dependency
-  const contractsKey = JSON.stringify(contracts);
-
-  const fetchBalances = useCallback(
-    async (isRefetch: boolean) => {
+    queryFn: async (): Promise<ConfidentialBalanceResult[]> => {
       if (!provider) {
-        setError(new Error("Provider not available. Please connect your wallet."));
-        setStatus("error");
-        return;
+        throw new Error("Provider not available. Please connect your wallet.");
       }
 
       if (!defaultAccount && contracts.every((c) => !c.account)) {
-        setError(new Error("No account address available."));
-        setStatus("error");
-        return;
+        throw new Error("No account address available.");
       }
 
-      try {
-        if (isRefetch) {
-          setIsRefetching(true);
-        } else {
-          setStatus("loading");
-        }
-        setError(null);
-
-        const settled = await Promise.allSettled(
-          contracts.map(async (config) => {
-            const account = config.account ?? defaultAccount;
-            if (!account) {
-              throw new Error(
-                "No account address available for contract " + config.contractAddress
-              );
-            }
-            const abi = config.abi ?? ERC7984_ABI;
-            const contract = new ethers.Contract(config.contractAddress, abi, provider);
-            const result: string = await contract.confidentialBalanceOf(account);
-            logger.debug("[useConfidentialBalances]", "confidentialBalanceOf result:", {
-              contractAddress: config.contractAddress,
-              account,
-              result,
-              isZeroHash: result === ethers.ZeroHash,
-            });
-            return result === ethers.ZeroHash ? undefined : (result as `0x${string}`);
-          })
-        );
-
-        const results: ConfidentialBalanceResult[] = settled.map((s) => {
-          if (s.status === "fulfilled") {
-            return { result: s.value, status: "success" as const, error: undefined };
+      const settled = await Promise.allSettled(
+        contracts.map(async (config) => {
+          const account = config.account ?? defaultAccount;
+          if (!account) {
+            throw new Error(
+              "No account address available for contract " + config.contractAddress
+            );
           }
-          const err = s.reason instanceof Error ? s.reason : new Error(String(s.reason));
-          return { result: undefined, status: "failure" as const, error: err };
-        });
+          const abi = config.abi ?? ERC7984_ABI;
+          const contract = new ethers.Contract(config.contractAddress, abi, provider);
+          const result: string = await contract.confidentialBalanceOf(account);
+          logger.debug("[useConfidentialBalances]", "confidentialBalanceOf result:", {
+            contractAddress: config.contractAddress,
+            account,
+            result,
+            isZeroHash: result === ethers.ZeroHash,
+          });
+          return result === ethers.ZeroHash ? undefined : (result as `0x${string}`);
+        })
+      );
 
-        setData(results);
-
-        const hasError = results.some((r) => r.status === "failure");
-        if (hasError) {
-          const firstError = results.find((r) => r.status === "failure")!.error!;
-          setError(firstError);
-          setStatus("error");
-        } else {
-          setStatus("success");
+      const results: ConfidentialBalanceResult[] = settled.map((s) => {
+        if (s.status === "fulfilled") {
+          return { result: s.value, status: "success" as const, error: undefined };
         }
-      } catch (err) {
-        const fetchError = err instanceof Error ? err : new Error(String(err));
-        setError(fetchError);
-        setStatus("error");
-      } finally {
-        setIsRefetching(false);
+        const err = s.reason instanceof Error ? s.reason : new Error(String(s.reason));
+        return { result: undefined, status: "failure" as const, error: err };
+      });
+
+      // If any result failed, throw the first error so the query goes into error state
+      const firstFailure = results.find((r) => r.status === "failure");
+      if (firstFailure) {
+        throw firstFailure.error;
       }
+
+      return results;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [provider, defaultAccount, contractsKey]
-  );
 
-  useEffect(() => {
-    if (!enabled || !providerReady || (!defaultAccount && contracts.every((c) => !c.account))) {
-      if (!enabled) {
-        setStatus("idle");
-        setData(makePendingResults(contracts.length));
-        setError(null);
-        hasFetchedRef.current = false;
-      }
-      return;
-    }
+    enabled: enabled && providerReady && (!!defaultAccount || contracts.some((c) => c.account)),
+    staleTime: FHEVM_QUERY_DEFAULTS.BALANCE_STALE_TIME,
+    gcTime: FHEVM_QUERY_DEFAULTS.BALANCE_GC_TIME,
+  });
 
-    const isRefetch = hasFetchedRef.current;
-    hasFetchedRef.current = true;
-    fetchBalances(isRefetch);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, providerReady, defaultAccount, contractsKey, fetchBalances]);
+  // Derive data with fallback to pending results
+  const data = balanceQuery.data ?? makePendingResults(contracts.length);
 
-  const refetch = useCallback(async () => {
-    if (!enabled) return;
-    await fetchBalances(true);
-  }, [enabled, fetchBalances]);
+  // Map TanStack Query states to our custom BalanceStatus
+  const status: BalanceStatus = useMemo(() => {
+    if (!enabled) return "idle";
+    if (balanceQuery.isLoading) return "loading";
+    if (balanceQuery.isError) return "error";
+    if (balanceQuery.isSuccess) return "success";
+    return "idle";
+  }, [enabled, balanceQuery.isLoading, balanceQuery.isError, balanceQuery.isSuccess]);
 
-  const isLoading = status === "loading";
-  const isFetching = isLoading || isRefetching;
-  const isError = status === "error";
-  const isSuccess = status === "success";
+  const isLoading = enabled && balanceQuery.isLoading;
+  const isRefetching = enabled && balanceQuery.isRefetching;
+  const isFetching = enabled && balanceQuery.isFetching;
+  const isError = enabled && balanceQuery.isError;
+  const isSuccess = enabled && balanceQuery.isSuccess;
+  const error = enabled ? balanceQuery.error ?? null : null;
+
+  // Refetch wrapper
+  const refetch = useCallback(async (): Promise<void> => {
+    await balanceQuery.refetch();
+  }, [balanceQuery]);
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Auto-decryption: compose useUserDecrypt + useUserDecryptedValues
@@ -232,9 +211,8 @@ export function useConfidentialBalances(
 
   const { values: cachedValues, allCached, cachedCount } = useUserDecryptedValues(cacheHandles);
 
-  // 3b. Auto-decrypt: probe storage for a cached EIP-712 signature.
+  // 3b. Auto-decrypt: Check if signature is cached using useSignature hook.
   //     If found, trigger decryption automatically (no wallet popup).
-  const [signatureCached, setSignatureCached] = useState(false);
   const autoDecryptTriggeredRef = useRef(false);
 
   // Stable key for the decrypt requests so we can reset the trigger ref
@@ -243,47 +221,29 @@ export function useConfidentialBalances(
     [decryptRequests]
   );
 
+  // Get unique contract addresses for signature query
+  const signatureContractAddresses = useMemo(() => {
+    if (!decryptRequests) return [];
+    return [...new Set(decryptRequests.map((r) => r.contractAddress))];
+  }, [decryptRequests]);
+
+  // Use the new useSignature hook to reactively check signature availability
+  const { isSignatureCached } = useSignature({
+    contractAddresses: signatureContractAddresses,
+    userAddress: (sharedAccount ?? contextAddress) as `0x${string}` | undefined,
+    enabled: autoDecrypt && !allCached,
+  });
+
   // Reset trigger when the set of handles changes
   useEffect(() => {
     autoDecryptTriggeredRef.current = false;
-    setSignatureCached(false);
   }, [decryptRequestsKey]);
-
-  // Probe storage for an existing signature
-  useEffect(() => {
-    if (!autoDecrypt || !storage || !instance || !decryptRequests || allCached) {
-      return;
-    }
-
-    const userAddr = sharedAccount ?? contextAddress;
-    if (!userAddr) return;
-
-    const contractAddresses = [...new Set(decryptRequests.map((r) => r.contractAddress))];
-
-    let cancelled = false;
-    FhevmDecryptionSignature.loadFromGenericStringStorage(
-      storage,
-      instance,
-      contractAddresses,
-      userAddr
-    )
-      .then((sig) => {
-        if (!cancelled) setSignatureCached(sig !== null);
-      })
-      .catch(() => {
-        if (!cancelled) setSignatureCached(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [autoDecrypt, storage, instance, decryptRequests, allCached, sharedAccount, contextAddress]);
 
   // Auto-trigger decrypt when signature is cached and values aren't already decrypted
   useEffect(() => {
     if (
       autoDecrypt &&
-      signatureCached &&
+      isSignatureCached &&
       canDecrypt &&
       !isDecrypting &&
       !allCached &&
@@ -292,7 +252,7 @@ export function useConfidentialBalances(
       autoDecryptTriggeredRef.current = true;
       triggerDecrypt();
     }
-  }, [autoDecrypt, signatureCached, canDecrypt, isDecrypting, allCached, triggerDecrypt]);
+  }, [autoDecrypt, isSignatureCached, canDecrypt, isDecrypting, allCached, triggerDecrypt]);
 
   // 4. Merge decrypted values into data array
   const enrichedData = useMemo(() => {

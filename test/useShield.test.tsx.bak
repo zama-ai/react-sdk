@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { useShield } from "../src/react/useShield";
 import {
   createTestWrapper,
@@ -100,20 +100,10 @@ describe("useShield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.shield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.shield(100n);
       });
 
-      await waitFor(() => {
-
-
-        expect(result.current.isError).toBe(true);
-
-
-      });
+      expect(result.current.isError).toBe(true);
       expect(result.current.error).toBeDefined();
     });
   });
@@ -134,31 +124,19 @@ describe("useShield", () => {
 
       // Trigger an error state
       await act(async () => {
-        try {
-          await result.current.shield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.shield(100n);
       });
 
-      await waitFor(() => {
-
-
-        expect(result.current.isError).toBe(true);
-
-
-      });
+      expect(result.current.isError).toBe(true);
 
       // Reset
       act(() => {
         result.current.reset();
       });
 
-      await waitFor(() => {
-        expect(result.current.status).toBe("idle");
-        expect(result.current.error).toBeNull();
-        expect(result.current.isError).toBe(false);
-      });
+      expect(result.current.status).toBe("idle");
+      expect(result.current.error).toBeNull();
+      expect(result.current.isError).toBe(false);
     });
   });
 
@@ -182,11 +160,7 @@ describe("useShield", () => {
       );
 
       await act(async () => {
-        try {
-          await result.current.shield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.shield(100n);
       });
 
       expect(onError).toHaveBeenCalled();
@@ -213,19 +187,13 @@ describe("useShield", () => {
       });
 
       await act(async () => {
-        try {
-          await result.current.shield(100n);
-        } catch {
-          // Expected to throw
-        }
+        await result.current.shield(100n);
       });
 
-      await waitFor(() => {
-        expect(result.current.status).toBe("error");
-        expect(result.current.isError).toBe(true);
-        expect(result.current.isSuccess).toBe(false);
-        expect(result.current.isPending).toBe(false);
-      });
+      expect(result.current.status).toBe("error");
+      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(false);
+      expect(result.current.isPending).toBe(false);
     });
   });
 

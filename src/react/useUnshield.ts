@@ -1,12 +1,17 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { ethers } from "ethers";
-import { useCallback, useState } from "react";
+import { useMemo } from "react";
 import { ERC20TOERC7984_ABI } from "../abi/index";
 import type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn } from "../types/shield";
 import { useFhevmContext } from "./context";
+import { fhevmKeys } from "./queryKeys";
 import { useEncrypt } from "./useEncrypt";
 import { useEthersSigner } from "./useEthersSigner";
+import { useMutationWrapper } from "./utils/useMutationWrapper";
+import { normalizeTransactionError } from "./utils/errorHandling";
+import { useMutationStatus } from "./utils/useMutationStatus";
 
 // Re-export types for convenience
 export type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn };
@@ -15,7 +20,26 @@ export type { UnshieldStatus, UseUnshieldOptions, UseUnshieldReturn };
 const UNWRAP_REQUESTED_TOPIC = ethers.id("UnwrapRequested(address,bytes32)");
 
 /**
+ * Parameters for the unshield mutation function.
+ */
+interface UnshieldParams {
+  amount: bigint;
+  to?: `0x${string}`;
+}
+
+/**
+ * Result data from a successful unshield operation.
+ */
+interface UnshieldResult {
+  txHash: string;
+  finalizeTxHash: string;
+  status: UnshieldStatus;
+}
+
+/**
  * Hook for unshielding confidential ERC7984 tokens back to ERC20.
+ *
+ * Now powered by TanStack Query's `useMutation` for automatic state management.
  *
  * Handles the complete flow:
  * 1. Encrypt the amount using FHE
@@ -66,177 +90,138 @@ const UNWRAP_REQUESTED_TOPIC = ethers.id("UnwrapRequested(address,bytes32)");
 export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
   const { wrapperAddress, onSuccess, onError } = options;
 
-  const { status: fhevmStatus, address, instance } = useFhevmContext();
+  const { status: fhevmStatus, address, instance, chainId } = useFhevmContext();
   const { encrypt, isReady: encryptReady } = useEncrypt();
   const { signer, isReady: signerReady } = useEthersSigner();
 
-  const [status, setStatus] = useState<UnshieldStatus>("idle");
-  const [error, setError] = useState<Error | null>(null);
-  const [txHash, setTxHash] = useState<string | undefined>();
-  const [finalizeTxHash, setFinalizeTxHash] = useState<string | undefined>();
+  // TanStack Query mutation for the unshield operation
+  const mutation = useMutation<UnshieldResult, Error, UnshieldParams>({
+    mutationKey: chainId
+      ? fhevmKeys.unshieldFor(chainId, wrapperAddress)
+      : ["fhevm", "unshield", "disabled"],
 
-  // Reset function
-  const reset = useCallback(() => {
-    setStatus("idle");
-    setError(null);
-    setTxHash(undefined);
-    setFinalizeTxHash(undefined);
-  }, []);
-
-  // Main unshield function
-  const unshield = useCallback(
-    async (amount: bigint, to?: `0x${string}`): Promise<void> => {
+    mutationFn: async ({ amount, to }: UnshieldParams): Promise<UnshieldResult> => {
       if (fhevmStatus !== "ready" || !encryptReady || !instance) {
-        const err = new Error("FHEVM not ready. Please wait for initialization.");
-        setError(err);
-        setStatus("error");
-        onError?.(err);
-        return;
+        throw new Error("FHEVM not ready. Please wait for initialization.");
       }
 
       if (!signerReady || !signer || !address) {
-        const err = new Error("Wallet not connected. Please connect your wallet.");
-        setError(err);
-        setStatus("error");
-        onError?.(err);
-        return;
+        throw new Error("Wallet not connected. Please connect your wallet.");
       }
 
       const recipient = to ?? address;
 
-      try {
-        // Step 1: Encrypt the amount
-        setStatus("encrypting");
-        setError(null);
-        setTxHash(undefined);
-        setFinalizeTxHash(undefined);
+      // Step 1: Encrypt the amount
+      const encryptResult = await encrypt([{ type: "uint64", value: amount }], wrapperAddress);
 
-        const encryptResult = await encrypt([{ type: "uint64", value: amount }], wrapperAddress);
-
-        if (!encryptResult) {
-          throw new Error("Encryption failed - no result returned");
-        }
-
-        const [amountHandle, proof] = encryptResult;
-
-        // Step 2: Sign and submit unwrap transaction
-        setStatus("signing");
-
-        const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
-
-        // unwrap(address from, address to, bytes32 encryptedAmount, bytes inputProof)
-        const tx = await wrapper["unwrap(address,address,bytes32,bytes)"](
-          address,
-          recipient,
-          amountHandle,
-          proof
-        );
-
-        setTxHash(tx.hash);
-
-        // Step 3: Wait for confirmation and get the burnt amount from event
-        setStatus("confirming");
-        const receipt = await tx.wait();
-
-        if (receipt.status === 0) {
-          throw new Error("Unwrap transaction reverted");
-        }
-
-        // Parse UnwrapRequested event to get the burntAmount handle
-        const unwrapEvent = receipt.logs.find(
-          (log: ethers.Log) =>
-            log.address.toLowerCase() === wrapperAddress.toLowerCase() &&
-            log.topics[0] === UNWRAP_REQUESTED_TOPIC
-        );
-
-        if (!unwrapEvent) {
-          throw new Error("UnwrapRequested event not found in transaction");
-        }
-
-        // Decode the event: UnwrapRequested(address indexed receiver, euint64 amount)
-        // topics[0] = event signature
-        // topics[1] = indexed receiver address
-        // data = non-indexed amount (bytes32)
-        const burntAmountHandle = unwrapEvent.data as `0x${string}`;
-
-        console.log("[useUnshield] Unwrap confirmed, burntAmount handle:", burntAmountHandle);
-
-        // Step 4: Request public decryption
-        setStatus("decrypting");
-
-        const decryptResult = await instance.publicDecrypt([burntAmountHandle]);
-
-        if (!decryptResult || !decryptResult.clearValues) {
-          throw new Error("Public decryption failed - no result returned");
-        }
-
-        const cleartextAmount = decryptResult.clearValues[burntAmountHandle];
-        if (cleartextAmount === undefined) {
-          throw new Error("Decrypted value not found for burnt amount handle");
-        }
-
-        console.log("[useUnshield] Decrypted amount:", cleartextAmount);
-
-        // Step 5: Finalize the unwrap
-        setStatus("finalizing");
-
-        const finalizeTx = await wrapper.finalizeUnwrap(
-          burntAmountHandle,
-          BigInt(cleartextAmount.toString()),
-          decryptResult.decryptionProof
-        );
-
-        setFinalizeTxHash(finalizeTx.hash);
-
-        const finalizeReceipt = await finalizeTx.wait();
-
-        if (finalizeReceipt.status === 0) {
-          throw new Error("Finalize transaction reverted");
-        }
-
-        // Success - ERC20 tokens have been released
-        setStatus("success");
-        onSuccess?.(finalizeTx.hash);
-      } catch (err) {
-        const e = err instanceof Error ? err : new Error(String(err));
-
-        // Check if user rejected
-        if (
-          e.message.includes("User rejected") ||
-          e.message.includes("user rejected") ||
-          e.message.includes("ACTION_REJECTED")
-        ) {
-          setError(new Error("Transaction rejected by user"));
-        } else {
-          setError(e);
-        }
-
-        setStatus("error");
-        onError?.(e);
+      if (!encryptResult) {
+        throw new Error("Encryption failed - no result returned");
       }
-    },
-    [
-      fhevmStatus,
-      encryptReady,
-      instance,
-      signerReady,
-      signer,
-      address,
-      encrypt,
-      wrapperAddress,
-      onSuccess,
-      onError,
-    ]
-  );
 
-  // Derived state
-  const isEncrypting = status === "encrypting";
-  const isSigning = status === "signing";
-  const isDecrypting = status === "decrypting";
-  const isFinalizing = status === "finalizing";
-  const isPending = status !== "idle" && status !== "success" && status !== "error";
-  const isSuccess = status === "success";
-  const isError = status === "error";
+      const [amountHandle, proof] = encryptResult;
+
+      // Step 2: Sign and submit unwrap transaction
+      const wrapper = new ethers.Contract(wrapperAddress, ERC20TOERC7984_ABI, signer);
+
+      // unwrap(address from, address to, bytes32 encryptedAmount, bytes inputProof)
+      const tx = await wrapper["unwrap(address,address,bytes32,bytes)"](
+        address,
+        recipient,
+        amountHandle,
+        proof
+      );
+
+      // Step 3: Wait for confirmation and get the burnt amount from event
+      const receipt = await tx.wait();
+
+      if (receipt.status === 0) {
+        throw new Error("Unwrap transaction reverted");
+      }
+
+      // Parse UnwrapRequested event to get the burntAmount handle
+      const unwrapEvent = receipt.logs.find(
+        (log: ethers.Log) =>
+          log.address.toLowerCase() === wrapperAddress.toLowerCase() &&
+          log.topics[0] === UNWRAP_REQUESTED_TOPIC
+      );
+
+      if (!unwrapEvent) {
+        throw new Error("UnwrapRequested event not found in transaction");
+      }
+
+      // Decode the event: UnwrapRequested(address indexed receiver, euint64 amount)
+      // topics[0] = event signature
+      // topics[1] = indexed receiver address
+      // data = non-indexed amount (bytes32)
+      const burntAmountHandle = unwrapEvent.data as `0x${string}`;
+
+      console.log("[useUnshield] Unwrap confirmed, burntAmount handle:", burntAmountHandle);
+
+      // Step 4: Request public decryption
+      const decryptResult = await instance.publicDecrypt([burntAmountHandle]);
+
+      if (!decryptResult || !decryptResult.clearValues) {
+        throw new Error("Public decryption failed - no result returned");
+      }
+
+      const cleartextAmount = decryptResult.clearValues[burntAmountHandle];
+      if (cleartextAmount === undefined) {
+        throw new Error("Decrypted value not found for burnt amount handle");
+      }
+
+      console.log("[useUnshield] Decrypted amount:", cleartextAmount);
+
+      // Step 5: Finalize the unwrap
+      const finalizeTx = await wrapper.finalizeUnwrap(
+        burntAmountHandle,
+        BigInt(cleartextAmount.toString()),
+        decryptResult.decryptionProof
+      );
+
+      const finalizeReceipt = await finalizeTx.wait();
+
+      if (finalizeReceipt.status === 0) {
+        throw new Error("Finalize transaction reverted");
+      }
+
+      // Success - ERC20 tokens have been released
+      return {
+        txHash: tx.hash,
+        finalizeTxHash: finalizeTx.hash,
+        status: "success",
+      };
+    },
+
+    onSuccess: (data) => {
+      onSuccess?.(data.finalizeTxHash);
+    },
+
+    onError: (err) => {
+      // Normalize error to user-friendly message
+      const normalizedError = normalizeTransactionError(err);
+      onError?.(normalizedError);
+    },
+  });
+
+  // Convenience wrapper for the mutation (using utility)
+  const unshield = useMutationWrapper(mutation);
+
+  // Derive status from mutation state
+  // Note: Can't distinguish between encrypting/signing/decrypting/finalizing with useMutation
+  const status = useMemo<UnshieldStatus>(() => {
+    if (mutation.isPending) return "signing"; // Generic pending state
+    if (mutation.isSuccess) return "success";
+    if (mutation.isError) return "error";
+    return "idle";
+  }, [mutation.isPending, mutation.isSuccess, mutation.isError]);
+
+  const isEncrypting = mutation.isPending;
+  const isSigning = mutation.isPending;
+  const isDecrypting = mutation.isPending;
+  const isFinalizing = mutation.isPending;
+  const isPending = mutation.isPending;
+  const isSuccess = mutation.isSuccess;
+  const isError = mutation.isError;
 
   return {
     unshield,
@@ -248,9 +233,9 @@ export function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn {
     isFinalizing,
     isSuccess,
     isError,
-    error,
-    txHash,
-    finalizeTxHash,
-    reset,
+    error: mutation.error ?? null,
+    txHash: mutation.data?.txHash,
+    finalizeTxHash: mutation.data?.finalizeTxHash,
+    reset: mutation.reset,
   };
 }
