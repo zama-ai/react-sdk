@@ -1,5 +1,5 @@
 /**
- * Global type declarations for fhevm-sdk.
+ * Global type declarations for @zama-fhe/react-sdk.
  */
 
 declare global {

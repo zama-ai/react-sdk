@@ -57,7 +57,7 @@ let config: LoggerConfig = {
  *
  * @example
  * ```ts
- * import { configureLogger } from 'fhevm-sdk';
+ * import { configureLogger } from '@zama-fhe/react-sdk';
  *
  * // Enable debug logging in production
  * configureLogger({ enabled: true });

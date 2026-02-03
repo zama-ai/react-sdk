@@ -1,6 +1,6 @@
 # 🔒 Security Quick Reference
 
-> **Quick security guide for developers using `@zama-fhe/sdk`**
+> **Quick security guide for developers using `@zama-fhe/react-sdk`**
 
 [![Security](https://img.shields.io/badge/security-reviewed-green.svg)](./SECURITY_ANALYSIS.md)
 [![OWASP](https://img.shields.io/badge/OWASP-25%25-orange.svg)](./SECURITY_ANALYSIS.md)
@@ -28,14 +28,14 @@
 
 ```typescript
 // Option 1: Memory storage (most secure, re-sign on refresh)
-import { memoryStorage } from '@zama-fhe/sdk';
+import { memoryStorage } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={memoryStorage} ... />
 ```
 
 ```typescript
 // Option 2: Encrypted storage (secure + persistent)
-import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/sdk';
+import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/react-sdk';
 
 const key = await generateDeviceKey();
 const storage = new EncryptedStorageAdapter(localStorage, { key });
@@ -45,7 +45,7 @@ const storage = new EncryptedStorageAdapter(localStorage, { key });
 
 ```typescript
 // Option 3: Session storage (secure, cleared on tab close)
-import { sessionStorageAdapter } from '@zama-fhe/sdk';
+import { sessionStorageAdapter } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={sessionStorageAdapter} ... />
 ```
@@ -60,7 +60,7 @@ import { sessionStorageAdapter } from '@zama-fhe/sdk';
 // - You understand XSS risks
 // - Your app has strong XSS protections
 // - You're okay with persistent storage
-import { localStorageAdapter } from '@zama-fhe/sdk';
+import { localStorageAdapter } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={localStorageAdapter} ... />
 ```
@@ -153,9 +153,9 @@ for (let key of Object.keys(localStorage)) {
 // app/providers.tsx
 'use client';
 
-import { FhevmProvider, createFhevmConfig } from '@zama-fhe/sdk';
-import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/sdk/storage';
-import { sepolia } from '@zama-fhe/sdk/chains';
+import { FhevmProvider, createFhevmConfig } from '@zama-fhe/react-sdk';
+import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/react-sdk/storage';
+import { sepolia } from '@zama-fhe/react-sdk/chains';
 
 const config = createFhevmConfig({
   chains: [sepolia],
@@ -185,8 +185,8 @@ export function Providers({ children }) {
 
 ```typescript
 // dev/providers.tsx
-import { memoryStorage } from '@zama-fhe/sdk';
-import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/sdk/security';
+import { memoryStorage } from '@zama-fhe/react-sdk';
+import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/react-sdk/security';
 
 // Enable security logging in dev
 const logger = new MemorySecurityLogger();
@@ -361,7 +361,7 @@ const durationDays = 365; // Keys valid for 1 year!
 ### Enable Logging
 
 ```typescript
-import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/sdk/security';
+import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/react-sdk/security';
 
 // In app initialization
 const logger = new MemorySecurityLogger(1000); // Keep last 1000 events
@@ -371,7 +371,7 @@ setSecurityLogger(logger);
 ### Monitor Events
 
 ```typescript
-import { getSecurityLogger, SecurityEventType } from '@zama-fhe/sdk/security';
+import { getSecurityLogger, SecurityEventType } from '@zama-fhe/react-sdk/security';
 
 // Check for failed decrypts
 const logger = getSecurityLogger();
@@ -387,7 +387,7 @@ if (failures.length > 10) {
 ### Custom Logger
 
 ```typescript
-import { SecurityLogger, SecurityEvent } from '@zama-fhe/sdk/security';
+import { SecurityLogger, SecurityEvent } from '@zama-fhe/react-sdk/security';
 
 class ProductionSecurityLogger implements SecurityLogger {
   log(event: SecurityEvent): void {

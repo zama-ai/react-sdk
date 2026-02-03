@@ -1,6 +1,6 @@
 # Threading & Performance
 
-The FHE encryption operations in @zama-fhe/sdk can run in two modes: **multi-threaded** (faster) or **single-threaded** (more compatible). This page explains the trade-offs and how to configure each.
+The FHE encryption operations in @zama-fhe/react-sdk can run in two modes: **multi-threaded** (faster) or **single-threaded** (more compatible). This page explains the trade-offs and how to configure each.
 
 ## Overview
 

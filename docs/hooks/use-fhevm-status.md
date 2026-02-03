@@ -5,7 +5,7 @@ Hook for checking FHEVM initialization status.
 ## Import
 
 ```tsx
-import { useFhevmStatus } from "@zama-fhe/sdk";
+import { useFhevmStatus } from "@zama-fhe/react-sdk";
 ```
 
 ## Usage

@@ -10,24 +10,24 @@
 ## Install the Package
 
 ```bash
-pnpm add @zama-fhe/sdk
+pnpm add @zama-fhe/react-sdk
 ```
 
 Or with npm:
 
 ```bash
-npm install @zama-fhe/sdk
+npm install @zama-fhe/react-sdk
 ```
 
 Or with yarn:
 
 ```bash
-yarn add @zama-fhe/sdk
+yarn add @zama-fhe/react-sdk
 ```
 
 ## Peer Dependencies
 
-@zama-fhe/sdk requires the following peer dependencies:
+@zama-fhe/react-sdk requires the following peer dependencies:
 
 ```bash
 pnpm add wagmi viem @tanstack/react-query ethers

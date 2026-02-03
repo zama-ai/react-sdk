@@ -1,6 +1,6 @@
 # Types Reference
 
-This page documents all TypeScript types exported by @zama-fhe/sdk.
+This page documents all TypeScript types exported by @zama-fhe/react-sdk.
 
 ## Core Types
 

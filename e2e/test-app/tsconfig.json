@@ -15,8 +15,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@zama-fhe/sdk": ["../../src"],
-      "@zama-fhe/sdk/*": ["../../src/*"]
+      "@zama-fhe/react-sdk": ["../../src"],
+      "@zama-fhe/react-sdk/*": ["../../src/*"]
     }
   },
   "include": ["src"]

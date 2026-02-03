@@ -10,7 +10,7 @@ This hook runs the full flow:
 ## Import
 
 ```tsx
-import { useConfidentialTransfer } from "@zama-fhe/sdk";
+import { useConfidentialTransfer } from "@zama-fhe/react-sdk";
 ```
 
 ## Usage

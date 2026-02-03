@@ -287,7 +287,7 @@ For production applications, use `EncryptedStorageAdapter` to encrypt private ke
 import {
   EncryptedStorageAdapter,
   generateDeviceKey,
-} from '@zama-fhe/sdk/storage';
+} from '@zama-fhe/react-sdk/storage';
 
 // Generate and store device key (once per device)
 const deviceKey = await generateDeviceKey();
@@ -307,7 +307,7 @@ const storage = new EncryptedStorageAdapter(localStorage, {
 import {
   EncryptedStorageAdapter,
   deriveKeyFromPassword,
-} from '@zama-fhe/sdk/storage';
+} from '@zama-fhe/react-sdk/storage';
 
 // Prompt user for password
 const password = await promptForPassword();
@@ -590,7 +590,7 @@ export class FhevmDecryptionSignature {
 
 - [ ] ✅ **Enable security event logging**
   ```typescript
-  import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/sdk';
+  import { MemorySecurityLogger, setSecurityLogger } from '@zama-fhe/react-sdk';
 
   setSecurityLogger(new MemorySecurityLogger());
   ```
@@ -704,7 +704,7 @@ export interface FhevmProviderProps {
    *
    * @example
    * ```typescript
-   * import { MemorySecurityLogger } from '@zama-fhe/sdk';
+   * import { MemorySecurityLogger } from '@zama-fhe/react-sdk';
    *
    * <FhevmProvider
    *   securityLogger={new MemorySecurityLogger()}

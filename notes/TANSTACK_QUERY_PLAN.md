@@ -1,6 +1,6 @@
 # TanStack Query Integration Plan
 
-This document analyzes the current TanStack Query usage in the `@zama-fhe/sdk` and outlines opportunities for deeper integration.
+This document analyzes the current TanStack Query usage in the `@zama-fhe/react-sdk` and outlines opportunities for deeper integration.
 
 ---
 

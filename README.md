@@ -1,4 +1,4 @@
-# @zama-fhe/sdk
+# @zama-fhe/react-sdk
 
 React SDK for building applications with Fully Homomorphic Encryption (FHE) on EVM chains.
 
@@ -14,11 +14,11 @@ React SDK for building applications with Fully Homomorphic Encryption (FHE) on E
 ## Installation
 
 ```bash
-npm install @zama-fhe/sdk
+npm install @zama-fhe/react-sdk
 # or
-pnpm add @zama-fhe/sdk
+pnpm add @zama-fhe/react-sdk
 # or
-yarn add @zama-fhe/sdk
+yarn add @zama-fhe/react-sdk
 ```
 
 ### Peer Dependencies
@@ -32,7 +32,7 @@ npm install react @tanstack/react-query
 ### 1. Create Configuration
 
 ```tsx
-import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/sdk";
+import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/react-sdk";
 
 export const fhevmConfig = createFhevmConfig({
   chains: [sepolia, hardhatLocal],
@@ -42,7 +42,7 @@ export const fhevmConfig = createFhevmConfig({
 ### 2. Set Up Providers
 
 ```tsx
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/react-sdk";
 import { WagmiProvider, useAccount, useConnectorClient } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -81,7 +81,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ### 3. Encrypt Values
 
 ```tsx
-import { useEncrypt, useFhevmStatus } from "@zama-fhe/sdk";
+import { useEncrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
 import { useWriteContract } from "wagmi";
 
 function TransferForm({ contractAddress }) {
@@ -117,7 +117,7 @@ function TransferForm({ contractAddress }) {
 ### 4. Decrypt Values
 
 ```tsx
-import { useUserDecrypt } from "@zama-fhe/sdk";
+import { useUserDecrypt } from "@zama-fhe/react-sdk";
 
 function BalanceDisplay({ handle, contractAddress }) {
   const { decrypt, results, isDecrypting, canDecrypt } = useUserDecrypt({
@@ -156,16 +156,16 @@ function BalanceDisplay({ handle, contractAddress }) {
 
 ```tsx
 // Main entry - hooks and provider
-import { FhevmProvider, useEncrypt, useFhevmStatus } from "@zama-fhe/sdk";
+import { FhevmProvider, useEncrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
 
 // Chain configurations
-import { sepolia, hardhatLocal, createFhevmConfig } from "@zama-fhe/sdk/chains";
+import { sepolia, hardhatLocal, createFhevmConfig } from "@zama-fhe/react-sdk/chains";
 
 // Storage adapters
-import { memoryStorage, indexedDbStorage } from "@zama-fhe/sdk/storage";
+import { memoryStorage, indexedDbStorage } from "@zama-fhe/react-sdk/storage";
 
 // TypeScript types
-import type { EncryptInput, FhevmConfig } from "@zama-fhe/sdk/types";
+import type { EncryptInput, FhevmConfig } from "@zama-fhe/react-sdk/types";
 ```
 
 ## Supported Chains

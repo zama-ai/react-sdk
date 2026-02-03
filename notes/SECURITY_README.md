@@ -1,6 +1,6 @@
 # 🔒 Security Documentation
 
-> **Comprehensive security guidance for `@zama-fhe/sdk`**
+> **Comprehensive security guidance for `@zama-fhe/react-sdk`**
 
 [![Security Analysis](https://img.shields.io/badge/security-analyzed-green.svg)](./SECURITY_ANALYSIS.md)
 [![Risk Level](https://img.shields.io/badge/risk-MEDIUM--HIGH-orange.svg)](./SECURITY_ANALYSIS.md)
@@ -99,7 +99,7 @@ This directory contains comprehensive security analysis and implementation plans
 
 ```typescript
 // Best: Memory storage (re-sign on refresh)
-import { memoryStorage } from '@zama-fhe/sdk';
+import { memoryStorage } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={memoryStorage} {...props} />
 ```
@@ -108,7 +108,7 @@ import { memoryStorage } from '@zama-fhe/sdk';
 
 ```typescript
 // Safe: Session storage (cleared on tab close)
-import { sessionStorageAdapter } from '@zama-fhe/sdk';
+import { sessionStorageAdapter } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={sessionStorageAdapter} {...props} />
 ```
@@ -117,7 +117,7 @@ import { sessionStorageAdapter } from '@zama-fhe/sdk';
 
 ```typescript
 // Best: Encrypted storage (persistent + secure)
-import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/sdk';
+import { EncryptedStorageAdapter, generateDeviceKey } from '@zama-fhe/react-sdk';
 
 const key = await generateDeviceKey();
 const storage = new EncryptedStorageAdapter(localStorage, { key });
@@ -129,7 +129,7 @@ const storage = new EncryptedStorageAdapter(localStorage, { key });
 
 ```typescript
 // ❌ NEVER in production
-import { localStorageAdapter } from '@zama-fhe/sdk';
+import { localStorageAdapter } from '@zama-fhe/react-sdk';
 
 <FhevmProvider storage={localStorageAdapter} {...props} />
 // Vulnerable to XSS attacks!

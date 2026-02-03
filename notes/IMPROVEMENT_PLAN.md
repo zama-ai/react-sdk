@@ -1,6 +1,6 @@
 # React SDK Improvement Plan
 
-This document outlines a comprehensive plan to address code quality, security, and architectural issues identified in the `@zama-fhe/sdk` codebase.
+This document outlines a comprehensive plan to address code quality, security, and architectural issues identified in the `@zama-fhe/react-sdk` codebase.
 
 ---
 

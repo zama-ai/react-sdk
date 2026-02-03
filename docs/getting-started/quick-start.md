@@ -1,6 +1,6 @@
 # Quick Start
 
-This guide walks you through setting up @zama-fhe/sdk in a React application.
+This guide walks you through setting up @zama-fhe/react-sdk in a React application.
 
 ## 1. Create Configuration
 
@@ -8,7 +8,7 @@ First, create a configuration with your supported chains:
 
 ```tsx
 // config/fhevm.ts
-import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/sdk";
+import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/react-sdk";
 
 export const fhevmConfig = createFhevmConfig({
   chains: [sepolia, hardhatLocal],
@@ -23,7 +23,7 @@ Wrap your application with the FhevmProvider after WagmiProvider:
 // app/providers.tsx
 "use client";
 
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/react-sdk";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAccount, useConnectorClient } from "wagmi";
@@ -69,7 +69,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 If you're not using wagmi, pass the provider directly:
 
 ```tsx
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/react-sdk";
 
 function FhevmWrapper({ children }: { children: React.ReactNode }) {
   const { address, chainId, isConnected } = useWallet(); // Your wallet hook
@@ -94,7 +94,7 @@ function FhevmWrapper({ children }: { children: React.ReactNode }) {
 Use the `useEncrypt` hook to encrypt values for contract calls:
 
 ```tsx
-import { useEncrypt } from "@zama-fhe/sdk";
+import { useEncrypt } from "@zama-fhe/react-sdk";
 
 function TransferForm({ contractAddress }) {
   const { encrypt, isReady } = useEncrypt();
@@ -140,7 +140,7 @@ function TransferForm({ contractAddress }) {
 Use the `useUserDecrypt` hook to decrypt encrypted values:
 
 ```tsx
-import { useUserDecrypt } from "@zama-fhe/sdk";
+import { useUserDecrypt } from "@zama-fhe/react-sdk";
 
 function BalanceDisplay({ handle, contractAddress }) {
   const { decrypt, results, isDecrypting, canDecrypt } = useUserDecrypt({
@@ -166,7 +166,7 @@ function BalanceDisplay({ handle, contractAddress }) {
 Use the `useFhevmStatus` hook for conditional rendering:
 
 ```tsx
-import { useFhevmStatus } from "@zama-fhe/sdk";
+import { useFhevmStatus } from "@zama-fhe/react-sdk";
 
 function FHEStatus() {
   const { status, isReady, isInitializing, isError, error } = useFhevmStatus();
@@ -192,7 +192,7 @@ function FHEStatus() {
 Here's a complete component combining encryption, decryption, and status:
 
 ```tsx
-import { useEncrypt, useUserDecrypt, useFhevmStatus } from "@zama-fhe/sdk";
+import { useEncrypt, useUserDecrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
 import { useReadContract, useWriteContract } from "wagmi";
 
 function EncryptedToken({ contractAddress, userAddress }) {

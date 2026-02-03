@@ -1,6 +1,6 @@
 # React SDK Development Notes
 
-This directory contains architectural documentation, analysis, and plans for the `@zama-fhe/sdk` React SDK.
+This directory contains architectural documentation, analysis, and plans for the `@zama-fhe/react-sdk` React SDK.
 
 ---
 

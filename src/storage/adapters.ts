@@ -1,5 +1,5 @@
 /**
- * Storage adapters for fhevm-sdk.
+ * Storage adapters for @zama-fhe/react-sdk.
  *
  * SECURITY NOTE: The SDK does NOT choose a default storage.
  * Developers must explicitly choose their storage strategy.

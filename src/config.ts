@@ -123,7 +123,7 @@ export interface FhevmConfig {
  *
  * @example
  * ```ts
- * import { createFhevmConfig, sepolia, hardhatLocal } from 'fhevm-sdk'
+ * import { createFhevmConfig, sepolia, hardhatLocal } from '@zama-fhe/react-sdk'
  *
  * const config = createFhevmConfig({
  *   chains: [sepolia, hardhatLocal],

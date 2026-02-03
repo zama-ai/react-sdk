@@ -119,4 +119,4 @@ jobs:
       - name: Verify exports
         run: |
           # Verify main export
-          node -e "import('@zama-fhe/sdk').then(m => console.log('Main export OK:', Object.keys(m)))" || echo "Main export check skipped (not published)"
+          node -e "import('@zama-fhe/react-sdk').then(m => console.log('Main export OK:', Object.keys(m)))" || echo "Main export check skipped (not published)"

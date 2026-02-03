@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in @zama-fhe/sdk
+about: Report a bug in @zama-fhe/react-sdk
 title: "[Bug]: "
 labels: bug
 assignees: ""

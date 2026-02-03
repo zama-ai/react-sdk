@@ -1,6 +1,6 @@
 # React SDK Testing Plan
 
-This document outlines a comprehensive testing strategy for `@zama-fhe/sdk`, including unit tests, integration tests, and end-to-end tests for FHE encryption and decryption flows.
+This document outlines a comprehensive testing strategy for `@zama-fhe/react-sdk`, including unit tests, integration tests, and end-to-end tests for FHE encryption and decryption flows.
 
 ---
 

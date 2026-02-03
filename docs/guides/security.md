@@ -1,6 +1,6 @@
 # 🔒 Security Guide
 
-> **Essential security considerations when using @zama-fhe/sdk**
+> **Essential security considerations when using @zama-fhe/react-sdk**
 
 [![Security](https://img.shields.io/badge/security-critical-red.svg)]()
 [![Read Time](https://img.shields.io/badge/read%20time-10%20min-blue.svg)]()
@@ -22,7 +22,7 @@
 
 ## Overview
 
-`@zama-fhe/sdk` handles sensitive cryptographic material including:
+`@zama-fhe/react-sdk` handles sensitive cryptographic material including:
 
 - **Decryption private keys** - Used to decrypt FHE ciphertext
 - **EIP-712 signatures** - Proves user authorization for decryption
@@ -83,7 +83,7 @@ const stolenData = Object.keys(localStorage)
 For applications handling highly sensitive data, use `memoryStorage`:
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
 
 <FhevmProvider
   config={fhevmConfig}
@@ -214,7 +214,7 @@ This fallback happens automatically in:
 You can check which storage is being used:
 
 ```tsx
-import { getPublicKeyStorageType } from "@zama-fhe/sdk";
+import { getPublicKeyStorageType } from "@zama-fhe/react-sdk";
 
 const storageType = getPublicKeyStorageType();
 // Returns: "indexeddb" | "memory" | "none"
@@ -229,7 +229,7 @@ The SDK includes a configurable logger. By default:
 To enable debug logs in production (not recommended):
 
 ```tsx
-import { configureLogger } from "@zama-fhe/sdk";
+import { configureLogger } from "@zama-fhe/react-sdk";
 
 configureLogger({
   enabled: true,
@@ -251,7 +251,7 @@ The SDK loads the relayer-sdk from Zama's CDN. The loader includes:
 For enhanced security, consider self-hosting the relayer SDK:
 
 ```tsx
-import { RelayerSDKLoader } from "@zama-fhe/sdk";
+import { RelayerSDKLoader } from "@zama-fhe/react-sdk";
 
 const loader = new RelayerSDKLoader({
   cdnUrl: "https://your-cdn.com/relayer-sdk.min.js",
@@ -289,7 +289,7 @@ Before deploying to production:
 
 ## Reporting Security Issues
 
-If you discover a security vulnerability in @zama-fhe/sdk:
+If you discover a security vulnerability in @zama-fhe/react-sdk:
 
 1. **Do not** open a public issue
 2. Email security@zama.ai with details

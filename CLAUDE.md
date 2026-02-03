@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**@zama-fhe/sdk** - React SDK for Fully Homomorphic Encryption (FHE) on EVM chains. Provides wagmi-style hooks for encrypting, decrypting, and managing FHE operations in React applications.
+**@zama-fhe/react-sdk** - React SDK for Fully Homomorphic Encryption (FHE) on EVM chains. Provides wagmi-style hooks for encrypting, decrypting, and managing FHE operations in React applications.
 
 ## Commands
 
@@ -42,9 +42,9 @@ Hooks (useEncrypt, useUserDecrypt, etc.)
 2. **Wagmi-style API** - Return shapes match wagmi conventions (`data`, `isLoading`, `error`, `status`)
 3. **Subpath exports** - SDK uses TypeScript's subpath exports:
    ```typescript
-   import { FhevmProvider } from "@zama-fhe/sdk";
-   import { sepolia } from "@zama-fhe/sdk/chains";
-   import { memoryStorage } from "@zama-fhe/sdk/storage";
+   import { FhevmProvider } from "@zama-fhe/react-sdk";
+   import { sepolia } from "@zama-fhe/react-sdk/chains";
+   import { memoryStorage } from "@zama-fhe/react-sdk/storage";
    ```
 
 ### Hook Pattern
@@ -115,7 +115,7 @@ await waitFor(() => expect(result.current.data).toBeDefined());
 
 This SDK is used by the dApps monorepo at `../dapps/` via file path linking:
 ```json
-"@zama-fhe/sdk": "file:../../../react-sdk"
+"@zama-fhe/react-sdk": "file:../../../react-sdk"
 ```
 
 After modifying SDK code, run `pnpm build` before testing in dApps.

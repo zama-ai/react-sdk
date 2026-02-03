@@ -1,5 +1,5 @@
 {
-  "name": "@zama-fhe/sdk",
+  "name": "@zama-fhe/react-sdk",
   "version": "0.1.0",
   "description": "React SDK for building applications with Fully Homomorphic Encryption (FHE) on EVM chains",
   "type": "module",

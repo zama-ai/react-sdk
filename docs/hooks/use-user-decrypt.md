@@ -5,7 +5,7 @@ Hook for decrypting FHE encrypted values.
 ## Import
 
 ```tsx
-import { useUserDecrypt } from "@zama-fhe/sdk";
+import { useUserDecrypt } from "@zama-fhe/react-sdk";
 ```
 
 ## Usage

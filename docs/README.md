@@ -1,8 +1,8 @@
-# @zama-fhe/sdk
+# @zama-fhe/react-sdk
 
 > **React SDK for building applications with Fully Homomorphic Encryption (FHE) on EVM chains**
 
-[![npm version](https://img.shields.io/npm/v/@zama-fhe/sdk.svg)](https://www.npmjs.com/package/@zama-fhe/sdk)
+[![npm version](https://img.shields.io/npm/v/@zama-fhe/react-sdk.svg)](https://www.npmjs.com/package/@zama-fhe/react-sdk)
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 
@@ -10,7 +10,7 @@
 
 ## 🌟 Overview
 
-`@zama-fhe/sdk` provides **wagmi-style React hooks** for encrypting, decrypting, and managing FHE operations in React applications. It integrates seamlessly with wagmi and TanStack Query for a modern, familiar developer experience.
+`@zama-fhe/react-sdk` provides **wagmi-style React hooks** for encrypting, decrypting, and managing FHE operations in React applications. It integrates seamlessly with wagmi and TanStack Query for a modern, familiar developer experience.
 
 ## ✨ Features
 
@@ -24,7 +24,7 @@
 ## Quick Example
 
 ```tsx
-import { useEncrypt, useFhevmStatus } from "@zama-fhe/sdk";
+import { useEncrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
 import { useWriteContract } from "wagmi";
 
 function EncryptedTransfer({ contractAddress, tokenAbi }) {
@@ -65,13 +65,13 @@ function EncryptedTransfer({ contractAddress, tokenAbi }) {
 ## 📦 Installation
 
 ```bash
-npm install @zama-fhe/sdk wagmi viem @tanstack/react-query
+npm install @zama-fhe/react-sdk wagmi viem @tanstack/react-query
 
 # or
-pnpm add @zama-fhe/sdk wagmi viem @tanstack/react-query
+pnpm add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
 
 # or
-yarn add @zama-fhe/sdk wagmi viem @tanstack/react-query
+yarn add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
 ```
 
 ---

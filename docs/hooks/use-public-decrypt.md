@@ -5,7 +5,7 @@ Hook for public decryption of FHE encrypted values.
 ## Import
 
 ```tsx
-import { usePublicDecrypt } from "@zama-fhe/sdk";
+import { usePublicDecrypt } from "@zama-fhe/react-sdk";
 ```
 
 ## Overview
@@ -128,7 +128,7 @@ contract PublicAuction {
 ### React Component with Callback
 
 ```tsx
-import { usePublicDecrypt } from "@zama-fhe/sdk";
+import { usePublicDecrypt } from "@zama-fhe/react-sdk";
 import { useWriteContract, useReadContract } from "wagmi";
 
 function RevealAuction({ contractAddress }) {

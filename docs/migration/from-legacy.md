@@ -57,14 +57,14 @@ function App() {
 
 ```tsx
 // config/fhevm.ts
-import { createFhevmConfig, sepolia } from "@zama-fhe/sdk";
+import { createFhevmConfig, sepolia } from "@zama-fhe/react-sdk";
 
 export const fhevmConfig = createFhevmConfig({
   chains: [sepolia],
 });
 
 // providers.tsx
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/react-sdk";
 import { useAccount, useConnectorClient } from "wagmi";
 
 function FhevmWrapper({ children }) {
@@ -99,7 +99,7 @@ function FhevmWrapper({ children }) {
 **Before (Legacy):**
 
 ```tsx
-import { useFHEEncryption } from "@zama-fhe/sdk";
+import { useFHEEncryption } from "@zama-fhe/react-sdk";
 
 function TransferForm({ instance, userAddress, contractAddress }) {
   const { encryptWith, canEncrypt } = useFHEEncryption({
@@ -127,7 +127,7 @@ function TransferForm({ instance, userAddress, contractAddress }) {
 **After (New):**
 
 ```tsx
-import { useEncrypt } from "@zama-fhe/sdk";
+import { useEncrypt } from "@zama-fhe/react-sdk";
 
 function TransferForm({ contractAddress }) {
   const { encrypt, isReady } = useEncrypt();
@@ -162,7 +162,7 @@ function TransferForm({ contractAddress }) {
 **Before (Legacy):**
 
 ```tsx
-import { useFHEDecrypt } from "@zama-fhe/sdk";
+import { useFHEDecrypt } from "@zama-fhe/react-sdk";
 
 function BalanceDisplay({ instance, provider, address, handle, contractAddress }) {
   const {
@@ -196,7 +196,7 @@ function BalanceDisplay({ instance, provider, address, handle, contractAddress }
 **After (New):**
 
 ```tsx
-import { useUserDecrypt } from "@zama-fhe/sdk";
+import { useUserDecrypt } from "@zama-fhe/react-sdk";
 
 function BalanceDisplay({ handle, contractAddress }) {
   const {
@@ -236,7 +236,7 @@ function BalanceDisplay({ handle, contractAddress }) {
 **Before (Legacy):**
 
 ```tsx
-import { useFhevm } from "@zama-fhe/sdk";
+import { useFhevm } from "@zama-fhe/react-sdk";
 
 function App() {
   const { instance, status, error } = useFhevm({
@@ -255,7 +255,7 @@ function App() {
 **After (New):**
 
 ```tsx
-import { useFhevmStatus } from "@zama-fhe/sdk";
+import { useFhevmStatus } from "@zama-fhe/react-sdk";
 
 function App() {
   const { status, isReady, isInitializing, isError, error } = useFhevmStatus();
@@ -291,7 +291,7 @@ const { instance } = useFhevm({ provider, chainId });
 **After (New):**
 
 ```tsx
-import { useFhevmContext } from "@zama-fhe/sdk";
+import { useFhevmContext } from "@zama-fhe/react-sdk";
 
 function MyComponent() {
   const { instance, status } = useFhevmContext();
@@ -308,8 +308,8 @@ function MyComponent() {
 ### Before (Legacy)
 
 ```tsx
-import { useFhevm, useFHEEncryption, useFHEDecrypt } from "@zama-fhe/sdk";
-import { GenericStringInMemoryStorage } from "@zama-fhe/sdk";
+import { useFhevm, useFHEEncryption, useFHEDecrypt } from "@zama-fhe/react-sdk";
+import { GenericStringInMemoryStorage } from "@zama-fhe/react-sdk";
 
 const storage = new GenericStringInMemoryStorage();
 
@@ -373,11 +373,11 @@ function TokenBalance({ instance, provider, address, storage }) {
 
 ```tsx
 // config/fhevm.ts
-import { createFhevmConfig, sepolia } from "@zama-fhe/sdk";
+import { createFhevmConfig, sepolia } from "@zama-fhe/react-sdk";
 export const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
 
 // providers.tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/sdk";
+import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
 
 function Providers({ children }) {
   const { address, chainId, isConnected } = useAccount();
@@ -398,7 +398,7 @@ function Providers({ children }) {
 }
 
 // TokenBalance.tsx
-import { useFhevmStatus, useEncrypt, useUserDecrypt } from "@zama-fhe/sdk";
+import { useFhevmStatus, useEncrypt, useUserDecrypt } from "@zama-fhe/react-sdk";
 
 function TokenBalance() {
   const { isReady } = useFhevmStatus();

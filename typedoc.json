@@ -29,7 +29,7 @@
   ],
   "navigationLinks": {
     "GitHub": "https://github.com/zama-ai/react-sdk",
-    "npm": "https://www.npmjs.com/package/@zama-fhe/sdk"
+    "npm": "https://www.npmjs.com/package/@zama-fhe/react-sdk"
   },
   "cleanOutputDir": true,
   "validation": {

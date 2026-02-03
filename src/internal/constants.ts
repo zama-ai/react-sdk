@@ -1,5 +1,5 @@
 /**
- * Relayer SDK version locked in the fhevm-sdk.
+ * Relayer SDK version locked in the @zama-fhe/react-sdk.
  * Users don't need to manage this - it's handled internally.
  */
 export const RELAYER_SDK_VERSION = "0.4.0";

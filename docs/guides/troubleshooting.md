@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Common issues and solutions when using @zama-fhe/sdk.
+Common issues and solutions when using @zama-fhe/react-sdk.
 
 ## FHEVM Initialization Issues
 
@@ -39,7 +39,7 @@ useEffect(() => {
 **Solution:** Add the chain to your configuration:
 
 ```tsx
-import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/sdk";
+import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/react-sdk";
 
 const config = createFhevmConfig({
   chains: [sepolia, hardhatLocal], // Include all chains you need
@@ -212,7 +212,7 @@ console.log("Success:", isSuccess);
 **Solution:** Use persistent storage if you want to avoid re-signing:
 
 ```tsx
-import { FhevmProvider, sessionStorageAdapter } from "@zama-fhe/sdk";
+import { FhevmProvider, sessionStorageAdapter } from "@zama-fhe/react-sdk";
 
 <FhevmProvider
   storage={sessionStorageAdapter} // Persists until tab closes
@@ -232,7 +232,7 @@ import { FhevmProvider, sessionStorageAdapter } from "@zama-fhe/sdk";
 // Next.js App Router
 "use client";
 
-import { FhevmProvider } from "@zama-fhe/sdk";
+import { FhevmProvider } from "@zama-fhe/react-sdk";
 
 export function Providers({ children }) {
   return (
@@ -306,7 +306,7 @@ return (
 4. Contracts deployed with `pnpm deploy:localhost`
 
 ```tsx
-import { hardhatLocal } from "@zama-fhe/sdk";
+import { hardhatLocal } from "@zama-fhe/react-sdk";
 
 const config = createFhevmConfig({
   chains: [hardhatLocal],
@@ -327,7 +327,7 @@ If these solutions don't resolve your issue:
 1. **Check the console** - Most errors include helpful messages
 2. **Enable debug logging**:
    ```tsx
-   import { configureLogger } from "@zama-fhe/sdk";
+   import { configureLogger } from "@zama-fhe/react-sdk";
    configureLogger({ enabled: true, level: "debug" });
    ```
 3. **Search existing issues**: [GitHub Issues](https://github.com/zama-ai/react-sdk/issues)

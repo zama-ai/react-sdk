@@ -149,7 +149,7 @@ jobs:
             ## Installation
 
             ```bash
-            npm install @zama-fhe/sdk@${{ needs.validate.outputs.version }}
+            npm install @zama-fhe/react-sdk@${{ needs.validate.outputs.version }}
             ```
           draft: false
           prerelease: ${{ contains(needs.validate.outputs.version, '-') }}

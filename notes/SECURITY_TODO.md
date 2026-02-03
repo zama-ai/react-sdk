@@ -265,7 +265,7 @@ const result = await signature.decrypt(instance, handle, contract);
 import {
   EncryptedStorageAdapter,
   generateDeviceKey
-} from '@zama-fhe/sdk/storage';
+} from '@zama-fhe/react-sdk/storage';
 
 const key = await generateDeviceKey();
 const storage = new EncryptedStorageAdapter(localStorage, { key });
@@ -277,7 +277,7 @@ const storage = new EncryptedStorageAdapter(localStorage, { key });
 import {
   MemorySecurityLogger,
   setSecurityLogger
-} from '@zama-fhe/sdk/security';
+} from '@zama-fhe/react-sdk/security';
 
 const logger = new MemorySecurityLogger(1000);
 setSecurityLogger(logger);
@@ -286,7 +286,7 @@ setSecurityLogger(logger);
 ### Security Levels (Phase 2)
 
 ```typescript
-import { SecurityLevel } from '@zama-fhe/sdk';
+import { SecurityLevel } from '@zama-fhe/react-sdk';
 
 <FhevmProvider
   storage={encryptedStorage}

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature for @zama-fhe/sdk
+about: Suggest a new feature for @zama-fhe/react-sdk
 title: "[Feature]: "
 labels: enhancement
 assignees: ""

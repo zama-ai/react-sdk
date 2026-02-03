@@ -7,7 +7,7 @@ It follows a wagmi-style `useReadContracts` pattern: you pass an array of contra
 ## Import
 
 ```tsx
-import { useConfidentialBalances } from "@zama-fhe/sdk";
+import { useConfidentialBalances } from "@zama-fhe/react-sdk";
 ```
 
 ## Usage

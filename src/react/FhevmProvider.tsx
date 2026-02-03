@@ -60,7 +60,7 @@ export interface FhevmProviderProps {
    *
    * @example
    * ```tsx
-   * import { memoryStorage } from 'fhevm-sdk';
+   * import { memoryStorage } from '@zama-fhe/react-sdk';
    *
    * <FhevmProvider storage={memoryStorage} ... />
    * ```
@@ -125,7 +125,7 @@ export interface FhevmProviderProps {
  * @example
  * ```tsx
  * // With wagmi
- * import { createFhevmConfig, FhevmProvider, sepolia, memoryStorage } from 'fhevm-sdk'
+ * import { createFhevmConfig, FhevmProvider, sepolia, memoryStorage } from '@zama-fhe/react-sdk'
  * import { useAccount } from 'wagmi'
  *
  * const config = createFhevmConfig({
@@ -153,7 +153,7 @@ export interface FhevmProviderProps {
  * @example
  * ```tsx
  * // With viem only
- * import { createFhevmConfig, FhevmProvider, sepolia } from 'fhevm-sdk'
+ * import { createFhevmConfig, FhevmProvider, sepolia } from '@zama-fhe/react-sdk'
  * import { useWallet } from './useWallet' // Custom hook
  *
  * function App() {

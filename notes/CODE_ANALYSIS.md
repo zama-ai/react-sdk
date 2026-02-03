@@ -1,7 +1,7 @@
 # Code Analysis & Refactoring Recommendations
 
 **Date:** 2026-02-03
-**Codebase:** `@zama-fhe/sdk` React SDK
+**Codebase:** `@zama-fhe/react-sdk` React SDK
 **Total Files:** 56 TypeScript files
 **Total Lines:** ~8,585 lines
 

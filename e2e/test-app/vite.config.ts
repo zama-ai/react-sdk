@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // Use the SDK source directly for testing
-      "@zama-fhe/sdk": path.resolve(__dirname, "../../src"),
+      "@zama-fhe/react-sdk": path.resolve(__dirname, "../../src"),
     },
   },
   server: {
