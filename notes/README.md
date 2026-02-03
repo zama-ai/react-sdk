@@ -11,6 +11,24 @@ This directory contains architectural documentation, analysis, and plans for the
 - **[TANSTACK_QUERY_PLAN.md](./TANSTACK_QUERY_PLAN.md)** - Original TanStack Query integration plan (completed)
 - **[CODE_ANALYSIS.md](./CODE_ANALYSIS.md)** - Comprehensive code quality analysis and recommendations
 - **[REFACTORING_PLAN.md](./REFACTORING_PLAN.md)** - Detailed implementation plan for refactoring
+- **[REFACTORING_PROGRESS.md](./REFACTORING_PROGRESS.md)** - Progress tracking for Phase 1 improvements
+- **[REFACTORING_COMPLETE.md](./REFACTORING_COMPLETE.md)** - Phase-by-phase completion report
+- **[FINAL_REFACTORING_SUMMARY.md](./FINAL_REFACTORING_SUMMARY.md)** - Complete refactoring summary
+- **[LEGACY_REMOVAL_CONFIRMATION.md](./LEGACY_REMOVAL_CONFIRMATION.md)** - Legacy code removal verification
+
+### 🔒 Security Documentation
+
+> **Comprehensive security analysis completed 2026-02-03**
+
+**⭐ Start here:** [SECURITY_README.md](./SECURITY_README.md) - Security documentation hub
+
+- **[SECURITY_QUICK_REFERENCE.md](./SECURITY_QUICK_REFERENCE.md)** - Quick guide for developers (5-10 min read, TL;DR)
+- **[SECURITY_ARCHITECTURE.md](./SECURITY_ARCHITECTURE.md)** - Visual diagrams and architecture flows 🎨
+- **[SECURITY_ANALYSIS.md](./SECURITY_ANALYSIS.md)** - Comprehensive 945-line security audit
+- **[SECURITY_IMPROVEMENT_PLAN.md](./SECURITY_IMPROVEMENT_PLAN.md)** - 3-phase implementation roadmap with code examples
+- **[SECURITY_TODO.md](./SECURITY_TODO.md)** - Action items checklist (awaiting prioritization)
+
+**Current Status:** Risk Level MEDIUM-HIGH | OWASP Compliance 25% | [Full Details →](./SECURITY_README.md)
 
 ### 📚 Architecture Decision Records (Coming Soon)
 
@@ -213,12 +231,58 @@ When adding new features or making changes:
 
 ---
 
+## Security Overview
+
+### Current State
+
+The SDK has been analyzed for security vulnerabilities, particularly around private key storage and handling. Key findings:
+
+**Risk Level:** MEDIUM-HIGH
+**OWASP Compliance:** 25% (1.5/6 guidelines)
+
+### Critical Issues Identified
+
+1. 🔴 **Private keys stored in plain text** - No encryption at rest
+2. 🔴 **Public getter exposes private key** - Direct access to sensitive material
+3. 🟠 **localStorage accessible to XSS** - Vulnerable to cross-site scripting
+4. 🟡 **No key rotation mechanism** - Keys persist without lifecycle management
+
+### Security Recommendations
+
+**For Development:**
+- ✅ Use `memoryStorage` (most secure, keys cleared on refresh)
+- ✅ Use `sessionStorageAdapter` (keys cleared when tab closes)
+- ⚠️ Use `localStorageAdapter` only with explicit warnings
+
+**For Production:**
+- ✅ Use `EncryptedStorageAdapter` (coming in Phase 1)
+- ✅ Configure CSP headers
+- ✅ Implement key rotation
+- ✅ Enable security event logging
+
+### Implementation Timeline
+
+| Phase | Duration | Status |
+|-------|----------|--------|
+| **Phase 1: Quick Wins** | Weeks 1-2 | Planned |
+| **Phase 2: API Improvements** | Weeks 3-4 | Planned |
+| **Phase 3: Breaking Changes (v2.0)** | Months 3-4 | Planned |
+
+**See [SECURITY_ANALYSIS.md](./SECURITY_ANALYSIS.md) for full details.**
+
+---
+
 ## Questions?
 
 For architectural decisions, see:
 - CODE_ANALYSIS.md - Detailed analysis and recommendations
 - REFACTORING_PLAN.md - Step-by-step implementation guide
 - TANSTACK_QUERY_PLAN.md - Original integration plan
+
+For security guidance, see:
+- **[SECURITY_QUICK_REFERENCE.md](./SECURITY_QUICK_REFERENCE.md)** - Start here! (TL;DR)
+- SECURITY_ANALYSIS.md - Full security analysis
+- SECURITY_IMPROVEMENT_PLAN.md - Implementation roadmap
 
 For code patterns, see:
 - Query keys: `src/react/queryKeys.ts`

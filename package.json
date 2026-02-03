@@ -82,11 +82,11 @@
   "license": "BSD-3-Clause-Clear",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/poppyseedDev/react-sdk.git"
+    "url": "git+https://github.com/zama-ai/react-sdk.git"
   },
-  "homepage": "https://github.com/poppyseedDev/react-sdk#readme",
+  "homepage": "https://github.com/zama-ai/react-sdk#readme",
   "bugs": {
-    "url": "https://github.com/poppyseedDev/react-sdk/issues"
+    "url": "https://github.com/zama-ai/react-sdk/issues"
   },
   "engines": {
     "node": ">=18.0.0"

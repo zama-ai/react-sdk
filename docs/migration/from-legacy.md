@@ -453,7 +453,7 @@ If you encounter issues during migration:
 
 1. Check the [Error Handling Guide](../guides/error-handling.md)
 2. Enable debug logging: `configureLogger({ enabled: true, level: "debug" })`
-3. Open an issue at [GitHub](https://github.com/zama-ai/fhevm-react)
+3. Open an issue at [GitHub](https://github.com/zama-ai/react-sdk)
 
 ## Further Reading
 

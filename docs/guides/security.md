@@ -1,10 +1,28 @@
-# Security Guide
+# 🔒 Security Guide
 
-This guide covers security considerations when using fhevm-sdk, particularly around storage and key management.
+> **Essential security considerations when using @zama-fhe/sdk**
+
+[![Security](https://img.shields.io/badge/security-critical-red.svg)]()
+[![Read Time](https://img.shields.io/badge/read%20time-10%20min-blue.svg)]()
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Storage Security](#storage-security)
+- [Mitigation Strategies](#mitigation-strategies)
+- [Public Key Storage](#public-key-storage)
+- [Debug Logging](#debug-logging)
+- [Network Security](#network-security)
+- [Security Checklist](#security-checklist)
+- [Reporting Security Issues](#reporting-security-issues)
+
+---
 
 ## Overview
 
-fhevm-sdk handles sensitive cryptographic material including:
+`@zama-fhe/sdk` handles sensitive cryptographic material including:
 
 - **Decryption private keys** - Used to decrypt FHE ciphertext
 - **EIP-712 signatures** - Proves user authorization for decryption

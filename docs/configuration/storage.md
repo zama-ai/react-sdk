@@ -4,7 +4,20 @@ The `storage` prop on FhevmProvider controls how decryption signatures are cache
 
 **Important:** No default storage is provided. You must explicitly choose a storage option.
 
-> **Security Warning:** Decryption signatures include private keys that can decrypt your users' confidential data. Using `localStorage` or `sessionStorage` exposes these keys to XSS attacks. For security-sensitive applications, use `memoryStorage` or implement encrypted storage. See the [Security Guide](../guides/security.md) for details.
+---
+
+> ### 🔒 Security Warning
+>
+> Decryption signatures include **private keys** that can decrypt your users' confidential data. Using `localStorage` or `sessionStorage` exposes these keys to **XSS attacks**.
+>
+> **For production apps:**
+> - ✅ Use `memoryStorage` or `sessionStorageAdapter`
+> - ✅ Implement [encrypted storage](#example-encrypted-storage)
+> - ⚠️ Avoid plain `localStorage` (XSS vulnerable)
+>
+> **See:** [Security Guide](../guides/security.md) for complete details
+
+---
 
 ## Quick Start
 
