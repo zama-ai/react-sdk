@@ -15,8 +15,12 @@ export interface FhevmStorage {
  */
 export const noopStorage: FhevmStorage = {
   getItem: () => null,
-  setItem: () => {},
-  removeItem: () => {},
+  setItem: () => {
+    // intentional no-op
+  },
+  removeItem: () => {
+    // intentional no-op
+  },
 };
 
 /**

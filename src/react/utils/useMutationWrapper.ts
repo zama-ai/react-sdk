@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 /**
  * Wraps useMutation's mutate function to return a Promise.
@@ -30,6 +30,6 @@ export function useMutationWrapper<TData, TError, TVariables>(
         });
       });
     },
-    [mutation.mutate]
+    [mutation]
   );
 }

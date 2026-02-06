@@ -201,18 +201,14 @@ export function useEncrypt(): UseEncryptReturn {
     ): Promise<EncryptResult<T> | undefined> => {
       if (!instance || !address) return undefined;
 
-      try {
-        // Trigger mutation and wait for result
-        const result = await mutation.mutateAsync({ inputs, contractAddress });
+      // Trigger mutation and wait for result
+      const result = await mutation.mutateAsync({ inputs, contractAddress });
 
-        // Return as tuple: [...handles, proof]
-        return [...result.handles, result.inputProof] as unknown as EncryptResult<T>;
-      } catch (error) {
-        // Re-throw so calling code can handle errors
-        throw error;
-      }
+      // Return as tuple: [...handles, proof]
+      return [...result.handles, result.inputProof] as unknown as EncryptResult<T>;
+    
     },
-    [instance, address, mutation.mutateAsync]
+    [instance, address, mutation]
   );
 
   return {

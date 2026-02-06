@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { FhevmInstance } from "../fhevmTypes";
 import { FhevmDecryptionSignature } from "../FhevmDecryptionSignature";
+import type { FhevmInstance } from "../fhevmTypes";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
 import { useFhevmContext } from "./context";
 import { FHEVM_QUERY_DEFAULTS } from "./core/constants";
@@ -69,9 +69,10 @@ export function useSignature(options: UseSignatureOptions): UseSignatureReturn {
   const userAddress = providedAddress ?? contextAddress;
 
   const signatureQuery = useQuery({
-    queryKey: chainId && userAddress
-      ? fhevmKeys.signatureFor(chainId, userAddress)
-      : ["fhevm", "signature", "disabled"],
+    queryKey:
+      chainId && userAddress
+        ? fhevmKeys.signatureFor(chainId, userAddress)
+        : ["fhevm", "signature", "disabled"],
 
     queryFn: async (): Promise<FhevmDecryptionSignature | null> => {
       if (!storage || !instance || !userAddress) {
