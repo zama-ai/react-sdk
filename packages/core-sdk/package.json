@@ -47,7 +47,10 @@
     "test:watch": "vitest watch",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "docs:serve": "pnpm run docs && npx serve docs/api"
   },
   "keywords": [
     "fhe",
@@ -91,6 +94,7 @@
   "devDependencies": {
     "@types/node": "~18.19.130",
     "@vitest/coverage-v8": "^2.1.9",
+    "typedoc": "^0.28.16",
     "typescript": "~5.8.3",
     "vitest": "~2.1.9"
   }

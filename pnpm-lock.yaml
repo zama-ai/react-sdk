@@ -36,6 +36,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^2.1.9
         version: 2.1.9(vitest@2.1.9(@types/node@18.19.130)(jsdom@27.4.0(@noble/hashes@1.8.0)))
+      typedoc:
+        specifier: ^0.28.16
+        version: 0.28.16(typescript@5.8.3)
       typescript:
         specifier: ~5.8.3
         version: 5.8.3

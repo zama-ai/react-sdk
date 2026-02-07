@@ -1,0 +1,41 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs/api",
+  "readme": "README.md",
+  "githubPages": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Config",
+    "Actions",
+    "Chains",
+    "Transports",
+    "Providers",
+    "Types",
+    "Utils",
+    "*"
+  ],
+  "groupOrder": [
+    "Functions",
+    "Classes",
+    "Interfaces",
+    "Type Aliases",
+    "Variables",
+    "*"
+  ],
+  "navigationLinks": {
+    "GitHub": "https://github.com/zama-ai/core-sdk",
+    "npm": "https://www.npmjs.com/package/@zama-fhe/core-sdk"
+  },
+  "cleanOutputDir": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": false,
+    "notDocumented": false
+  }
+}
