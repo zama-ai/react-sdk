@@ -24,6 +24,9 @@
     "lint:fix": "pnpm --filter '@zama-fhe/*' lint:fix",
     "typecheck": "pnpm --filter '@zama-fhe/*' typecheck",
     "clean": "pnpm --filter '@zama-fhe/*' clean && rm -rf node_modules",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "docs:serve": "pnpm run docs && npx serve docs/api",
     "ci": "pnpm build && pnpm typecheck && pnpm lint && pnpm test",
     "changeset": "changeset",
     "version": "changeset version",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "typedoc": "^0.28.16",
     "typescript": "~5.8.3"
   },
   "keywords": [

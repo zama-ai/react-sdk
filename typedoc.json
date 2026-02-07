@@ -1,0 +1,50 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Zama FHE SDK",
+  "entryPoints": [
+    "packages/shared",
+    "packages/core-sdk",
+    "packages/react-sdk"
+  ],
+  "entryPointStrategy": "packages",
+  "out": "docs/api",
+  "readme": "README.md",
+  "githubPages": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Provider",
+    "Hooks",
+    "Config",
+    "Actions",
+    "Chains",
+    "Transports",
+    "Providers",
+    "Storage",
+    "Types",
+    "Utils",
+    "*"
+  ],
+  "groupOrder": [
+    "Functions",
+    "Classes",
+    "Interfaces",
+    "Type Aliases",
+    "Variables",
+    "*"
+  ],
+  "navigationLinks": {
+    "GitHub": "https://github.com/zama-ai/fhe-sdk",
+    "npm": "https://www.npmjs.com/package/@zama-fhe/react-sdk"
+  },
+  "cleanOutputDir": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": false,
+    "notDocumented": false
+  }
+}
