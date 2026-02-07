@@ -1,0 +1,33 @@
+# Source files (dist is published, not src)
+src/
+test/
+docs/
+
+# Config files
+tsconfig.json
+vitest.config.ts
+vitest.setup.ts
+.eslintrc*
+.prettierrc*
+
+# Development
+.git/
+.github/
+.github_to_potentially_add/
+.vscode/
+.idea/
+coverage/
+node_modules/
+
+# Lockfiles (users will use their own)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*

@@ -1,0 +1,54 @@
+{
+  "name": "@zama-fhe/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared internal utilities for Zama FHE SDK packages",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./abi": {
+      "types": "./dist/abi/index.d.ts",
+      "default": "./dist/abi/index.js"
+    },
+    "./chains": {
+      "types": "./dist/chains/index.d.ts",
+      "default": "./dist/chains/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9",
+    "@vitest/coverage-v8": "^2.1.9"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "fhe",
+    "fhevm",
+    "zama",
+    "internal"
+  ],
+  "author": "Zama",
+  "license": "BSD-3-Clause-Clear"
+}

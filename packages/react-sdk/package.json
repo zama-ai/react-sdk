@@ -1,0 +1,140 @@
+{
+  "name": "@zama-fhe/react-sdk",
+  "version": "0.1.0",
+  "description": "React SDK for building applications with Fully Homomorphic Encryption (FHE) on EVM chains",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./chains": {
+      "types": "./dist/chains/index.d.ts",
+      "default": "./dist/chains/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./storage": {
+      "types": "./dist/storage/index.d.ts",
+      "default": "./dist/storage/index.js"
+    },
+    "./types": {
+      "types": "./dist/fhevmTypes.d.ts",
+      "default": "./dist/fhevmTypes.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "default": "./dist/react/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:check": "tsc -p tsconfig.json --noEmit",
+    "watch": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "e2e:app": "pnpm --dir e2e/test-app run dev",
+    "test:all": "pnpm run test && pnpm run test:integration && pnpm run test:e2e",
+    "lint": "eslint src test --ext .ts,.tsx",
+    "lint:fix": "eslint src test --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "ci": "pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build",
+    "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run test",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "docs:serve": "pnpm run docs && npx serve docs/api"
+  },
+  "keywords": [
+    "fhe",
+    "fhevm",
+    "fully-homomorphic-encryption",
+    "zama",
+    "react",
+    "hooks",
+    "ethereum",
+    "evm",
+    "web3",
+    "privacy",
+    "confidential",
+    "encryption",
+    "wagmi",
+    "viem"
+  ],
+  "author": "Zama",
+  "license": "BSD-3-Clause-Clear",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zama-ai/react-sdk.git"
+  },
+  "homepage": "https://github.com/zama-ai/react-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/zama-ai/react-sdk/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@zama-fhe/shared": "workspace:*",
+    "@zama-fhe/core-sdk": "workspace:*",
+    "@zama-fhe/relayer-sdk": "0.4.0",
+    "ethers": "^6.16.0",
+    "idb": "^8.0.3"
+  },
+  "peerDependencies": {
+    "@fhevm/mock-utils": "^0.4.0",
+    "@tanstack/react-query": ">=5.0.0",
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@fhevm/mock-utils": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.58.1",
+    "@tanstack/react-query": "~5.59.20",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "~18.19.130",
+    "@types/react": "~19.0.14",
+    "@vitest/coverage-v8": "2.1.9",
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "ethers": "^6.13.7",
+    "fake-indexeddb": "~6.0.1",
+    "jsdom": "^27.4.0",
+    "prettier": "^3.8.1",
+    "react": "~19.2.4",
+    "react-dom": "^19.2.4",
+    "typedoc": "^0.28.16",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.54.0",
+    "vitest": "~2.1.9"
+  }
+}

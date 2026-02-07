@@ -1,0 +1,49 @@
+{
+  "name": "@zama-fhe/monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo for Zama FHE SDK packages",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build": "pnpm --filter @zama-fhe/shared build && pnpm --filter '@zama-fhe/*' --filter '!@zama-fhe/shared' build",
+    "build:shared": "pnpm --filter @zama-fhe/shared build",
+    "build:core": "pnpm --filter @zama-fhe/core-sdk build",
+    "build:react": "pnpm --filter @zama-fhe/react-sdk build",
+    "watch:shared": "pnpm --filter @zama-fhe/shared watch",
+    "watch:core": "pnpm --filter @zama-fhe/core-sdk watch",
+    "watch:react": "pnpm --filter @zama-fhe/react-sdk watch",
+    "test": "pnpm --filter '@zama-fhe/*' test",
+    "test:core": "pnpm --filter @zama-fhe/core-sdk test",
+    "test:react": "pnpm --filter @zama-fhe/react-sdk test",
+    "test:watch": "pnpm --filter '@zama-fhe/*' test:watch",
+    "lint": "pnpm --filter '@zama-fhe/*' lint",
+    "lint:fix": "pnpm --filter '@zama-fhe/*' lint:fix",
+    "typecheck": "pnpm --filter '@zama-fhe/*' typecheck",
+    "clean": "pnpm --filter '@zama-fhe/*' clean && rm -rf node_modules",
+    "ci": "pnpm build && pnpm typecheck && pnpm lint && pnpm test",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "typescript": "~5.8.3"
+  },
+  "keywords": [
+    "fhe",
+    "fhevm",
+    "fully-homomorphic-encryption",
+    "zama",
+    "monorepo"
+  ],
+  "author": "Zama",
+  "license": "BSD-3-Clause-Clear",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zama-ai/fhe-sdk.git"
+  }
+}
