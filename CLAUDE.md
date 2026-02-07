@@ -66,6 +66,11 @@ pnpm ci              # build + typecheck + lint + test
 
 # Clean all build artifacts
 pnpm clean
+
+# Documentation
+pnpm docs            # Generate unified TypeDoc API docs to docs/api/
+pnpm docs:watch      # Watch and rebuild docs
+pnpm docs:serve      # Build and serve docs locally
 ```
 
 ### Core SDK (packages/core-sdk/)
@@ -117,10 +122,8 @@ pnpm format:check    # Prettier check only
 pnpm typecheck       # TypeScript type checking
 pnpm ci              # Full CI: typecheck + lint + test + build
 
-# Documentation
-pnpm docs            # Generate TypeDoc API docs
-pnpm docs:watch      # Watch and rebuild docs
-pnpm docs:serve      # Build and serve docs locally
+# Documentation (moved to root docs/)
+# See root docs/ directory for all documentation
 ```
 
 **Test patterns:**
@@ -285,3 +288,45 @@ Multiple storage adapters for public keys and signatures:
 | Hardhat Local | 31337 | Yes |
 
 Mock chains skip real FHE operations for testing.
+
+## Documentation
+
+All documentation is located in the `docs/` directory at the root of the monorepo.
+
+### Structure
+
+```
+docs/
+├── README.md                    # Documentation home
+├── SUMMARY.md                   # Master table of contents
+├── api/                         # TypeDoc-generated API reference (all packages)
+├── getting-started/             # Cross-package getting started guides
+├── core-sdk/                    # @zama-fhe/core-sdk documentation
+├── react-sdk/                   # @zama-fhe/react-sdk documentation
+├── shared/                      # @zama-fhe/shared documentation
+└── guides/                      # Cross-cutting guides
+```
+
+### Generating Documentation
+
+```bash
+# From root
+pnpm docs            # Generate unified TypeDoc API docs
+pnpm docs:watch      # Watch and rebuild
+pnpm docs:serve      # Build and serve locally
+```
+
+### Documentation Features
+
+- **Unified API Reference**: TypeDoc generates a single API documentation site for all three packages (`shared`, `core-sdk`, `react-sdk`)
+- **Narrative Documentation**: Markdown guides for getting started, configuration, best practices
+- **Package-Specific Docs**: Each package has its own section with relevant documentation
+- **Cross-Cutting Guides**: Architecture overview, security best practices, contributing guidelines
+
+### Key Documentation Files
+
+- `docs/README.md` - Start here for all documentation
+- `docs/getting-started/overview.md` - Which package to use
+- `docs/core-sdk/README.md` - Core SDK overview and examples
+- `docs/react-sdk/README.md` - React SDK overview and examples
+- `docs/api/index.html` - TypeScript API reference (generated)

@@ -7,8 +7,11 @@ dist/
 build/
 *.tsbuildinfo
 
-# Documentation
-docs/
+# Documentation (generated API docs only)
+docs/api/
+
+# Planning and notes
+notes/
 
 # Test coverage
 coverage/
