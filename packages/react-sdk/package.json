@@ -92,9 +92,9 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@zama-fhe/shared": "workspace:*",
     "@zama-fhe/core-sdk": "workspace:*",
     "@zama-fhe/relayer-sdk": "0.4.0",
+    "@zama-fhe/shared": "workspace:*",
     "ethers": "^6.16.0",
     "idb": "^8.0.3"
   },
@@ -121,7 +121,7 @@
     "@testing-library/react": "^16.3.2",
     "@types/node": "~18.19.130",
     "@types/react": "~19.0.14",
-    "@vitest/coverage-v8": "2.1.9",
+    "@vitest/coverage-v8": "4.0.18",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -135,6 +135,6 @@
     "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.54.0",
-    "vitest": "~2.1.9"
+    "vitest": "~4.0.18"
   }
 }
