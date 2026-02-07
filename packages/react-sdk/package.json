@@ -39,9 +39,9 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc --build tsconfig.json",
     "build:check": "tsc -p tsconfig.json --noEmit",
-    "watch": "tsc -p tsconfig.json --watch",
+    "watch": "tsc --build tsconfig.json --watch",
     "clean": "rm -rf dist",
     "test": "vitest run --coverage",
     "test:watch": "vitest",

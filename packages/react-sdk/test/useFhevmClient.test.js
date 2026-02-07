@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import { useFhevmClient } from "../src/react/useFhevmClient";
 import { createTestWrapper, createMockFhevmInstance, ConnectedWrapper, DisconnectedWrapper, InitializingWrapper, ErrorWrapper, } from "./utils";
 describe("useFhevmClient", () => {

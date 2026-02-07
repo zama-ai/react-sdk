@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useConfidentialTransfer } from "../src/react/useConfidentialTransfer";
 import { createTestWrapper, createMockFhevmInstance, createMockEip1193Provider, ConnectedWrapper, DisconnectedWrapper, InitializingWrapper, TEST_ADDRESS, } from "./utils";
 describe("useConfidentialTransfer", () => {

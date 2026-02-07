@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useUserDecrypt } from "../src/react/useUserDecrypt";
 import { createTestWrapper, createMockFhevmInstance, createMockEip1193Provider, ConnectedWrapper, DisconnectedWrapper, InitializingWrapper, MOCK_HANDLE, TEST_ADDRESS, } from "./utils";
 // Mock the FhevmDecryptionSignature module

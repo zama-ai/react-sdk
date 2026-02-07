@@ -2,13 +2,13 @@
 
 import { useMutation } from "@tanstack/react-query";
 import type { RelayerEncryptedInput } from "@zama-fhe/relayer-sdk/web";
-import { useCallback, useMemo } from "react";
 import type {
   EncryptInput,
   EncryptResult,
   EncryptedOutput,
   FheTypeName,
 } from "@zama-fhe/shared/types";
+import { useCallback, useMemo } from "react";
 import { useFhevmContext } from "./context";
 import { fhevmKeys } from "./queryKeys";
 

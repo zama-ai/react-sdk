@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MockRelayer } from "./mockRelayer";
-import { FhevmContext } from "../../src/react/context";
+import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from "vitest";
 import { createFhevmConfig, hardhatLocal } from "../../src";
-import { useUserDecrypt } from "../../src/react/useUserDecrypt";
+import { FhevmContext } from "../../src/react/context";
 import { usePublicDecrypt } from "../../src/react/usePublicDecrypt";
+import { useUserDecrypt } from "../../src/react/useUserDecrypt";
+import { MockRelayer } from "./mockRelayer";
 // Test constants
 const TEST_ADDRESS = "0x1234567890123456789012345678901234567890";
 const CONTRACT_ADDRESS = "0xabcdef1234567890abcdef1234567890abcdef12";

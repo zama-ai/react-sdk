@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import { useFhevmContext } from "../src/react/context";
-import { createTestWrapper, ConnectedWrapper, DisconnectedWrapper, createMockFhevmInstance, createMockEip1193Provider, TEST_ADDRESS, TEST_CHAIN_ID, } from "./utils";
 import { GenericStringInMemoryStorage } from "../src/storage/GenericStringStorage";
+import { createTestWrapper, ConnectedWrapper, DisconnectedWrapper, createMockFhevmInstance, createMockEip1193Provider, TEST_ADDRESS, TEST_CHAIN_ID, } from "./utils";
 describe("useFhevmContext", () => {
     describe("basic context values", () => {
         it("should provide config", () => {

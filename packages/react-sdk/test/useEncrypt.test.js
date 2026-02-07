@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useEncrypt } from "../src/react/useEncrypt";
 import { createTestWrapper, createMockFhevmInstance, ConnectedWrapper, DisconnectedWrapper, InitializingWrapper, TEST_ADDRESS, } from "./utils";
 describe("useEncrypt", () => {

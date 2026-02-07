@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import { renderHook } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { useFhevmStatus } from "../src/react/useFhevmStatus";
 import { createTestWrapper, ConnectedWrapper, DisconnectedWrapper, InitializingWrapper, ErrorWrapper, } from "./utils";
 describe("useFhevmStatus", () => {

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useEthersSigner } from "../src/react/useEthersSigner";
 import { createTestWrapper, ConnectedWrapper, DisconnectedWrapper, TEST_ADDRESS, TEST_CHAIN_ID, } from "./utils";
 describe("useEthersSigner", () => {

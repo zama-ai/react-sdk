@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useUserDecryptedValue, useUserDecryptedValues } from "../src/react/useUserDecryptedValue";
 import { createTestWrapper, ConnectedWrapper, DisconnectedWrapper, MOCK_HANDLE } from "./utils";
 describe("useUserDecryptedValue", () => {
