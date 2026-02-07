@@ -9,7 +9,9 @@
   "entryPointStrategy": "packages",
   "out": "docs/api",
   "readme": "README.md",
-  "githubPages": true,
+  "plugin": ["typedoc-plugin-markdown"],
+  "outputFileStrategy": "modules",
+  "fileExtension": ".md",
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
@@ -37,10 +39,6 @@
     "Variables",
     "*"
   ],
-  "navigationLinks": {
-    "GitHub": "https://github.com/zama-ai/fhe-sdk",
-    "npm": "https://www.npmjs.com/package/@zama-fhe/react-sdk"
-  },
   "cleanOutputDir": true,
   "validation": {
     "notExported": false,

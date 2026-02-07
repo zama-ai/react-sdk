@@ -44,9 +44,12 @@ Internal package with shared utilities, types, and ABIs.
 - **[Utilities](shared/utilities.md)** - Helper functions
 
 ### API Reference
-Auto-generated TypeScript API documentation.
+Auto-generated TypeScript API documentation in Markdown.
 
-- **[API Documentation](api/index.html)** - Complete API reference for all packages
+- **[API Documentation](api/README.md)** - Complete API reference for all packages
+- **[@zama-fhe/core-sdk API](api/@zama-fhe/core-sdk.md)** - Core SDK API reference
+- **[@zama-fhe/react-sdk API](api/@zama-fhe/react-sdk.md)** - React SDK API reference
+- **[@zama-fhe/shared API](api/@zama-fhe/shared/README.md)** - Shared package API reference
 
 ### Guides
 Cross-cutting topics and best practices.
@@ -84,8 +87,8 @@ Cross-cutting topics and best practices.
 This documentation is available in multiple formats:
 
 - **Markdown** - You're reading it! Browse on GitHub or locally
-- **API Reference** - TypeDoc-generated API docs at [api/](api/index.html)
-- **GitBook** - Can be deployed with GitBook for enhanced navigation
+- **API Reference** - TypeDoc-generated Markdown API docs at [api/](api/README.md)
+- **GitBook** - Ready to deploy with GitBook for enhanced navigation
 
 ---
 

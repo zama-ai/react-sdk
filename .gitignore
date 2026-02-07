@@ -7,8 +7,7 @@ dist/
 build/
 *.tsbuildinfo
 
-# Documentation (generated API docs only)
-docs/api/
+# Documentation (none - API docs are now Markdown and tracked)
 
 # Planning and notes
 notes/

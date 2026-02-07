@@ -68,3 +68,14 @@
 * [Choosing a Package](guides/choosing-a-package.md)
 * [Security Best Practices](guides/security-best-practices.md)
 * [Contributing](guides/contributing.md)
+
+## API Reference
+
+* [API Overview](api/README.md)
+* [@zama-fhe/core-sdk](api/@zama-fhe/core-sdk.md)
+* [@zama-fhe/react-sdk](api/@zama-fhe/react-sdk.md)
+* [@zama-fhe/shared](api/@zama-fhe/shared/README.md)
+  * [ABI](api/@zama-fhe/shared/abi.md)
+  * [Chains](api/@zama-fhe/shared/chains.md)
+  * [Types](api/@zama-fhe/shared/types.md)
+  * [Utils](api/@zama-fhe/shared/utils.md)
