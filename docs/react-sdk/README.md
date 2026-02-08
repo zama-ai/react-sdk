@@ -10,7 +10,7 @@
 
 ## 🌟 Overview
 
-`@zama-fhe/react-sdk` provides **wagmi-style React hooks** for encrypting, decrypting, and managing FHE operations in React applications. It integrates seamlessly with wagmi and TanStack Query for a modern, familiar developer experience.
+`@zama-fhe/react-sdk` provides **wagmi-style React hooks** for encrypting, decrypting, and managing FHE operations in React applications. It works with **wagmi, viem, or ethers.js** — pick whichever web3 library you prefer. Integrates with TanStack Query for a modern, familiar developer experience.
 
 ## ✨ Features
 
@@ -24,38 +24,25 @@
 ## Quick Example
 
 ```tsx
-import { useEncrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
-import { useWriteContract } from "wagmi";
+import { useConfidentialTransfer } from "@zama-fhe/react-sdk";
 
-function EncryptedTransfer({ contractAddress, tokenAbi }) {
-  const { isReady } = useFhevmStatus();
-  const { encrypt } = useEncrypt();
-  const { writeContract } = useWriteContract();
-
-  const handleTransfer = async (recipient: `0x${string}`, amount: bigint) => {
-    // Encrypt values - returns [...handles, proof] for easy destructuring
-    const [amountHandle, proof] = await encrypt([
-      { type: "uint64", value: amount },
-    ], contractAddress);
-
-    if (!amountHandle) return;
-
-    // Send encrypted value to contract
-    writeContract({
-      address: contractAddress,
-      abi: tokenAbi,
-      functionName: "transfer",
-      args: [recipient, amountHandle, proof],
-    });
-  };
+function EncryptedTransfer({ contractAddress }: { contractAddress: `0x${string}` }) {
+  const { transfer, isEncrypting, isSigning, isSuccess, error } =
+    useConfidentialTransfer({ contractAddress });
 
   return (
-    <button
-      onClick={() => handleTransfer("0x...", 100n)}
-      disabled={!isReady}
-    >
-      Transfer 100 Tokens
-    </button>
+    <div>
+      <button
+        onClick={() => transfer("0xRecipient...", 100n)}
+        disabled={isEncrypting || isSigning}
+      >
+        Transfer 100 Tokens
+      </button>
+      {isEncrypting && <p>Encrypting...</p>}
+      {isSigning && <p>Confirm in wallet...</p>}
+      {isSuccess && <p>Transfer complete!</p>}
+      {error && <p>Error: {error.message}</p>}
+    </div>
   );
 }
 ```
@@ -65,13 +52,12 @@ function EncryptedTransfer({ contractAddress, tokenAbi }) {
 ## 📦 Installation
 
 ```bash
-npm install @zama-fhe/react-sdk wagmi viem @tanstack/react-query
+npm install @zama-fhe/react-sdk @tanstack/react-query
 
-# or
-pnpm add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
-
-# or
-yarn add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
+# Then pick your web3 library:
+npm install wagmi viem    # wagmi setup (recommended for React)
+npm install viem          # viem-only
+# ethers.js is bundled — no extra install needed
 ```
 
 ---
@@ -111,7 +97,7 @@ yarn add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
 **Utilities:**
 - [useFhevmStatus](hooks/use-fhevm-status.md) - Check FHEVM initialization status
 - [useFhevmClient](hooks/use-fhevm-client.md) - Access FHEVM instance directly
-- [useEthersSigner](hooks/use-ethers-signer.md) - Get ethers.js signer from wagmi *(deprecated)*
+- [useEthersSigner](hooks/use-ethers-signer.md) - Get ethers.js signer *(deprecated — use FhevmWallet instead)*
 
 ### Guides
 

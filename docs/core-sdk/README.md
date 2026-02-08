@@ -261,7 +261,6 @@ See [Providers Guide](providers.md) for details.
 ## 📦 Related Packages
 
 - **[@zama-fhe/react-sdk](../react-sdk/README.md)** - React hooks for FHE operations
-- **[@zama-fhe/shared](../shared/README.md)** - Shared utilities and types
 
 ---
 

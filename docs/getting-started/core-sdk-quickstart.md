@@ -39,6 +39,18 @@ const result = await confidentialTransfer(config, {
 });
 
 console.log("Transfer successful:", result);
+
+// 4. Read a confidential balance
+import { confidentialBalance } from "@zama-fhe/core-sdk";
+
+const handle = await confidentialBalance(config, {
+  chainId: sepolia.chainId,
+  contractAddress: "0x...",
+  account: wallet.address,
+  provider: wallet,
+});
+
+console.log("Balance handle:", handle);
 ```
 
 ### With viem
@@ -73,6 +85,18 @@ const result = await confidentialTransfer(config, {
 });
 
 console.log("Transfer successful:", result);
+
+// 4. Read a confidential balance
+import { confidentialBalance } from "@zama-fhe/core-sdk";
+
+const handle = await confidentialBalance(config, {
+  chainId: sepolia.chainId,
+  contractAddress: "0x...",
+  account: account.address,
+  provider: client,
+});
+
+console.log("Balance handle:", handle);
 ```
 
 ## Next Steps

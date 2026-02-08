@@ -54,14 +54,6 @@
   * [Types](react-sdk/types/overview.md)
   * [Migration Guide](react-sdk/migration/from-legacy.md)
 
-## Shared Package
-
-* [Overview](shared/README.md)
-* [Chains](shared/chains.md)
-* [Types](shared/types.md)
-* [ABIs](shared/abis.md)
-* [Utilities](shared/utilities.md)
-
 ## Guides
 
 * [Architecture](guides/architecture.md)
@@ -74,8 +66,3 @@
 * [API Overview](api/README.md)
 * [@zama-fhe/core-sdk](api/@zama-fhe/core-sdk.md)
 * [@zama-fhe/react-sdk](api/@zama-fhe/react-sdk.md)
-* [@zama-fhe/shared](api/@zama-fhe/shared/README.md)
-  * [ABI](api/@zama-fhe/shared/abi.md)
-  * [Chains](api/@zama-fhe/shared/chains.md)
-  * [Types](api/@zama-fhe/shared/types.md)
-  * [Utils](api/@zama-fhe/shared/utils.md)

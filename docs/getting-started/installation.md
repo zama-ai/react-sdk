@@ -7,19 +7,19 @@ This guide covers installation instructions for all Zama FHE SDK packages.
 For React applications:
 
 ```bash
-npm install @zama-fhe/react-sdk wagmi viem @tanstack/react-query
-
-# or using pnpm
-pnpm add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
-
-# or using yarn
-yarn add @zama-fhe/react-sdk wagmi viem @tanstack/react-query
+npm install @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-**Required peer dependencies:**
-- `wagmi` ^2.0.0
-- `viem` ^2.0.0
-- `@tanstack/react-query` ^5.0.0
+`@zama-fhe/react-sdk` works with any of these web3 libraries:
+
+| Setup | Install | Best for |
+|-------|---------|----------|
+| **wagmi + viem** | `npm install wagmi viem` | React apps already using wagmi |
+| **viem only** | `npm install viem` | React apps without wagmi |
+| **ethers.js only** | *(bundled)* | Existing ethers.js projects |
+| **wagmi + ethers** | `npm install wagmi viem` | Mixed setups |
+
+> **Note:** ethers.js is bundled with `@zama-fhe/react-sdk` — no separate install needed.
 
 See the [React SDK documentation](../react-sdk/getting-started/installation.md) for detailed setup instructions.
 
@@ -33,24 +33,12 @@ For Node.js, CLI tools, and other frameworks:
 
 ```bash
 npm install @zama-fhe/core-sdk ethers
-
-# or using pnpm
-pnpm add @zama-fhe/core-sdk ethers
-
-# or using yarn
-yarn add @zama-fhe/core-sdk ethers
 ```
 
 ### With viem
 
 ```bash
 npm install @zama-fhe/core-sdk viem
-
-# or using pnpm
-pnpm add @zama-fhe/core-sdk viem
-
-# or using yarn
-yarn add @zama-fhe/core-sdk viem
 ```
 
 **Required peer dependencies:**

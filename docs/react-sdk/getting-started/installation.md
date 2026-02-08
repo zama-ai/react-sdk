@@ -4,34 +4,51 @@
 
 - Node.js >= 18
 - React >= 18
-- wagmi >= 2.0
 - @tanstack/react-query >= 5.0
 
 ## Install the Package
 
 ```bash
-pnpm add @zama-fhe/react-sdk
+npm install @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-Or with npm:
+Or with pnpm:
 
 ```bash
-npm install @zama-fhe/react-sdk
+pnpm add @zama-fhe/react-sdk @tanstack/react-query
 ```
 
 Or with yarn:
 
 ```bash
-yarn add @zama-fhe/react-sdk
+yarn add @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-## Peer Dependencies
+## Choose Your Web3 Library
 
-@zama-fhe/react-sdk requires the following peer dependencies:
+`@zama-fhe/react-sdk` works with wagmi, viem, or ethers.js. Pick the setup that matches your project:
+
+### wagmi + viem (recommended for React)
 
 ```bash
-pnpm add wagmi viem @tanstack/react-query ethers
+npm install wagmi viem
 ```
+
+Best if you're building a React app with wallet connection UI (RainbowKit, ConnectKit, etc.).
+
+### viem only
+
+```bash
+npm install viem
+```
+
+Use this if you want viem's type-safe APIs without the wagmi React layer.
+
+### ethers.js only
+
+No extra install needed — ethers.js is bundled with `@zama-fhe/react-sdk`.
+
+Best for projects already using ethers.js or migrating from older web3 stacks.
 
 ## Next Steps
 

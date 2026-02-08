@@ -8,7 +8,8 @@ First, create a configuration with your supported chains:
 
 ```tsx
 // config/fhevm.ts
-import { createFhevmConfig, sepolia, hardhatLocal } from "@zama-fhe/react-sdk";
+import { createFhevmConfig } from "@zama-fhe/react-sdk";
+import { sepolia, hardhatLocal } from "@zama-fhe/react-sdk/chains";
 
 export const fhevmConfig = createFhevmConfig({
   chains: [sepolia, hardhatLocal],
@@ -17,7 +18,11 @@ export const fhevmConfig = createFhevmConfig({
 
 ## 2. Set Up Providers
 
-Wrap your application with the FhevmProvider after WagmiProvider:
+Choose the setup that matches your web3 stack.
+
+### With wagmi (recommended)
+
+Wrap your application with the FhevmProvider inside WagmiProvider:
 
 ```tsx
 // app/providers.tsx
@@ -64,98 +69,186 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-### Without wagmi
+### With viem (no wagmi)
 
-If you're not using wagmi, pass the provider directly:
+Create an `FhevmWallet` from a viem `WalletClient` and pass it directly:
 
 ```tsx
-import { FhevmProvider, memoryStorage, type Eip1193Provider } from "@zama-fhe/react-sdk";
+import {
+  FhevmProvider, createFhevmConfig, memoryStorage,
+  type FhevmWallet,
+} from "@zama-fhe/react-sdk";
+import { sepolia } from "@zama-fhe/react-sdk/chains";
+import { createWalletClient, custom } from "viem";
+import { sepolia as viemSepolia } from "viem/chains";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function FhevmWrapper({ children }: { children: React.ReactNode }) {
-  const { address, chainId, isConnected } = useWallet(); // Your wallet hook
+const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
+const queryClient = new QueryClient();
+
+function App() {
+  // Create viem WalletClient (your connection logic here)
+  const walletClient = createWalletClient({
+    chain: viemSepolia,
+    transport: custom(window.ethereum!),
+  });
+
+  // Wrap as FhevmWallet — 3 lines
+  const wallet: FhevmWallet = {
+    address: walletClient.account!.address,
+    sendTransaction: (tx) =>
+      walletClient.sendTransaction({
+        ...tx,
+        account: walletClient.account!,
+        chain: viemSepolia,
+      }),
+    signTypedData: (td) =>
+      walletClient.signTypedData({ ...td, account: walletClient.account! }),
+  };
 
   return (
-    <FhevmProvider
-      config={fhevmConfig}
-      provider={window.ethereum as Eip1193Provider}
-      address={address}
-      chainId={chainId}
-      isConnected={isConnected}
-      storage={memoryStorage}
-    >
-      {children}
-    </FhevmProvider>
+    <QueryClientProvider client={queryClient}>
+      <FhevmProvider
+        config={fhevmConfig}
+        wallet={wallet}
+        address={wallet.address}
+        chainId={viemSepolia.id}
+        isConnected={true}
+        storage={memoryStorage}
+      >
+        <YourApp />
+      </FhevmProvider>
+    </QueryClientProvider>
   );
 }
 ```
 
-## 3. Encrypt Values
+### With ethers.js (no wagmi)
 
-Use the `useEncrypt` hook to encrypt values for contract calls:
+Create an `FhevmWallet` from an ethers.js `Signer`:
 
 ```tsx
-import { useEncrypt } from "@zama-fhe/react-sdk";
+import {
+  FhevmProvider, createFhevmConfig, memoryStorage,
+  type FhevmWallet,
+} from "@zama-fhe/react-sdk";
+import { sepolia } from "@zama-fhe/react-sdk/chains";
+import { BrowserProvider } from "ethers";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function TransferForm({ contractAddress }) {
-  const { encrypt, isReady } = useEncrypt();
+const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
+const queryClient = new QueryClient();
+
+function App() {
+  const [wallet, setWallet] = useState<FhevmWallet>();
+
+  useEffect(() => {
+    async function connect() {
+      const provider = new BrowserProvider(window.ethereum!);
+      const signer = await provider.getSigner();
+
+      // Wrap as FhevmWallet — 3 lines
+      setWallet({
+        address: (await signer.getAddress()) as `0x${string}`,
+        sendTransaction: async (tx) => {
+          const resp = await signer.sendTransaction(tx);
+          return resp.hash as `0x${string}`;
+        },
+        signTypedData: (td) =>
+          signer.signTypedData(td.domain, td.types, td.message),
+      });
+    }
+    connect();
+  }, []);
+
+  if (!wallet) return <p>Connecting...</p>;
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <FhevmProvider
+        config={fhevmConfig}
+        wallet={wallet}
+        address={wallet.address}
+        chainId={11155111}
+        isConnected={true}
+        storage={memoryStorage}
+      >
+        <YourApp />
+      </FhevmProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+## 3. Transfer Confidential Tokens
+
+Use the `useConfidentialTransfer` hook — it handles encryption, signing, and confirmation automatically:
+
+```tsx
+import { useConfidentialTransfer } from "@zama-fhe/react-sdk";
+
+function TransferForm({ contractAddress }: { contractAddress: `0x${string}` }) {
+  const {
+    transfer, status, isEncrypting, isSigning, isConfirming, isSuccess, error, txHash, reset,
+  } = useConfidentialTransfer({ contractAddress });
+
+  const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
 
-  const handleTransfer = async () => {
-    if (!isReady) return;
-
-    // Encrypt the amount - returns [handle, proof] for easy destructuring
-    const [amountHandle, proof] = await encrypt([
-      { type: "uint64", value: BigInt(amount) },
-    ], contractAddress);
-
-    if (!amountHandle) return;
-
-    // Use in contract call
-    await writeContract({
-      address: contractAddress,
-      abi: tokenAbi,
-      functionName: "transfer",
-      args: [recipient, amountHandle, proof],
-    });
+  const handleTransfer = () => {
+    transfer(recipient as `0x${string}`, BigInt(amount));
   };
 
   return (
     <div>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Amount"
-      />
-      <button onClick={handleTransfer} disabled={!isReady}>
+      <input placeholder="Recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)} />
+      <input type="number" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
+      <button onClick={handleTransfer} disabled={status !== "idle"}>
         Transfer
       </button>
+
+      {isEncrypting && <p>Encrypting amount...</p>}
+      {isSigning && <p>Sign the transaction in your wallet...</p>}
+      {isConfirming && <p>Waiting for confirmation...</p>}
+      {isSuccess && <p>Done! TX: {txHash}</p>}
+      {error && <p>Error: {error.message} <button onClick={reset}>Retry</button></p>}
     </div>
   );
 }
 ```
 
-## 4. Decrypt Values
+## 4. Read Confidential Balances
 
-Use the `useUserDecrypt` hook to decrypt encrypted values:
+Use the `useConfidentialBalances` hook to fetch and decrypt balances:
 
 ```tsx
-import { useUserDecrypt } from "@zama-fhe/react-sdk";
+import { useConfidentialBalances } from "@zama-fhe/react-sdk";
 
-function BalanceDisplay({ handle, contractAddress }) {
-  const { decrypt, results, isDecrypting, canDecrypt } = useUserDecrypt({
-    handle,
-    contractAddress,
+function BalanceDisplay({ contractAddress }: { contractAddress: `0x${string}` }) {
+  const {
+    data, isLoading, decryptAll, isDecrypting, canDecrypt, isAllDecrypted,
+  } = useConfidentialBalances({
+    contracts: [{ contractAddress }],
+    decrypt: true,
   });
 
-  const balance = handle ? results[handle] : undefined;
+  if (isLoading) return <p>Loading...</p>;
+
+  const balance = data[0];
 
   return (
     <div>
-      <p>Balance: {balance?.toString() ?? "Encrypted"}</p>
-      <button onClick={decrypt} disabled={!canDecrypt}>
-        {isDecrypting ? "Decrypting..." : "Decrypt"}
-      </button>
+      <p>
+        Balance:{" "}
+        {balance?.decryptedValue !== undefined
+          ? `${balance.decryptedValue} tokens`
+          : "Encrypted"}
+      </p>
+      {canDecrypt && !isAllDecrypted && (
+        <button onClick={decryptAll} disabled={isDecrypting}>
+          {isDecrypting ? "Decrypting..." : "Reveal Balance"}
+        </button>
+      )}
     </div>
   );
 }
@@ -187,74 +280,10 @@ function FHEStatus() {
 }
 ```
 
-## Complete Example
-
-Here's a complete component combining encryption, decryption, and status:
-
-```tsx
-import { useEncrypt, useUserDecrypt, useFhevmStatus } from "@zama-fhe/react-sdk";
-import { useReadContract, useWriteContract } from "wagmi";
-
-function EncryptedToken({ contractAddress, userAddress }) {
-  const { isReady: fhevmReady } = useFhevmStatus();
-  const { encrypt } = useEncrypt();
-  const { writeContract } = useWriteContract();
-
-  // Read encrypted balance handle from contract
-  const { data: balanceHandle } = useReadContract({
-    address: contractAddress,
-    abi: tokenAbi,
-    functionName: "balanceOf",
-    args: [userAddress],
-  });
-
-  // Set up decryption
-  const { decrypt, results, canDecrypt, isDecrypting } = useUserDecrypt({
-    handle: balanceHandle,
-    contractAddress,
-  });
-
-  const decryptedBalance = balanceHandle ? results[balanceHandle] : undefined;
-
-  // Transfer function with encryption
-  const handleTransfer = async (recipient: `0x${string}`, amount: bigint) => {
-    const [amountHandle, proof] = await encrypt([
-      { type: "uint64", value: amount },
-    ], contractAddress);
-
-    if (!amountHandle) return;
-
-    writeContract({
-      address: contractAddress,
-      abi: tokenAbi,
-      functionName: "transfer",
-      args: [recipient, amountHandle, proof],
-    });
-  };
-
-  if (!fhevmReady) {
-    return <p>Loading FHE...</p>;
-  }
-
-  return (
-    <div>
-      <h2>My Balance</h2>
-      <p>
-        {decryptedBalance !== undefined
-          ? `${decryptedBalance} tokens`
-          : "Encrypted"}
-      </p>
-      <button onClick={decrypt} disabled={!canDecrypt}>
-        {isDecrypting ? "Decrypting..." : "Reveal Balance"}
-      </button>
-    </div>
-  );
-}
-```
-
 ## Next Steps
 
 - [FhevmProvider](../provider/fhevm-provider.md) - Learn about provider configuration
+- [Wallet Interface](../guides/wallet-interface.md) - FhevmWallet details for viem and ethers.js
 - [Storage Configuration](../configuration/storage.md) - Configure signature caching
-- [useEncrypt](../hooks/use-encrypt.md) - Explore encryption options
-- [useUserDecrypt](../hooks/use-user-decrypt.md) - Learn about decryption
+- [useConfidentialTransfer](../hooks/use-confidential-transfer.md) - Full transfer hook API
+- [useConfidentialBalances](../hooks/use-confidential-balances.md) - Full balance hook API
