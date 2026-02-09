@@ -41,7 +41,7 @@
   * [Linking](react-sdk/guides/linking.md)
 * Reference
   * [Types](react-sdk/types/overview.md)
-  * [Migration Guide](react-sdk/migration/from-legacy.md)
+
 
 ## API Reference
 

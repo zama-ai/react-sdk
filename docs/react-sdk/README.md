@@ -108,7 +108,6 @@ npm install viem          # viem-only
 ### Reference
 
 - **[Types](types/overview.md)** - TypeScript type definitions
-- **[Migration Guide](migration/from-legacy.md)** - Migrate from legacy hooks
 
 ---
 

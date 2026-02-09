@@ -134,39 +134,6 @@ const wallet: FhevmWallet = {
 }
 ```
 
-## Migration from `provider`
-
-The `wallet` prop is fully backwards compatible. You can adopt it incrementally:
-
-1. **Phase 1 (now):** Add `wallet` alongside `provider`. Hooks will prefer `wallet` when available.
-2. **Phase 2 (future):** The `provider` prop will be deprecated for transaction hooks.
-3. **Phase 3 (future):** The `provider` prop will only be needed for FHEVM instance initialization.
-
-### Before
-
-```tsx
-<FhevmProvider
-  config={config}
-  provider={window.ethereum}
-  address={address}
-  chainId={chainId}
-  isConnected={isConnected}
->
-```
-
-### After
-
-```tsx
-<FhevmProvider
-  config={config}
-  wallet={myWallet}
-  provider={window.ethereum}  // Still used for FHEVM instance init
-  address={address}
-  chainId={chainId}
-  isConnected={isConnected}
->
-```
-
 ## How it works internally
 
 When `wallet` is provided:

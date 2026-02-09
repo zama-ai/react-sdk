@@ -48,12 +48,6 @@ function FhevmWrapper({ children }) {
 | `storage`     | `GenericStringStorage`| `undefined`       | Storage for caching decryption signatures        |
 | `autoInit`    | `boolean`             | `true`            | Auto-initialize when wallet connects             |
 
-### Deprecated Props
-
-| Prop    | Type                                | Description                                |
-| ------- | ----------------------------------- | ------------------------------------------ |
-| `wagmi` | `{ isConnected, chainId, address }` | **Deprecated.** Use explicit props instead |
-
 ## Storage Options
 
 The `storage` prop controls how decryption signatures are cached. **No default is provided** - you must explicitly choose:
@@ -252,24 +246,3 @@ function FHEStatus() {
 }
 ```
 
-## Migration from wagmi prop
-
-If you were using the deprecated `wagmi` prop, update to explicit props:
-
-```tsx
-// Before (deprecated)
-<FhevmProvider
-  config={fhevmConfig}
-  wagmi={{ isConnected, chainId, address }}
->
-
-// After (recommended)
-<FhevmProvider
-  config={fhevmConfig}
-  provider={window.ethereum}
-  address={address}
-  chainId={chainId}
-  isConnected={isConnected}
-  storage={memoryStorage}
->
-```

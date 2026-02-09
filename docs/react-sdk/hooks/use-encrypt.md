@@ -182,36 +182,3 @@ function ConfidentialTransfer({ contractAddress, tokenAbi }) {
 }
 ```
 
-## Migration from Old API
-
-If you were using the previous API:
-
-```tsx
-// Old API
-const encrypted = await encrypt(100n, contractAddress);
-writeContract({ args: [encrypted.handles[0], encrypted.inputProof] });
-
-// New API
-const [handle, proof] = await encrypt([
-  { type: "uint64", value: 100n }
-], contractAddress);
-writeContract({ args: [handle, proof] });
-```
-
-Multiple values:
-
-```tsx
-// Old API
-const encrypted = await encryptBatch([
-  { type: "uint64", value: 100n },
-  { type: "address", value: "0x..." },
-], contractAddress);
-writeContract({ args: [encrypted.handles[0], encrypted.handles[1], encrypted.inputProof] });
-
-// New API
-const [amount, recipient, proof] = await encrypt([
-  { type: "uint64", value: 100n },
-  { type: "address", value: "0x..." },
-], contractAddress);
-writeContract({ args: [amount, recipient, proof] });
-```

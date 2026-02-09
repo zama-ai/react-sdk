@@ -25,7 +25,7 @@ React hooks for FHE operations with wagmi-style API.
 - **[Configuration](react-sdk/configuration/)** - Chains, storage, threading
 - **[Provider](react-sdk/provider/)** - FhevmProvider setup
 - **[Hooks](react-sdk/hooks/)** - All available hooks
-- **[Migration](react-sdk/migration/)** - Migrate from legacy versions
+
 
 ### API Reference
 Auto-generated TypeScript API documentation in Markdown.
