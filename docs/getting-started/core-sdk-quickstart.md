@@ -101,6 +101,4 @@ console.log("Balance handle:", handle);
 
 ## Next Steps
 
-- Learn about [Configuration](../core-sdk/config.md)
-- Explore [Actions](../core-sdk/actions/)
-- Read about [Providers](../core-sdk/providers.md)
+- Read the full [Core SDK Documentation](../core-sdk/README.md)

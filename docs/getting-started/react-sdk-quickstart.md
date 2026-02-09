@@ -2,8 +2,6 @@
 
 Get started with `@zama-fhe/react-sdk` in under 5 minutes.
 
-For detailed setup instructions, see the [React SDK Quick Start Guide](../react-sdk/getting-started/quick-start.md).
-
 ## Installation
 
 ```bash

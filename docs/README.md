@@ -4,7 +4,7 @@
 
 ---
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ### Getting Started
 Choose the right SDK and get up and running quickly.
@@ -19,20 +19,12 @@ Choose the right SDK and get up and running quickly.
 #### [@zama-fhe/core-sdk](core-sdk/README.md)
 Framework-agnostic core SDK that works with ethers.js and viem.
 
-- **[Actions](core-sdk/actions/)** - Encrypt, transfer, read balances
-- **[Configuration](core-sdk/config.md)** - Configure the SDK
-- **[Providers](core-sdk/providers.md)** - Ethers and Viem integration
-- **[Chains](core-sdk/chains.md)** - Network configuration
-- **[Transports](core-sdk/transports.md)** - RPC transport setup
-
 #### [@zama-fhe/react-sdk](react-sdk/README.md)
 React hooks for FHE operations with wagmi-style API.
 
-- **[Getting Started](react-sdk/getting-started/)** - Installation and quick start
 - **[Configuration](react-sdk/configuration/)** - Chains, storage, threading
 - **[Provider](react-sdk/provider/)** - FhevmProvider setup
 - **[Hooks](react-sdk/hooks/)** - All available hooks
-- **[Guides](react-sdk/guides/)** - Security, error handling, troubleshooting
 - **[Migration](react-sdk/migration/)** - Migrate from legacy versions
 
 ### API Reference
@@ -42,17 +34,9 @@ Auto-generated TypeScript API documentation in Markdown.
 - **[@zama-fhe/core-sdk API](api/@zama-fhe/core-sdk/README.md)** - Core SDK API reference
 - **[@zama-fhe/react-sdk API](api/@zama-fhe/react-sdk/README.md)** - React SDK API reference
 
-### Guides
-Cross-cutting topics and best practices.
-
-- **[Architecture](guides/architecture.md)** - How the SDK packages work together
-- **[Choosing a Package](guides/choosing-a-package.md)** - Decision guide
-- **[Security Best Practices](guides/security-best-practices.md)** - Production security
-- **[Contributing](guides/contributing.md)** - How to contribute
-
 ---
 
-## 🚀 Quick Links
+## Quick Links
 
 ### I want to build...
 
@@ -73,26 +57,7 @@ Cross-cutting topics and best practices.
 
 ---
 
-## 📖 Documentation Formats
-
-This documentation is available in multiple formats:
-
-- **Markdown** - You're reading it! Browse on GitHub or locally
-- **API Reference** - TypeDoc-generated Markdown API docs at [api/](api/README.md)
-- **GitBook** - Ready to deploy with GitBook for enhanced navigation
-
----
-
-## 🆘 Support
-
-- **GitHub Issues:** [Report bugs or request features](https://github.com/zama-ai/fhe-sdk/issues)
-- **Discord:** [Join our community](https://discord.fhe.org)
-- **Documentation:** You're here! 📖
-- **Security Issues:** Email security@zama.ai (do not open public issues)
-
----
-
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 @fhevm/relayer-sdk        ← Low-level FHE primitives (Zama)
@@ -106,7 +71,7 @@ Your Application          ← dApps, backends, CLIs
 
 ---
 
-## 📦 Package Overview
+## Package Overview
 
 | Package | Use Case | Dependencies |
 |---------|----------|--------------|
@@ -115,10 +80,8 @@ Your Application          ← dApps, backends, CLIs
 
 ---
 
-<div align="center">
+## Support
 
-**Built with ❤️ by [Zama](https://zama.ai)**
-
-[Website](https://zama.ai) • [GitHub](https://github.com/zama-ai) • [Documentation](https://docs.zama.ai) • [Discord](https://discord.fhe.org)
-
-</div>
+- **GitHub Issues:** [Report bugs or request features](https://github.com/zama-ai/fhe-sdk/issues)
+- **Discord:** [Join our community](https://discord.fhe.org)
+- **Security Issues:** Email security@zama.ai (do not open public issues)

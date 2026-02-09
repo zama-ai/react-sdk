@@ -54,28 +54,6 @@ Are you building with React?
 
 ---
 
-## Installation
-
-### React SDK
-
-```bash
-npm install @zama-fhe/react-sdk ethers @tanstack/react-query
-# or
-npm install @zama-fhe/react-sdk viem @tanstack/react-query
-# or
-npm install @zama-fhe/react-sdk wagmi viem @tanstack/react-query
-```
-
-### Core SDK
-
-```bash
-npm install @zama-fhe/core-sdk ethers
-# or
-npm install @zama-fhe/core-sdk viem
-```
-
----
-
 ## Next Steps
 
 - **[Installation Guide](installation.md)** - Detailed installation instructions

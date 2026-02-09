@@ -8,18 +8,18 @@
 
 ---
 
-## 🌟 Overview
+## Overview
 
 `@zama-fhe/core-sdk` provides **framework-agnostic actions** for encrypting, decrypting, and managing FHE operations. It works with both **ethers.js** and **viem**, making it perfect for Node.js backends, CLI tools, and non-React frontends.
 
-## ✨ Features
+## Features
 
-- 🔧 **Framework-agnostic** - Works with any JavaScript/TypeScript framework
-- 🔌 **Dual provider support** - Use ethers.js or viem
-- 📘 **Full TypeScript support** - Completely typed API
-- 🌐 **Multiple chain support** - Sepolia testnet and local Hardhat
-- 🔐 **Flexible encryption** - Support for all FHE types (uint8-256, address, bool)
-- ⚡ **Lightweight** - No React or UI dependencies
+- **Framework-agnostic** - Works with any JavaScript/TypeScript framework
+- **Dual provider support** - Use ethers.js or viem
+- **Full TypeScript support** - Completely typed API
+- **Multiple chain support** - Sepolia testnet and local Hardhat
+- **Flexible encryption** - Support for all FHE types (uint8-256, address, bool)
+- **Lightweight** - No React or UI dependencies
 
 ## Quick Example
 
@@ -80,7 +80,7 @@ const result = await confidentialTransfer(config, {
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @zama-fhe/core-sdk ethers
@@ -97,26 +97,113 @@ pnpm add @zama-fhe/core-sdk viem
 
 ---
 
-## 📖 Documentation
+## Configuration
 
-### Core Concepts
+Use `createConfig()` to create a configuration object:
 
-- **[Configuration](config.md)** - Set up SDK configuration
-- **[Providers](providers.md)** - Ethers.js and Viem integration
-- **[Chains](chains.md)** - Network configuration
-- **[Transports](transports.md)** - RPC transport setup
+```typescript
+import { createConfig } from "@zama-fhe/core-sdk";
+import { sepolia, hardhatLocal } from "@zama-fhe/core-sdk/chains";
 
-### API Reference
+const config = createConfig({
+  chains: [sepolia, hardhatLocal],
+  defaultChain: sepolia,
+});
+```
 
-- **[TypeScript API Documentation](../api/@zama-fhe/core-sdk/README.md)** - Complete API reference
+### Configuration Options
+
+| Option | Required | Description |
+|--------|----------|-------------|
+| `chains` | Yes | Array of chain objects defining the networks your app supports |
+| `defaultChain` | No | The default chain to use when none is specified in action calls |
+
+Pass the configuration object to all SDK actions:
+
+```typescript
+import { confidentialTransfer } from "@zama-fhe/core-sdk";
+
+const result = await confidentialTransfer(config, {
+  chainId: sepolia.chainId,
+  // ... other params
+});
+```
 
 ---
 
-## 🚀 Use Cases
+## Providers
+
+The SDK automatically detects whether you're using ethers.js or viem:
+
+```typescript
+// Ethers.js
+const wallet = new ethers.Wallet(pk, provider);
+await confidentialTransfer(config, { provider: wallet, ... });
+
+// Viem
+const client = createWalletClient({ chain, transport: http() });
+await confidentialTransfer(config, { provider: client, ... });
+```
+
+---
+
+## Chains
+
+### Built-in Chains
+
+| Chain | Chain ID | Mock |
+|-------|----------|------|
+| **Sepolia Testnet** | 11155111 | No |
+| **Hardhat Local** | 31337 | Yes |
+
+```typescript
+import { sepolia, hardhatLocal } from "@zama-fhe/core-sdk/chains";
+```
+
+### Custom Chains
+
+Define custom chains with `defineChain`:
+
+```typescript
+import { defineChain } from "@zama-fhe/core-sdk/chains";
+
+const myChain = defineChain({
+  chainId: 1234,
+  name: "My Chain",
+  // ... other properties
+});
+```
+
+---
+
+## Transports
+
+### HTTP Transport
+
+```typescript
+import { http } from "@zama-fhe/core-sdk/transports";
+
+const transport = http("https://rpc.example.com");
+```
+
+### Fallback Transport
+
+Use multiple RPC endpoints with automatic failover:
+
+```typescript
+import { fallback, http } from "@zama-fhe/core-sdk/transports";
+
+const transport = fallback([
+  http("https://rpc1.example.com"),
+  http("https://rpc2.example.com"),
+]);
+```
+
+---
+
+## Use Cases
 
 ### Node.js Backend
-
-Perfect for building backend services that interact with FHE contracts:
 
 ```typescript
 import { confidentialBalance, createConfig } from "@zama-fhe/core-sdk";
@@ -137,8 +224,6 @@ async function getBalance(address: string) {
 ```
 
 ### CLI Tools
-
-Build command-line tools for FHE operations:
 
 ```typescript
 #!/usr/bin/env node
@@ -182,34 +267,7 @@ async function handleSubmit() {
 
 ---
 
-## 🔧 Configuration
-
-The SDK requires a configuration object created with `createConfig()`:
-
-```typescript
-import { createConfig } from "@zama-fhe/core-sdk";
-import { sepolia, hardhatLocal } from "@zama-fhe/core-sdk/chains";
-
-const config = createConfig({
-  chains: [sepolia, hardhatLocal],
-  defaultChain: sepolia,
-});
-```
-
-See [Configuration Guide](config.md) for details.
-
----
-
-## 🌐 Supported Chains
-
-- **Sepolia Testnet** - Ethereum testnet with fhEVM
-- **Hardhat Local** - Local development network
-
-See [Chains Guide](chains.md) for configuration details.
-
----
-
-## 📘 TypeScript Support
+## TypeScript Support
 
 The SDK is written in TypeScript and provides complete type definitions:
 
@@ -223,25 +281,13 @@ import type {
 
 ---
 
-## 🔄 Provider Flexibility
+## API Reference
 
-The SDK automatically detects whether you're using ethers.js or viem:
-
-```typescript
-// Ethers.js
-const wallet = new ethers.Wallet(pk, provider);
-await confidentialTransfer(config, { provider: wallet, ... });
-
-// Viem
-const client = createWalletClient({ chain, transport: http() });
-await confidentialTransfer(config, { provider: client, ... });
-```
-
-See [Providers Guide](providers.md) for details.
+See the [TypeScript API Documentation](../api/@zama-fhe/core-sdk/README.md) for the complete API reference.
 
 ---
 
-## 🆘 Support
+## Support
 
 - **Documentation:** [Full SDK Documentation](../README.md)
 - **GitHub Issues:** [Report bugs or request features](https://github.com/zama-ai/fhe-sdk/issues)
@@ -250,16 +296,6 @@ See [Providers Guide](providers.md) for details.
 
 ---
 
-## 📦 Related Packages
+## Related Packages
 
 - **[@zama-fhe/react-sdk](../react-sdk/README.md)** - React hooks for FHE operations
-
----
-
-<div align="center">
-
-**Built with ❤️ by [Zama](https://zama.ai)**
-
-[Website](https://zama.ai) • [GitHub](https://github.com/zama-ai) • [Documentation](https://docs.zama.ai) • [Discord](https://discord.fhe.org)
-
-</div>

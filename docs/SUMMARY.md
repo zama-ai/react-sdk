@@ -12,17 +12,10 @@
 ## Core SDK
 
 * [Overview](core-sdk/README.md)
-* [Configuration](core-sdk/config.md)
-* [Providers](core-sdk/providers.md)
-* [Chains](core-sdk/chains.md)
-* [Transports](core-sdk/transports.md)
 
 ## React SDK
 
 * [Overview](react-sdk/README.md)
-* Getting Started
-  * [Installation](react-sdk/getting-started/installation.md)
-  * [Quick Start](react-sdk/getting-started/quick-start.md)
 * Configuration
   * [Overview](react-sdk/configuration/overview.md)
   * [Chains](react-sdk/configuration/chains.md)

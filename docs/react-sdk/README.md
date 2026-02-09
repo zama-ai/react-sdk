@@ -8,18 +8,18 @@
 
 ---
 
-## 🌟 Overview
+## Overview
 
 `@zama-fhe/react-sdk` provides **wagmi-style React hooks** for encrypting, decrypting, and managing FHE operations in React applications. It works with **wagmi, viem, or ethers.js** — pick whichever web3 library you prefer. Integrates with TanStack Query for a modern, familiar developer experience.
 
-## ✨ Features
+## Features
 
-- 🎣 **Wagmi-style API** - Familiar patterns for web3 developers
-- ⚡ **Auto-initialization** - FHEVM instance managed automatically
-- 🔄 **TanStack Query integration** - Built-in caching, refetching, and state management
-- 📘 **Full TypeScript support** - Completely typed API with intellisense
-- 🌐 **Multiple chain support** - Sepolia testnet and local Hardhat development
-- 🔐 **Flexible encryption** - Simple and builder patterns for all FHE types (uint8-256, address, bool)
+- **Wagmi-style API** - Familiar patterns for web3 developers
+- **Auto-initialization** - FHEVM instance managed automatically
+- **TanStack Query integration** - Built-in caching, refetching, and state management
+- **Full TypeScript support** - Completely typed API with intellisense
+- **Multiple chain support** - Sepolia testnet and local Hardhat development
+- **Flexible encryption** - Simple and builder patterns for all FHE types (uint8-256, address, bool)
 
 ## Quick Example
 
@@ -49,7 +49,7 @@ function EncryptedTransfer({ contractAddress }: { contractAddress: `0x${string}`
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @zama-fhe/react-sdk @tanstack/react-query
@@ -62,18 +62,18 @@ npm install viem          # viem-only
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 ### Getting Started
 
-- **[Installation](getting-started/installation.md)** - Set up your project with dependencies
-- **[Quick Start](getting-started/quick-start.md)** - Build your first FHE app in 5 minutes
+- **[Installation](../getting-started/installation.md)** - Set up your project with dependencies
+- **[Quick Start](../getting-started/react-sdk-quickstart.md)** - Build your first FHE app in 5 minutes
 
 ### Configuration
 
 - **[Overview](configuration/overview.md)** - Configure FhevmProvider for your app
 - **[Chains](configuration/chains.md)** - Network configuration (Sepolia, Hardhat)
-- **[Storage](configuration/storage.md)** ⭐ - Choose storage strategy (localStorage, memory, encrypted)
+- **[Storage](configuration/storage.md)** - Choose storage strategy (localStorage, memory, encrypted)
 - **[Threading & Performance](configuration/threading.md)** - Optimize initialization with Web Workers
 
 ### Provider
@@ -101,7 +101,7 @@ npm install viem          # viem-only
 
 ### Guides
 
-- **[Security](guides/security.md)** ⭐ - Essential security considerations for production
+- **[Security](guides/security.md)** - Essential security considerations for production
 - **[Error Handling](guides/error-handling.md)** - Handle errors gracefully
 - **[Troubleshooting](guides/troubleshooting.md)** - Common issues and solutions
 
@@ -112,7 +112,7 @@ npm install viem          # viem-only
 
 ---
 
-## 🔒 Security
+## Security
 
 **Important:** This SDK handles sensitive cryptographic material. Please review the **[Security Guide](guides/security.md)** before deploying to production.
 
@@ -120,27 +120,16 @@ npm install viem          # viem-only
 
 | Environment | Recommended Storage | Security Level |
 |-------------|---------------------|----------------|
-| **Production** | `sessionStorageAdapter` or `memoryStorage` | ✅ High |
-| **Development** | `localStorageAdapter` or `memoryStorage` | ⚠️ Medium |
-| **High-Security Apps** | `memoryStorage` or custom encrypted | 🔒 Highest |
+| **Production** | `sessionStorageAdapter` or `memoryStorage` | High |
+| **Development** | `localStorageAdapter` or `memoryStorage` | Medium |
+| **High-Security Apps** | `memoryStorage` or custom encrypted | Highest |
 
-**⚠️ Warning:** Both `localStorage` and `sessionStorage` are vulnerable to XSS attacks. For security-critical applications, use `memoryStorage` or implement [encrypted storage](configuration/storage.md#example-encrypted-storage).
+**Warning:** Both `localStorage` and `sessionStorage` are vulnerable to XSS attacks. For security-critical applications, use `memoryStorage` or implement [encrypted storage](configuration/storage.md#example-encrypted-storage).
 
 ---
 
-## 🆘 Support
+## Support
 
-- **Documentation:** You're reading it! 📖
 - **GitHub Issues:** [Report bugs or request features](https://github.com/zama-ai/react-sdk/issues)
 - **Discord:** [Join our community](https://discord.fhe.org)
 - **Security Issues:** Email security@zama.ai (do not open public issues)
-
----
-
-<div align="center">
-
-**Built with ❤️ by [Zama](https://zama.ai)**
-
-[Website](https://zama.ai) • [GitHub](https://github.com/zama-ai) • [Documentation](https://docs.zama.ai) • [Discord](https://discord.fhe.org)
-
-</div>

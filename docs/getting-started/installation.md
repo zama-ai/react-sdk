@@ -19,7 +19,7 @@ npm install @zama-fhe/react-sdk @tanstack/react-query
 | **ethers.js only** | `npm install ethers` | Existing ethers.js projects |
 | **wagmi + ethers** | `npm install wagmi viem` | Mixed setups |
 
-See the [React SDK documentation](../react-sdk/getting-started/installation.md) for detailed setup instructions.
+See the [React SDK documentation](../react-sdk/README.md) for detailed setup instructions.
 
 ---
 
