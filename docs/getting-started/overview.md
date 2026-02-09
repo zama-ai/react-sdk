@@ -59,6 +59,10 @@ Are you building with React?
 ### React SDK
 
 ```bash
+npm install @zama-fhe/react-sdk ethers @tanstack/react-query
+# or
+npm install @zama-fhe/react-sdk viem @tanstack/react-query
+# or
 npm install @zama-fhe/react-sdk wagmi viem @tanstack/react-query
 ```
 

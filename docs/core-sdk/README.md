@@ -106,17 +106,9 @@ pnpm add @zama-fhe/core-sdk viem
 - **[Chains](chains.md)** - Network configuration
 - **[Transports](transports.md)** - RPC transport setup
 
-### Actions
-
-Actions are the main functions you'll use to interact with FHE contracts:
-
-- **[encrypt](actions/encrypt.md)** - Encrypt values for contract calls
-- **[confidentialBalance](actions/confidential-balance.md)** - Read and decrypt confidential balances
-- **[confidentialTransfer](actions/confidential-transfer.md)** - Transfer confidential tokens
-
 ### API Reference
 
-- **[TypeScript API Documentation](../api/modules/_zama-fhe_core-sdk.html)** - Complete API reference
+- **[TypeScript API Documentation](../api/@zama-fhe/core-sdk/README.md)** - Complete API reference
 
 ---
 

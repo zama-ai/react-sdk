@@ -16,10 +16,6 @@
 * [Providers](core-sdk/providers.md)
 * [Chains](core-sdk/chains.md)
 * [Transports](core-sdk/transports.md)
-* Actions
-  * [encrypt](core-sdk/actions/encrypt.md)
-  * [confidentialBalance](core-sdk/actions/confidential-balance.md)
-  * [confidentialTransfer](core-sdk/actions/confidential-transfer.md)
 
 ## React SDK
 
@@ -54,15 +50,8 @@
   * [Types](react-sdk/types/overview.md)
   * [Migration Guide](react-sdk/migration/from-legacy.md)
 
-## Guides
-
-* [Architecture](guides/architecture.md)
-* [Choosing a Package](guides/choosing-a-package.md)
-* [Security Best Practices](guides/security-best-practices.md)
-* [Contributing](guides/contributing.md)
-
 ## API Reference
 
 * [API Overview](api/README.md)
-* [@zama-fhe/core-sdk](api/@zama-fhe/core-sdk.md)
-* [@zama-fhe/react-sdk](api/@zama-fhe/react-sdk.md)
+* [@zama-fhe/core-sdk](api/@zama-fhe/core-sdk/README.md)
+* [@zama-fhe/react-sdk](api/@zama-fhe/react-sdk/README.md)

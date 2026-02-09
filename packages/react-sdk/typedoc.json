@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/index.ts"],
+  "entryPoints": ["src/_docs.ts"],
   "out": "docs/api",
   "readme": "none",
   "githubPages": true,
@@ -11,12 +11,7 @@
   "includeVersion": true,
   "categorizeByGroup": true,
   "categoryOrder": [
-    "Provider",
     "Hooks",
-    "Config",
-    "Chains",
-    "Storage",
-    "Types",
     "*"
   ],
   "groupOrder": [

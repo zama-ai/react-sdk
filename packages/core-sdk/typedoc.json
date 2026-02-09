@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/index.ts"],
+  "entryPoints": ["src/_docs.ts"],
   "out": "docs/api",
   "readme": "README.md",
   "githubPages": true,
@@ -14,18 +14,10 @@
     "Config",
     "Actions",
     "Chains",
-    "Transports",
-    "Providers",
-    "Types",
-    "Utils",
     "*"
   ],
   "groupOrder": [
     "Functions",
-    "Classes",
-    "Interfaces",
-    "Type Aliases",
-    "Variables",
     "*"
   ],
   "navigationLinks": {

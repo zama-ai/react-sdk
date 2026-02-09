@@ -12,8 +12,8 @@ This monorepo contains the core SDK packages for building FHE-powered applicatio
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@zama-fhe/core-sdk](@zama-fhe/core-sdk.md) | 0.1.0 | Framework-agnostic core SDK (works with ethers.js & viem) |
-| [@zama-fhe/react-sdk](@zama-fhe/react-sdk.md) | 0.1.0 | React hooks for FHE operations |
+| [@zama-fhe/core-sdk](@zama-fhe/core-sdk/README.md) | 0.1.0 | Framework-agnostic core SDK (works with ethers.js & viem) |
+| [@zama-fhe/react-sdk](@zama-fhe/react-sdk/README.md) | 0.1.0 | React hooks for FHE operations (works with wagmi, viem, or ethers.js) |
 
 ## Quick Start
 

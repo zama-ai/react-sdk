@@ -2,41 +2,32 @@
   "$schema": "https://typedoc.org/schema.json",
   "name": "Zama FHE SDK",
   "entryPoints": [
-    "packages/shared",
     "packages/core-sdk",
     "packages/react-sdk"
   ],
   "entryPointStrategy": "packages",
+  "packageOptions": {
+    "entryPoints": ["src/_docs.ts"]
+  },
   "out": "docs/api",
   "readme": "README.md",
   "plugin": ["typedoc-plugin-markdown"],
-  "outputFileStrategy": "modules",
+  "outputFileStrategy": "members",
+  "membersWithOwnFile": ["Function"],
   "fileExtension": ".md",
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
   "excludeExternals": true,
+  "excludeReferences": true,
   "includeVersion": true,
   "categorizeByGroup": true,
   "categoryOrder": [
-    "Provider",
     "Hooks",
-    "Config",
-    "Actions",
-    "Chains",
-    "Transports",
-    "Providers",
-    "Storage",
-    "Types",
-    "Utils",
     "*"
   ],
   "groupOrder": [
     "Functions",
-    "Classes",
-    "Interfaces",
-    "Type Aliases",
-    "Variables",
     "*"
   ],
   "cleanOutputDir": true,

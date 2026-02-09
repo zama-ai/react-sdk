@@ -39,8 +39,8 @@ React hooks for FHE operations with wagmi-style API.
 Auto-generated TypeScript API documentation in Markdown.
 
 - **[API Documentation](api/README.md)** - Complete API reference for all packages
-- **[@zama-fhe/core-sdk API](api/@zama-fhe/core-sdk.md)** - Core SDK API reference
-- **[@zama-fhe/react-sdk API](api/@zama-fhe/react-sdk.md)** - React SDK API reference
+- **[@zama-fhe/core-sdk API](api/@zama-fhe/core-sdk/README.md)** - Core SDK API reference
+- **[@zama-fhe/react-sdk API](api/@zama-fhe/react-sdk/README.md)** - React SDK API reference
 
 ### Guides
 Cross-cutting topics and best practices.

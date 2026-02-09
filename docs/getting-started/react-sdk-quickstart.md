@@ -10,12 +10,13 @@ For detailed setup instructions, see the [React SDK Quick Start Guide](../react-
 npm install @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-Then install your preferred web3 library (or use the bundled ethers.js):
+Then install your preferred web3 library:
 
 ```bash
-npm install wagmi viem    # wagmi setup (recommended for React)
 npm install viem          # viem-only setup
-# ethers.js is bundled — no extra install needed
+npm install wagmi viem    # wagmi setup (recommended for React)
+npm install ethers        # ethers.js-only setup
+npm install wagmi ethers  # wagmi + ethers.js setup
 ```
 
 ---
@@ -24,7 +25,7 @@ npm install viem          # viem-only setup
 
 Choose the setup that matches your web3 stack:
 
-### With wagmi (recommended)
+### With wagmi
 
 ```tsx
 import { FhevmProvider, createFhevmConfig } from "@zama-fhe/react-sdk";

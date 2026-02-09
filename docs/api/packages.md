@@ -6,6 +6,5 @@
 
 ## Packages
 
-- [@zama-fhe/core-sdk - v0.1.0](@zama-fhe/core-sdk.md)
-- [@zama-fhe/react-sdk - v0.1.0](@zama-fhe/react-sdk.md)
-- [@zama-fhe/shared](@zama-fhe/shared/README.md)
+- [@zama-fhe/core-sdk - v0.1.0](@zama-fhe/core-sdk/README.md)
+- [@zama-fhe/react-sdk - v0.1.0](@zama-fhe/react-sdk/README.md)
