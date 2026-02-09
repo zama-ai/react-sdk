@@ -1,196 +1,62 @@
 # Storage Configuration
 
-The `storage` prop on FhevmProvider controls how decryption signatures are cached. This avoids repeated signature requests from the user's wallet.
+The `storage` prop on FhevmProvider controls how decryption signatures are cached, avoiding repeated signature requests from the user's wallet.
 
 **Important:** No default storage is provided. You must explicitly choose a storage option.
 
 ---
 
-> ### 🔒 Security Warning
+> **Security Warning**
 >
-> Decryption signatures include **private keys** that can decrypt your users' confidential data. Using `localStorage` or `sessionStorage` exposes these keys to **XSS attacks**.
+> Decryption signatures include **private keys** that can decrypt your users' confidential data.
+> Both `localStorage` and `sessionStorage` are accessible to any JavaScript running on the page, making them vulnerable to XSS attacks.
 >
-> **For production apps:**
-> - ✅ Use `memoryStorage` or `sessionStorageAdapter`
-> - ✅ Implement [encrypted storage](#example-encrypted-storage)
-> - ⚠️ Avoid plain `localStorage` (XSS vulnerable)
+> **Recommended:** Use `memoryStorage` for built-in options, or implement [custom storage](#custom-storage) with encryption.
 >
-> **See:** [Security Guide](../guides/security.md) for complete details
+> See the [Security Guide](../guides/security.md) for details.
 
 ---
 
-## Quick Start
-
-For most applications, use `localStorageAdapter` for the best user experience:
-
-```tsx
-import { FhevmProvider, localStorageAdapter } from "@zama-fhe/react-sdk";
-
-<FhevmProvider
-  config={fhevmConfig}
-  storage={localStorageAdapter}
-  // ...other props
->
-  {children}
-</FhevmProvider>
-```
-
 ## Built-in Storage Adapters
 
-@zama-fhe/react-sdk provides four built-in storage adapters:
+### memoryStorage (Recommended)
 
-```tsx
-import {
-  memoryStorage,         // In-memory, cleared on refresh
-  localStorageAdapter,   // Persistent in localStorage
-  sessionStorageAdapter, // Cleared when tab closes
-  noOpStorage,           // No caching
-} from "@zama-fhe/react-sdk";
-```
-
-### localStorage Adapter (Recommended for UX)
-
-Persistent storage using browser's localStorage. Best user experience.
-
-```tsx
-import { FhevmProvider, localStorageAdapter } from "@zama-fhe/react-sdk";
-
-<FhevmProvider
-  config={fhevmConfig}
-  storage={localStorageAdapter}
-  // ...other props
->
-  {children}
-</FhevmProvider>
-```
-
-**Characteristics:**
-- Persists across sessions and page refreshes
-- User signs once, then can decrypt for 24 hours without re-signing
-- Keys stored with `fhevm:` prefix
-- Best UX (minimal signature requests)
-
-**When to use:**
-- Consumer-facing dApps where UX is priority
-- Apps where users decrypt frequently
-- Trusted device environments
-
-### sessionStorage Adapter
-
-Storage that clears when the browser tab closes.
-
-```tsx
-import { FhevmProvider, sessionStorageAdapter } from "@zama-fhe/react-sdk";
-
-<FhevmProvider
-  config={fhevmConfig}
-  storage={sessionStorageAdapter}
-  // ...other props
->
-  {children}
-</FhevmProvider>
-```
-
-**Characteristics:**
-- Persists across page refreshes within same tab
-- Cleared when tab closes
-- Keys stored with `fhevm:` prefix
-- Good balance of security and UX
-
-**When to use:**
-- Apps where users have longer sessions
-- When you want automatic cleanup on tab close
-- Middle-ground security requirements
-
-### Memory Storage
-
-In-memory storage that clears on page refresh.
+In-memory storage that clears on page refresh. No data persists to disk.
 
 ```tsx
 import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
 
-<FhevmProvider
-  config={fhevmConfig}
-  storage={memoryStorage}
-  // ...other props
->
+<FhevmProvider config={fhevmConfig} storage={memoryStorage} /* ...other props */ >
   {children}
 </FhevmProvider>
 ```
 
-**Characteristics:**
-- Data cleared on page refresh
-- No persistence to disk
 - User must re-sign after each page reload
 - Most secure built-in option
+- Good for security-sensitive applications and development
 
-**When to use:**
-- High-security applications
-- When signatures should never persist
-- Testing and development
-
-### No-op Storage
+### noOpStorage
 
 Disables caching entirely. User must sign for every decryption.
 
 ```tsx
 import { FhevmProvider, noOpStorage } from "@zama-fhe/react-sdk";
 
-<FhevmProvider
-  config={fhevmConfig}
-  storage={noOpStorage}
-  // ...other props
->
+<FhevmProvider config={fhevmConfig} storage={noOpStorage} /* ...other props */ >
   {children}
 </FhevmProvider>
 ```
 
-Or simply pass `undefined`:
-
-```tsx
-<FhevmProvider
-  config={fhevmConfig}
-  storage={undefined}
-  // ...other props
->
-  {children}
-</FhevmProvider>
-```
-
-**Characteristics:**
-- No caching at all
-- User signs for every decrypt operation
 - Maximum security, worst UX
+- Use when explicit user consent is required for each decrypt
 
-**When to use:**
-- Extremely sensitive operations
-- When you need explicit user consent for each decrypt
-- Compliance requirements that prohibit caching
-
-## Custom Prefix
-
-Create storage adapters with custom prefixes to isolate different apps or environments:
-
-```tsx
-import { createLocalStorageAdapter, createSessionStorageAdapter } from "@zama-fhe/react-sdk";
-
-// Isolate staging from production
-const stagingStorage = createLocalStorageAdapter("fhevm-staging:");
-const productionStorage = createLocalStorageAdapter("fhevm-prod:");
-
-// Use in provider
-<FhevmProvider
-  config={fhevmConfig}
-  storage={stagingStorage}
-  // ...
->
-```
+---
 
 ## Custom Storage
 
-Implement the `GenericStringStorage` interface for custom storage:
+For persistent storage that is also secure, implement the `GenericStringStorage` interface with your own encryption layer.
 
-```tsx
+```typescript
 interface GenericStringStorage {
   getItem(key: string): string | null | Promise<string | null>;
   setItem(key: string, value: string): void | Promise<void>;
@@ -198,17 +64,69 @@ interface GenericStringStorage {
 }
 ```
 
-### Example: IndexedDB Storage
+### Example: Encrypted Storage
+
+Encrypt signatures before persisting them. An XSS attacker cannot decrypt the data without the encryption key.
+
+```typescript
+import CryptoJS from "crypto-js";
+
+// Derive key from something the attacker can't access
+// (e.g., user password hash, hardware key, or secure enclave)
+function getEncryptionKey(): string {
+  // WARNING: This is a simplified example.
+  // In production, derive this from a secure source — not from
+  // anything stored in localStorage/sessionStorage.
+  return mySecureKeyDerivation();
+}
+
+const encryptedStorage: GenericStringStorage = {
+  getItem(key) {
+    const encrypted = localStorage.getItem(`fhevm-encrypted:${key}`);
+    if (!encrypted) return null;
+
+    const encKey = getEncryptionKey();
+    if (!encKey) return null;
+
+    try {
+      const bytes = CryptoJS.AES.decrypt(encrypted, encKey);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    } catch {
+      return null;
+    }
+  },
+
+  setItem(key, value) {
+    const encKey = getEncryptionKey();
+    if (!encKey) return;
+
+    const encrypted = CryptoJS.AES.encrypt(value, encKey).toString();
+    localStorage.setItem(`fhevm-encrypted:${key}`, encrypted);
+  },
+
+  removeItem(key) {
+    localStorage.removeItem(`fhevm-encrypted:${key}`);
+  },
+};
+```
+
+Use it in FhevmProvider:
 
 ```tsx
+<FhevmProvider config={fhevmConfig} storage={encryptedStorage} /* ... */ >
+  {children}
+</FhevmProvider>
+```
+
+### Example: IndexedDB Storage
+
+```typescript
 import { openDB } from "idb";
 
 const indexedDBStorage: GenericStringStorage = {
   async getItem(key) {
     const db = await openDB("fhevm-store", 1, {
-      upgrade(db) {
-        db.createObjectStore("signatures");
-      },
+      upgrade(db) { db.createObjectStore("signatures"); },
     });
     return db.get("signatures", key);
   },
@@ -221,137 +139,55 @@ const indexedDBStorage: GenericStringStorage = {
     await db.delete("signatures", key);
   },
 };
-
-<FhevmProvider
-  config={fhevmConfig}
-  storage={indexedDBStorage}
-  // ...other props
->
-  {children}
-</FhevmProvider>
-```
-
-### Example: Encrypted Storage
-
-For additional security, encrypt signatures before storing:
-
-```tsx
-import CryptoJS from "crypto-js";
-
-const SECRET_KEY = "your-encryption-key"; // Derive from user password or secure source
-
-const encryptedStorage: GenericStringStorage = {
-  getItem(key) {
-    const encrypted = localStorage.getItem(`fhevm-encrypted:${key}`);
-    if (!encrypted) return null;
-    const bytes = CryptoJS.AES.decrypt(encrypted, SECRET_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  },
-  setItem(key, value) {
-    const encrypted = CryptoJS.AES.encrypt(value, SECRET_KEY).toString();
-    localStorage.setItem(`fhevm-encrypted:${key}`, encrypted);
-  },
-  removeItem(key) {
-    localStorage.removeItem(`fhevm-encrypted:${key}`);
-  },
-};
 ```
 
 ### Example: React Native AsyncStorage
 
-```tsx
+```typescript
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const asyncStorageAdapter: GenericStringStorage = {
-  async getItem(key) {
-    return AsyncStorage.getItem(`fhevm:${key}`);
-  },
-  async setItem(key, value) {
-    await AsyncStorage.setItem(`fhevm:${key}`, value);
-  },
-  async removeItem(key) {
-    await AsyncStorage.removeItem(`fhevm:${key}`);
-  },
+  async getItem(key) { return AsyncStorage.getItem(`fhevm:${key}`); },
+  async setItem(key, value) { await AsyncStorage.setItem(`fhevm:${key}`, value); },
+  async removeItem(key) { await AsyncStorage.removeItem(`fhevm:${key}`); },
 };
 ```
+
+---
 
 ## What's Stored?
 
 The storage persists decryption signatures, which include:
 
-- **Public/private key pairs** - For decrypting values
-- **EIP-712 signature** - From the user's wallet
-- **Contract addresses** - Authorized for decryption
-- **Timestamp** - When the signature was created
-- **Duration** - Validity period (default: 24 hours)
-
-This allows decryption without re-signing on every request.
+- **Public/private key pairs** for decrypting values
+- **EIP-712 signature** from the user's wallet
+- **Contract addresses** authorized for decryption
+- **Timestamp** and **duration** (validity period, default 24 hours)
 
 ## Signature Validity
 
-Signatures are valid for **24 hours** by default. After expiration:
-- The cached signature is automatically ignored
-- User will be prompted to sign again
-- A new signature is generated and cached
+Signatures are valid for **24 hours** by default. After expiration, the cached signature is ignored and the user is prompted to sign again.
 
-## Clearing Cached Signatures
+## Clearing Signatures on Logout
 
-To manually clear cached signatures:
+Always clear FHE-related storage when users log out:
 
-```tsx
-// Clear all fhevm signatures from localStorage
-Object.keys(localStorage)
-  .filter(key => key.startsWith("fhevm:sig:"))
-  .forEach(key => localStorage.removeItem(key));
-
-// Clear from sessionStorage
-Object.keys(sessionStorage)
-  .filter(key => key.startsWith("fhevm:sig:"))
-  .forEach(key => sessionStorage.removeItem(key));
-```
-
-Or provide a logout handler:
-
-```tsx
+```typescript
 function handleLogout() {
-  // Clear fhevm signatures
+  // If using custom persistent storage, clear it
   Object.keys(localStorage)
-    .filter(key => key.startsWith("fhevm:"))
+    .filter(key => key.startsWith("fhevm"))
     .forEach(key => localStorage.removeItem(key));
-
-  // Continue with logout...
 }
 ```
 
+---
+
 ## Security Comparison
 
-| Storage | Persistence | Security | UX | Use Case |
-|---------|-------------|----------|-----|----------|
-| `localStorageAdapter` | Permanent | Low | Best | Consumer apps |
-| `sessionStorageAdapter` | Tab lifetime | Medium | Good | Balanced apps |
-| `memoryStorage` | Page lifetime | High | Fair | Security-first apps |
-| `noOpStorage` | None | Highest | Poor | Max security |
-| Custom encrypted | Configurable | Highest | Good | Enterprise apps |
-
-## Troubleshooting
-
-### Signature not being cached
-
-Check the browser console for debug logs:
-```
-[LocalStorageAdapter] setItem: fhevm:sig:0x... -> 1234 chars
-[LocalStorageAdapter] verified save: OK
-```
-
-If you see "window undefined (SSR)", the code is running on the server. Make sure your FhevmProvider is only rendered on the client.
-
-### User prompted to sign on every page load
-
-1. Verify you're using a persistent storage adapter (`localStorageAdapter` or `sessionStorageAdapter`)
-2. Check that the storage is passed to FhevmProvider
-3. Verify the signature hasn't expired (24 hour validity)
-4. Check browser console for any storage errors
-
-### Different signatures for different contracts
-
-This is expected behavior. Each unique set of contract addresses requires its own signature. If your app interacts with multiple contracts, users may need to sign multiple times (once per contract set).
+| Storage | Persistence | XSS Resistant | UX |
+|---------|-------------|---------------|-----|
+| `memoryStorage` | Page lifetime | Yes | Fair |
+| `noOpStorage` | None | Yes | Poor |
+| Custom encrypted | Configurable | Yes | Good |
+| Custom unencrypted | Configurable | **No** | Best |

@@ -4,12 +4,24 @@
 
 ## Pre-configured Chains
 
-### Sepolia (Production)
+### Ethereum Mainnet
+
+Ethereum mainnet with Zama's FHE infrastructure:
+
+```tsx
+import { mainnet } from "@zama-fhe/react-sdk/chains";
+
+// Chain ID: 1
+// Gateway: https://gateway.zama.ai
+// Relayer: https://relayer.zama.ai
+```
+
+### Sepolia (Testnet)
 
 Ethereum Sepolia testnet with Zama's FHE infrastructure:
 
 ```tsx
-import { sepolia } from "@zama-fhe/react-sdk";
+import { sepolia } from "@zama-fhe/react-sdk/chains";
 
 // Chain ID: 11155111
 // Gateway: https://gateway.sepolia.zama.ai
@@ -21,7 +33,7 @@ import { sepolia } from "@zama-fhe/react-sdk";
 Local Hardhat node for development:
 
 ```tsx
-import { hardhatLocal } from "@zama-fhe/react-sdk";
+import { hardhatLocal } from "@zama-fhe/react-sdk/chains";
 
 // Chain ID: 31337
 // RPC: http://localhost:8545
@@ -35,7 +47,7 @@ import { hardhatLocal } from "@zama-fhe/react-sdk";
 For local development without real FHE infrastructure:
 
 ```tsx
-import { defineMockChain } from "@zama-fhe/react-sdk";
+import { defineMockChain } from "@zama-fhe/react-sdk/chains";
 
 const myLocalChain = defineMockChain({
   id: 31337,
@@ -56,14 +68,14 @@ Mock chains:
 For production deployments with real FHE infrastructure:
 
 ```tsx
-import { defineProductionChain } from "@zama-fhe/react-sdk";
+import { defineProductionChain } from "@zama-fhe/react-sdk/chains";
 
 const myProductionChain = defineProductionChain({
-  id: 1,
-  name: "Mainnet",
-  network: "mainnet",
-  gatewayUrl: "https://gateway.example.com",
-  relayerUrl: "https://relayer.example.com",
+  id: 42,
+  name: "My Chain",
+  network: "mychain",
+  gatewayUrl: "https://gateway.mychain.com",
+  relayerUrl: "https://relayer.mychain.com",
   aclAddress: "0x...",
   kmsVerifierAddress: "0x...",
   inputVerifierAddress: "0x...",
@@ -72,12 +84,12 @@ const myProductionChain = defineProductionChain({
 
 Production chains require:
 
-| Property               | Description                    |
+| Property | Description |
 | ---------------------- | ------------------------------ |
-| `gatewayUrl`           | Zama gateway URL               |
-| `relayerUrl`           | Zama relayer URL               |
-| `aclAddress`           | ACL contract address           |
-| `kmsVerifierAddress`   | KMS verifier contract address  |
+| `gatewayUrl` | Zama gateway URL |
+| `relayerUrl` | Zama relayer URL |
+| `aclAddress` | ACL contract address |
+| `kmsVerifierAddress` | KMS verifier contract address |
 | `inputVerifierAddress` | Input verifier contract address |
 
 ### Custom Hardhat Chain
@@ -85,7 +97,7 @@ Production chains require:
 Create a Hardhat chain with a custom RPC URL:
 
 ```tsx
-import { createHardhatChain } from "@zama-fhe/react-sdk";
+import { createHardhatChain } from "@zama-fhe/react-sdk/chains";
 
 const customHardhat = createHardhatChain({
   rpcUrl: "http://192.168.1.100:8545",
@@ -112,7 +124,7 @@ type FhevmChain = {
 ## Type Guards
 
 ```tsx
-import { isMockChain, isProductionChain } from "@zama-fhe/react-sdk";
+import { isMockChain, isProductionChain } from "@zama-fhe/react-sdk/chains";
 
 if (isMockChain(chain)) {
   // chain.rpcUrl is available

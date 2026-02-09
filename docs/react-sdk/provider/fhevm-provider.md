@@ -4,97 +4,22 @@ The FhevmProvider component wraps your application to provide FHEVM context to a
 
 ## Features
 
-- **Automatic script loading** - Loads the Zama Relayer SDK automatically (no manual script tag needed)
-- **Auto-initialization** - Initializes FHEVM when wallet connects
-- **Chain switching** - Reinitializes when chain changes
-- **Error handling** - Exposes script and initialization errors via `useFhevmStatus`
-- **Library agnostic** - Works with wagmi, viem, ethers, or raw `window.ethereum`
+- **Automatic script loading** — Loads the Zama Relayer SDK from CDN (no manual script tags)
+- **Auto-initialization** — Initializes FHEVM when wallet connects
+- **Chain switching** — Reinitializes when chain changes
+- **Error handling** — Exposes errors via `useFhevmStatus`
+- **Library agnostic** — Works with wagmi, viem, ethers, or raw EIP-1193
 
 ## Basic Usage
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
+import { FhevmProvider, createFhevmConfig, memoryStorage } from "@zama-fhe/react-sdk";
+import { sepolia } from "@zama-fhe/react-sdk/chains";
 import { useAccount, useConnectorClient } from "wagmi";
 
-function FhevmWrapper({ children }) {
-  const { address, chainId, isConnected } = useAccount();
-  const { data: connectorClient } = useConnectorClient();
+const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
 
-  return (
-    <FhevmProvider
-      config={fhevmConfig}
-      provider={connectorClient?.transport ?? window.ethereum}
-      address={address}
-      chainId={chainId}
-      isConnected={isConnected}
-      storage={memoryStorage}
-    >
-      {children}
-    </FhevmProvider>
-  );
-}
-```
-
-## Props
-
-| Prop          | Type                  | Default           | Description                                      |
-| ------------- | --------------------- | ----------------- | ------------------------------------------------ |
-| `config`      | `FhevmConfig`         | Required          | Config from `createFhevmConfig()`                |
-| `children`    | `ReactNode`           | Required          | Child components                                 |
-| `provider`    | `Eip1193Provider`     | `window.ethereum` | EIP-1193 provider (wallet)                       |
-| `address`     | `` `0x${string}` ``   | `undefined`       | Connected wallet address                         |
-| `chainId`     | `number`              | `undefined`       | Current chain ID                                 |
-| `isConnected` | `boolean`             | `false`           | Whether wallet is connected                      |
-| `storage`     | `GenericStringStorage`| `undefined`       | Storage for caching decryption signatures        |
-| `autoInit`    | `boolean`             | `true`            | Auto-initialize when wallet connects             |
-
-## Storage Options
-
-The `storage` prop controls how decryption signatures are cached. **No default is provided** - you must explicitly choose:
-
-```tsx
-import {
-  memoryStorage,        // Cleared on page refresh (most secure)
-  localStorageAdapter,  // Persistent in localStorage
-  sessionStorageAdapter,// Cleared when tab closes
-  noOpStorage,          // No caching, re-sign every time
-} from "@zama-fhe/react-sdk";
-
-// Most secure - keys cleared on refresh
-<FhevmProvider storage={memoryStorage} ... />
-
-// Persistent - better UX, less secure
-<FhevmProvider storage={localStorageAdapter} ... />
-
-// No caching - re-sign every decrypt
-<FhevmProvider storage={undefined} ... />
-```
-
-See [Storage Configuration](../configuration/storage.md) for details.
-
-## Provider Hierarchy
-
-Place FhevmProvider after WagmiProvider and QueryClientProvider:
-
-```tsx
-<WagmiProvider config={wagmiConfig}>
-  <QueryClientProvider client={queryClient}>
-    <FhevmProvider config={fhevmConfig} ...>
-      <YourApp />
-    </FhevmProvider>
-  </QueryClientProvider>
-</WagmiProvider>
-```
-
-## Integration Examples
-
-### With wagmi
-
-```tsx
-import { useAccount, useConnectorClient } from "wagmi";
-import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
-
-function FhevmWrapper({ children }) {
+function FhevmWrapper({ children }: { children: React.ReactNode }) {
   const { address, chainId, isConnected } = useAccount();
   const { data: connectorClient } = useConnectorClient();
 
@@ -113,52 +38,160 @@ function FhevmWrapper({ children }) {
 }
 ```
 
-### With viem only
+## Props
+
+| Prop | Type | Default | Description |
+| ------------- | --------------------- | ----------- | -------------------------------------------------------- |
+| `config` | `FhevmConfig` | Required | Config from `createFhevmConfig()` |
+| `children` | `ReactNode` | Required | Child components |
+| `wallet` | `FhevmWallet` | `undefined` | **Preferred.** Direct wallet integration (see below) |
+| `provider` | `Eip1193Provider` | `undefined` | Raw EIP-1193 provider (e.g. `window.ethereum`) |
+| `address` | `` `0x${string}` `` | `undefined` | Connected wallet address |
+| `chainId` | `number` | `undefined` | Current chain ID |
+| `isConnected` | `boolean` | `false` | Whether wallet is connected |
+| `storage` | `GenericStringStorage` | `undefined` | Storage for caching decryption signatures |
+| `autoInit` | `boolean` | `true` | Auto-initialize when wallet connects |
+| `apiKey` | `string` | `undefined` | API key for relayer authentication |
+| `initTimeout` | `number` | `30000` | Timeout in ms for FHEVM initialization |
+| `queryClient` | `QueryClient` | `undefined` | External TanStack QueryClient (avoids creating internal one) |
+
+### `wallet` vs `provider`
+
+The `wallet` prop accepts an `FhevmWallet` object and is the **preferred** way to connect non-wagmi wallets. It gives the SDK direct access to `sendTransaction` and `signTypedData` without going through EIP-1193.
+
+The `provider` prop accepts a raw EIP-1193 provider (like `window.ethereum` or a wagmi connector transport). Use this with wagmi setups.
+
+If both are provided, `wallet` takes precedence.
+
+```typescript
+// FhevmWallet interface
+interface FhevmWallet {
+  address: `0x${string}`;
+  sendTransaction: (tx: TransactionRequest) => Promise<`0x${string}`>;
+  signTypedData: (typedData: SignTypedDataParams) => Promise<string>;
+}
+```
+
+### `queryClient`
+
+Pass an external `QueryClient` to share the same TanStack Query cache with the rest of your app. If not provided, FhevmProvider creates its own isolated QueryClient.
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
-import { useWallet } from "./useWallet"; // Custom hook
+const queryClient = new QueryClient();
 
-function App() {
-  const { address, chainId, isConnected } = useWallet();
+<QueryClientProvider client={queryClient}>
+  <FhevmProvider config={fhevmConfig} queryClient={queryClient} /* ... */>
+    {children}
+  </FhevmProvider>
+</QueryClientProvider>
+```
+
+### `apiKey`
+
+API key for authenticating with the Zama relayer. Required for relayer-sdk v0.4.0+.
+
+```tsx
+<FhevmProvider config={fhevmConfig} apiKey="your-api-key" /* ... */>
+```
+
+## Provider Hierarchy
+
+Place FhevmProvider after WagmiProvider and QueryClientProvider:
+
+```tsx
+<WagmiProvider config={wagmiConfig}>
+  <QueryClientProvider client={queryClient}>
+    <FhevmProvider config={fhevmConfig} queryClient={queryClient} /* ... */>
+      <YourApp />
+    </FhevmProvider>
+  </QueryClientProvider>
+</WagmiProvider>
+```
+
+## Integration Examples
+
+### With wagmi
+
+```tsx
+function FhevmWrapper({ children }: { children: React.ReactNode }) {
+  const { address, chainId, isConnected } = useAccount();
+  const { data: connectorClient } = useConnectorClient();
 
   return (
     <FhevmProvider
       config={fhevmConfig}
-      provider={window.ethereum}
+      provider={connectorClient?.transport}
       address={address}
       chainId={chainId}
       isConnected={isConnected}
       storage={memoryStorage}
     >
-      <YourApp />
+      {children}
     </FhevmProvider>
   );
 }
 ```
 
-### With ethers only
+### With viem (FhevmWallet)
 
 ```tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
-import { useWallet } from "./useWallet"; // Custom hook using ethers
+import { createWalletClient, custom } from "viem";
+import { sepolia as viemSepolia } from "viem/chains";
+import type { FhevmWallet } from "@zama-fhe/react-sdk";
 
-function App() {
-  const { address, chainId, isConnected } = useWallet();
+const walletClient = createWalletClient({
+  chain: viemSepolia,
+  transport: custom(window.ethereum!),
+});
 
-  return (
-    <FhevmProvider
-      config={fhevmConfig}
-      provider={window.ethereum}
-      address={address}
-      chainId={chainId}
-      isConnected={isConnected}
-      storage={memoryStorage}
-    >
-      <YourApp />
-    </FhevmProvider>
-  );
-}
+const wallet: FhevmWallet = {
+  address: walletClient.account!.address,
+  sendTransaction: (tx) =>
+    walletClient.sendTransaction({ ...tx, account: walletClient.account!, chain: viemSepolia }),
+  signTypedData: (td) =>
+    walletClient.signTypedData({ ...td, account: walletClient.account! }),
+};
+
+<FhevmProvider
+  config={fhevmConfig}
+  wallet={wallet}
+  address={wallet.address}
+  chainId={viemSepolia.id}
+  isConnected={true}
+  storage={memoryStorage}
+>
+  {children}
+</FhevmProvider>
+```
+
+### With ethers.js (FhevmWallet)
+
+```tsx
+import { BrowserProvider } from "ethers";
+import type { FhevmWallet } from "@zama-fhe/react-sdk";
+
+const provider = new BrowserProvider(window.ethereum!);
+const signer = await provider.getSigner();
+
+const wallet: FhevmWallet = {
+  address: (await signer.getAddress()) as `0x${string}`,
+  sendTransaction: async (tx) => {
+    const resp = await signer.sendTransaction(tx);
+    return resp.hash as `0x${string}`;
+  },
+  signTypedData: (td) => signer.signTypedData(td.domain, td.types, td.message),
+};
+
+<FhevmProvider
+  config={fhevmConfig}
+  wallet={wallet}
+  address={wallet.address}
+  chainId={11155111}
+  isConnected={true}
+  storage={memoryStorage}
+>
+  {children}
+</FhevmProvider>
 ```
 
 ## Manual Initialization
@@ -166,28 +199,21 @@ function App() {
 Disable auto-initialization for manual control:
 
 ```tsx
-import { useFhevmClient } from "@zama-fhe/react-sdk";
-
-function App() {
-  return (
-    <FhevmProvider config={fhevmConfig} autoInit={false}>
-      <ManualInit />
-    </FhevmProvider>
-  );
-}
+<FhevmProvider config={fhevmConfig} autoInit={false}>
+  <ManualInit />
+</FhevmProvider>
 
 function ManualInit() {
   const { refresh } = useFhevmClient();
-
   return <button onClick={refresh}>Initialize FHEVM</button>;
 }
 ```
 
 ## Context Value
 
-FhevmProvider exposes these values via context:
+FhevmProvider exposes these values via `useFhevmContext()`:
 
-```tsx
+```typescript
 interface FhevmContextValue {
   config: FhevmConfig;
   instance: FhevmInstance | undefined;
@@ -197,35 +223,13 @@ interface FhevmContextValue {
   address: `0x${string}` | undefined;
   isConnected: boolean;
   provider: Eip1193Provider | undefined;
+  wallet: FhevmWallet | undefined;
   storage: GenericStringStorage | undefined;
   refresh: () => void;
 }
 ```
 
-Access context directly with `useFhevmContext`:
-
-```tsx
-import { useFhevmContext } from "@zama-fhe/react-sdk";
-
-function MyComponent() {
-  const { instance, status, chainId, provider } = useFhevmContext();
-}
-```
-
-## Automatic Script Loading
-
-FhevmProvider automatically loads the Zama Relayer SDK script from CDN. You don't need to add any script tags to your HTML or layout.
-
-The provider handles:
-- Loading the script on first mount
-- Deduplication (won't load twice if multiple providers exist)
-- Error states if the script fails to load
-
-The script version is locked internally and managed by the SDK.
-
 ## Error Handling
-
-Handle initialization errors (including script loading failures):
 
 ```tsx
 import { useFhevmStatus } from "@zama-fhe/react-sdk";
@@ -245,4 +249,3 @@ function FHEStatus() {
   return null;
 }
 ```
-

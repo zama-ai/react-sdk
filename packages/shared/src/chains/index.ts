@@ -8,3 +8,4 @@ export { defineChain, defineMockChain, defineProductionChain } from "./defineCha
 // Pre-configured chains
 export { hardhatLocal, createHardhatChain } from "./hardhat";
 export { sepolia, SEPOLIA_CHAIN_ID } from "./sepolia";
+export { mainnet, MAINNET_CHAIN_ID } from "./mainnet";

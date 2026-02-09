@@ -1,31 +1,25 @@
 # Installation
 
-This guide covers installation instructions for all Zama FHE SDK packages.
-
 ## React SDK
-
-For React applications:
 
 ```bash
 npm install @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-`@zama-fhe/react-sdk` works with any of these web3 libraries:
+Then install your preferred web3 library:
 
-| Setup | Install | Best for |
-|-------|---------|----------|
-| **viem only** | `npm install viem` | React apps with viem only |
-| **wagmi + viem** | `npm install wagmi viem` | React apps already using wagmi |
-| **ethers.js only** | `npm install ethers` | Existing ethers.js projects |
-| **wagmi + ethers** | `npm install wagmi viem` | Mixed setups |
+| Setup | Install command | Notes |
+|-------|----------------|-------|
+| **ethers.js only** | *(nothing extra)* | ethers is bundled with the SDK |
+| **viem only** | `npm install viem` | Use viem `WalletClient` + `FhevmWallet` |
+| **wagmi + viem** | `npm install wagmi viem` | Recommended for React — use `useAccount` / `useConnectorClient` |
+| **wagmi + ethers** | `npm install wagmi viem` | wagmi requires viem; SDK uses ethers internally |
 
-See the [React SDK documentation](../react-sdk/README.md) for detailed setup instructions.
+See the [React SDK Quick Start](react-sdk-quickstart.md) for setup examples for each mode.
 
 ---
 
 ## Core SDK
-
-For Node.js, CLI tools, and other frameworks:
 
 ### With ethers.js
 
@@ -39,8 +33,7 @@ npm install @zama-fhe/core-sdk ethers
 npm install @zama-fhe/core-sdk viem
 ```
 
-**Required peer dependencies:**
-- Either `ethers` ^6.0.0 OR `viem` ^2.0.0
+**Peer dependencies:** Either `ethers` ^6.0.0 OR `viem` ^2.0.0.
 
 ---
 
@@ -51,19 +44,7 @@ npm install @zama-fhe/core-sdk viem
 
 ---
 
-## Verify Installation
-
-After installation, verify the packages are installed correctly:
-
-```bash
-npm list @zama-fhe/react-sdk
-# or
-npm list @zama-fhe/core-sdk
-```
-
----
-
 ## Next Steps
 
-- **React developers:** Continue to [React SDK Quick Start](react-sdk-quickstart.md)
-- **Other frameworks:** Continue to [Core SDK Quick Start](core-sdk-quickstart.md)
+- **React developers:** [React SDK Quick Start](react-sdk-quickstart.md)
+- **Other frameworks:** [Core SDK Quick Start](core-sdk-quickstart.md)

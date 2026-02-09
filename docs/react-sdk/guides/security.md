@@ -1,112 +1,40 @@
-# 🔒 Security Guide
+# Security Guide
 
-> **Essential security considerations when using @zama-fhe/react-sdk**
+`@zama-fhe/react-sdk` handles sensitive cryptographic material. Understanding what's stored and how to protect it is essential for production applications.
 
-[![Security](https://img.shields.io/badge/security-critical-red.svg)]()
-[![Read Time](https://img.shields.io/badge/read%20time-10%20min-blue.svg)]()
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Storage Security](#storage-security)
-- [Mitigation Strategies](#mitigation-strategies)
-- [Public Key Storage](#public-key-storage)
-- [Debug Logging](#debug-logging)
-- [Network Security](#network-security)
-- [Security Checklist](#security-checklist)
-- [Reporting Security Issues](#reporting-security-issues)
-
----
-
-## Overview
-
-`@zama-fhe/react-sdk` handles sensitive cryptographic material including:
-
-- **Decryption private keys** - Used to decrypt FHE ciphertext
-- **EIP-712 signatures** - Proves user authorization for decryption
-- **Encrypted handles** - References to on-chain encrypted values
-
-Understanding how this data is stored and protected is essential for building secure applications.
-
-## Storage Security
-
-### What Gets Stored
+## What's Sensitive
 
 When a user decrypts a value, the SDK caches:
 
+- **Decryption private keys** — can decrypt FHE ciphertext
+- **EIP-712 signatures** — proves user authorization
+- **Contract addresses** — scope of the authorization
+
+If an attacker obtains this data, they can decrypt the user's confidential on-chain values.
+
+## Storage Recommendations
+
+| Use case | Storage | Why |
+|----------|---------|-----|
+| Most apps | `memoryStorage` | Cleared on refresh, no disk persistence |
+| Maximum security | `noOpStorage` | Re-sign every decryption |
+| Persistent + secure | Custom encrypted | Data encrypted before persisting |
+
+**Do not** use plain `localStorage` or `sessionStorage` for production applications. Both are accessible to any JavaScript on the page, making them vulnerable to XSS attacks.
+
+## Custom Encrypted Storage
+
+For apps that need persistence without XSS risk, implement the `GenericStringStorage` interface with encryption:
+
 ```typescript
-{
-  privateKey: Uint8Array,      // Decryption private key
-  publicKey: Uint8Array,       // Corresponding public key
-  signature: string,           // EIP-712 signature from wallet
-  contractAddresses: string[], // Authorized contracts
-  userAddress: string,         // User's wallet address
-  startTimestamp: number,      // When signature was created
-  durationDays: number         // Validity period (default: 1 day)
-}
-```
-
-### Storage Options Security Comparison
-
-| Storage | XSS Vulnerable | Persists | Cleared On | Recommended For |
-|---------|---------------|----------|------------|-----------------|
-| `localStorageAdapter` | **Yes** | Forever | Manual clear | Low-risk apps, dev |
-| `sessionStorageAdapter` | **Yes** | Tab lifetime | Tab close | Balanced security |
-| `memoryStorage` | No | Page lifetime | Refresh | Security-critical apps |
-| `noOpStorage` | No | Never | Immediately | Maximum security |
-| Custom encrypted | Configurable | Configurable | Configurable | Enterprise apps |
-
-### XSS Attack Vector
-
-**Critical Warning:** Both `localStorage` and `sessionStorage` are vulnerable to Cross-Site Scripting (XSS) attacks.
-
-If an attacker injects malicious JavaScript into your page, they can:
-
-1. Read all stored decryption signatures
-2. Extract private keys and signatures
-3. Decrypt the user's confidential data without their knowledge
-
-```javascript
-// Example attack - DO NOT USE, shown for awareness only
-const stolenData = Object.keys(localStorage)
-  .filter(key => key.startsWith("fhevm:"))
-  .map(key => ({ key, value: localStorage.getItem(key) }));
-// Attacker sends stolenData to their server
-```
-
-### Mitigation Strategies
-
-#### 1. Use Memory Storage for Sensitive Applications
-
-For applications handling highly sensitive data, use `memoryStorage`:
-
-```tsx
-import { FhevmProvider, memoryStorage } from "@zama-fhe/react-sdk";
-
-<FhevmProvider
-  config={fhevmConfig}
-  storage={memoryStorage}
-  // ...
->
-```
-
-**Trade-off:** Users must re-sign on every page refresh.
-
-#### 2. Implement Encrypted Storage
-
-Encrypt data before storing to protect against XSS:
-
-```tsx
 import CryptoJS from "crypto-js";
 
-// Derive key from something the attacker can't access
-// (e.g., user password, hardware key, or secure enclave)
 function getEncryptionKey(): string {
-  // WARNING: This is a simplified example.
-  // In production, derive this from a secure source.
-  return sessionStorage.getItem("session-key") || "";
+  // Derive from a source an XSS attacker cannot access:
+  // - User password hash (prompted at login, held in memory)
+  // - Hardware key / secure enclave
+  // - Server-side session key fetched over authenticated API
+  return mySecureKeyDerivation();
 }
 
 const encryptedStorage: GenericStringStorage = {
@@ -128,9 +56,7 @@ const encryptedStorage: GenericStringStorage = {
   setItem(key, value) {
     const encKey = getEncryptionKey();
     if (!encKey) return;
-
-    const encrypted = CryptoJS.AES.encrypt(value, encKey).toString();
-    localStorage.setItem(`fhevm-encrypted:${key}`, encrypted);
+    localStorage.setItem(`fhevm-encrypted:${key}`, CryptoJS.AES.encrypt(value, encKey).toString());
   },
 
   removeItem(key) {
@@ -139,153 +65,47 @@ const encryptedStorage: GenericStringStorage = {
 };
 ```
 
-#### 3. Strict Content Security Policy
+The key insight: even if an XSS attacker reads `localStorage`, they get AES-encrypted blobs they cannot decrypt without the encryption key.
 
-Implement CSP headers to prevent XSS:
+See [Storage Configuration](../configuration/storage.md) for the full `GenericStringStorage` interface and more examples.
+
+## Clear Storage on Logout
+
+Always clear FHE data when users disconnect:
+
+```typescript
+function handleLogout() {
+  Object.keys(localStorage)
+    .filter(key => key.startsWith("fhevm"))
+    .forEach(key => localStorage.removeItem(key));
+
+  disconnect(); // wagmi disconnect, etc.
+}
+```
+
+## Content Security Policy
+
+Restrict script sources to prevent XSS injection:
 
 ```http
 Content-Security-Policy:
   default-src 'self';
   script-src 'self' https://cdn.zama.ai;
-  style-src 'self' 'unsafe-inline';
   connect-src 'self' https://*.infura.io https://*.alchemy.com;
 ```
-
-#### 4. Clear Storage on Logout
-
-Always clear FHE-related storage when users log out:
-
-```tsx
-function handleLogout() {
-  // Clear all fhevm data
-  Object.keys(localStorage)
-    .filter(key => key.startsWith("fhevm:"))
-    .forEach(key => localStorage.removeItem(key));
-
-  Object.keys(sessionStorage)
-    .filter(key => key.startsWith("fhevm:"))
-    .forEach(key => sessionStorage.removeItem(key));
-
-  // Continue with logout...
-  disconnect();
-}
-```
-
-#### 5. Reduce Signature Duration
-
-The default signature validity is 24 hours. For sensitive apps, consider:
-
-```tsx
-// Use shorter sessions by implementing a wrapper
-const shortLivedStorage: GenericStringStorage = {
-  getItem(key) {
-    const data = localStorage.getItem(key);
-    if (!data) return null;
-
-    try {
-      const parsed = JSON.parse(data);
-      // Check if signature is older than 1 hour
-      if (Date.now() - parsed.startTimestamp > 3600000) {
-        localStorage.removeItem(key);
-        return null;
-      }
-      return data;
-    } catch {
-      return data;
-    }
-  },
-  setItem: (key, value) => localStorage.setItem(key, value),
-  removeItem: (key) => localStorage.removeItem(key),
-};
-```
-
-## Public Key Storage
-
-The SDK stores public keys and parameters in IndexedDB with automatic fallback:
-
-1. **IndexedDB** (primary) - Persists across sessions
-2. **Memory** (fallback) - Used when IndexedDB is unavailable
-
-This fallback happens automatically in:
-- Server-side rendering (SSR)
-- Private/incognito browsing mode
-- Browsers with IndexedDB disabled
-
-You can check which storage is being used:
-
-```tsx
-import { getPublicKeyStorageType } from "@zama-fhe/react-sdk";
-
-const storageType = getPublicKeyStorageType();
-// Returns: "indexeddb" | "memory" | "none"
-```
-
-## Debug Logging
-
-The SDK includes a configurable logger. By default:
-- **Development**: Debug logs enabled
-- **Production**: Only warnings and errors
-
-To enable debug logs in production (not recommended):
-
-```tsx
-import { configureLogger } from "@zama-fhe/react-sdk";
-
-configureLogger({
-  enabled: true,
-  level: "debug",
-});
-```
-
-**Warning:** Debug logs may include sensitive information. Never enable in production.
-
-## Network Security
-
-### CDN Dependencies
-
-The SDK loads the relayer-sdk from Zama's CDN. The loader includes:
-- Automatic retry with exponential backoff
-- Configurable timeout
-- Error recovery
-
-For enhanced security, consider self-hosting the relayer SDK:
-
-```tsx
-import { RelayerSDKLoader } from "@zama-fhe/react-sdk";
-
-const loader = new RelayerSDKLoader({
-  cdnUrl: "https://your-cdn.com/relayer-sdk.min.js",
-  maxRetries: 3,
-});
-```
-
-### Initialization Timeout
-
-FhevmProvider includes an `initTimeout` prop to prevent hanging:
-
-```tsx
-<FhevmProvider
-  config={fhevmConfig}
-  initTimeout={30000} // 30 seconds, default
-  // ...
->
-```
-
-If initialization times out, the status changes to `"error"` and `error` is populated.
 
 ## Security Checklist
 
 Before deploying to production:
 
-- [ ] Choose appropriate storage based on security requirements
+- [ ] Use `memoryStorage` or custom encrypted storage (not plain localStorage/sessionStorage)
 - [ ] Implement CSP headers
-- [ ] Clear storage on logout
-- [ ] Disable debug logging
-- [ ] Consider encrypted storage for sensitive applications
+- [ ] Clear FHE storage on logout/disconnect
+- [ ] Disable debug logging in production
 - [ ] Test in private browsing mode (IndexedDB fallback)
 - [ ] Handle initialization timeouts gracefully
-- [ ] Validate all user inputs before encryption
-- [ ] Use HTTPS in production
+- [ ] Validate user inputs before encryption
+- [ ] Use HTTPS
 
 ## Reporting Security Issues
 
@@ -300,4 +120,3 @@ If you discover a security vulnerability in @zama-fhe/react-sdk:
 
 - [Storage Configuration](../configuration/storage.md)
 - [FhevmProvider](../provider/fhevm-provider.md)
-- [OWASP XSS Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)

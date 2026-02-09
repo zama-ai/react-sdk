@@ -8,27 +8,20 @@ Get started with `@zama-fhe/react-sdk` in under 5 minutes.
 npm install @zama-fhe/react-sdk @tanstack/react-query
 ```
 
-Then install your preferred web3 library:
-
-```bash
-npm install viem          # viem-only setup
-npm install wagmi viem    # wagmi setup (recommended for React)
-npm install ethers        # ethers.js-only setup
-npm install wagmi ethers  # wagmi + ethers.js setup
-```
+Then install your preferred web3 library (see [Installation](installation.md) for all options).
 
 ---
 
 ## Setup
 
-Choose the setup that matches your web3 stack:
+Choose the setup that matches your web3 stack.
 
-### With wagmi
+### With wagmi (recommended)
 
 ```tsx
 import { FhevmProvider, createFhevmConfig } from "@zama-fhe/react-sdk";
 import { sepolia } from "@zama-fhe/react-sdk/chains";
-import { WagmiProvider, createConfig, useAccount, useConnectorClient } from "wagmi";
+import { WagmiProvider, useAccount, useConnectorClient } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
@@ -37,12 +30,11 @@ const queryClient = new QueryClient();
 function FhevmWrapper({ children }: { children: React.ReactNode }) {
   const { address, chainId, isConnected } = useAccount();
   const { data: connectorClient } = useConnectorClient();
-  const provider = connectorClient?.transport;
 
   return (
     <FhevmProvider
       config={fhevmConfig}
-      provider={provider}
+      provider={connectorClient?.transport}
       address={address}
       chainId={chainId}
       isConnected={isConnected}
@@ -78,13 +70,11 @@ const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
 const queryClient = new QueryClient();
 
 function App() {
-  // Create a viem WalletClient from your provider (e.g. window.ethereum)
   const walletClient = createWalletClient({
     chain: viemSepolia,
     transport: custom(window.ethereum!),
   });
 
-  // Wrap it as an FhevmWallet
   const wallet: FhevmWallet = {
     address: walletClient.account!.address,
     sendTransaction: (tx) =>
@@ -121,10 +111,9 @@ const fhevmConfig = createFhevmConfig({ chains: [sepolia] });
 const queryClient = new QueryClient();
 
 function App() {
-  const provider = new BrowserProvider(window.ethereum!);
-  const signer = await provider.getSigner();
+  const ethersProvider = new BrowserProvider(window.ethereum!);
+  const signer = await ethersProvider.getSigner();
 
-  // Wrap ethers Signer as an FhevmWallet
   const wallet: FhevmWallet = {
     address: (await signer.getAddress()) as `0x${string}`,
     sendTransaction: async (tx) => {
@@ -157,22 +146,18 @@ function App() {
 
 ### Confidential Transfer
 
-The `useConfidentialTransfer` hook handles encryption, signing, and confirmation in a single call:
+`useConfidentialTransfer` handles encryption, signing, and confirmation in a single call:
 
 ```tsx
 import { useConfidentialTransfer } from "@zama-fhe/react-sdk";
 
 function TransferForm({ contractAddress }: { contractAddress: `0x${string}` }) {
-  const { transfer, status, isEncrypting, isSigning, isSuccess, error, txHash } =
+  const { transfer, isEncrypting, isSigning, isSuccess, error, txHash } =
     useConfidentialTransfer({ contractAddress });
-
-  const handleTransfer = () => {
-    transfer("0xRecipient...", 100n);
-  };
 
   return (
     <div>
-      <button onClick={handleTransfer} disabled={status !== "idle"}>
+      <button onClick={() => transfer("0xRecipient...", 100n)} disabled={isEncrypting || isSigning}>
         Transfer 100 Tokens
       </button>
       {isEncrypting && <p>Encrypting...</p>}
@@ -186,18 +171,17 @@ function TransferForm({ contractAddress }: { contractAddress: `0x${string}` }) {
 
 ### Confidential Balances
 
-The `useConfidentialBalances` hook fetches encrypted balances and optionally decrypts them:
+`useConfidentialBalances` fetches encrypted balances and optionally decrypts them:
 
 ```tsx
 import { useConfidentialBalances } from "@zama-fhe/react-sdk";
 
 function BalanceDisplay({ contractAddress }: { contractAddress: `0x${string}` }) {
-  const {
-    data, isLoading, decryptAll, isDecrypting, canDecrypt, isAllDecrypted,
-  } = useConfidentialBalances({
-    contracts: [{ contractAddress }],
-    decrypt: true,
-  });
+  const { data, isLoading, decryptAll, isDecrypting, canDecrypt, isAllDecrypted } =
+    useConfidentialBalances({
+      contracts: [{ contractAddress }],
+      decrypt: true,
+    });
 
   if (isLoading) return <p>Loading balance...</p>;
 
@@ -223,6 +207,6 @@ function BalanceDisplay({ contractAddress }: { contractAddress: `0x${string}` })
 
 ## Next Steps
 
-- Read the full [React SDK Documentation](../react-sdk/README.md)
-- Learn about [Configuration](../react-sdk/configuration/overview.md)
-- Explore [Hooks](../react-sdk/hooks/)
+- [React SDK Documentation](../react-sdk/README.md)
+- [Configuration](../react-sdk/configuration/overview.md)
+- [API Reference](../api/@zama-fhe/react-sdk/README.md)

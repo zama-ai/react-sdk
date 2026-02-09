@@ -23,16 +23,6 @@
   * [Threading & Performance](react-sdk/configuration/threading.md)
 * Provider
   * [FhevmProvider](react-sdk/provider/fhevm-provider.md)
-* Hooks
-  * [useEncrypt](react-sdk/hooks/use-encrypt.md)
-  * [useConfidentialTransfer](react-sdk/hooks/use-confidential-transfer.md)
-  * [useConfidentialBalances](react-sdk/hooks/use-confidential-balances.md)
-  * [useUserDecrypt](react-sdk/hooks/use-user-decrypt.md)
-  * [usePublicDecrypt](react-sdk/hooks/use-public-decrypt.md)
-  * [useUserDecryptedValue](react-sdk/hooks/use-user-decrypted-value.md)
-  * [useFhevmStatus](react-sdk/hooks/use-fhevm-status.md)
-  * [useFhevmClient](react-sdk/hooks/use-fhevm-client.md)
-  * [useEthersSigner](react-sdk/hooks/use-ethers-signer.md)
 * Guides
   * [Security](react-sdk/guides/security.md)
   * [Error Handling](react-sdk/guides/error-handling.md)
@@ -41,7 +31,6 @@
   * [Linking](react-sdk/guides/linking.md)
 * Reference
   * [Types](react-sdk/types/overview.md)
-
 
 ## API Reference
 
