@@ -1,5 +1,5 @@
 import type { FhevmConfig } from "../config/types.js";
-import { detectAndWrapProvider } from "../providers/detect.js";
+import { detectProvider } from "../providers/detect.js";
 import { ERC7984_ABI } from "../abi/index.js";
 import { FhevmTransactionError } from "@zama-fhe/shared/utils";
 import { assertAddress, assertChainId } from "@zama-fhe/shared/utils";
@@ -7,7 +7,7 @@ import { assertAddress, assertChainId } from "@zama-fhe/shared/utils";
 /**
  * Parameters for reading a single confidential balance.
  */
-export interface ConfidentialBalanceParams {
+export interface ReadConfidentialBalanceParams {
   /** Chain ID */
   chainId: number;
   /** ERC7984 token contract address */
@@ -23,7 +23,7 @@ export interface ConfidentialBalanceParams {
 /**
  * Parameters for reading multiple confidential balances.
  */
-export interface ConfidentialBalancesParams {
+export interface ReadConfidentialBalancesParams {
   /** Chain ID */
   chainId: number;
   /** Array of contract configurations */
@@ -45,7 +45,7 @@ const ZERO_HASH = "0x00000000000000000000000000000000000000000000000000000000000
  *
  * @example
  * ```typescript
- * const handle = await confidentialBalance(config, {
+ * const handle = await readConfidentialBalance(config, {
  *   chainId: 11155111,
  *   contractAddress: '0xToken...',
  *   account: '0xUser...',
@@ -64,9 +64,9 @@ const ZERO_HASH = "0x00000000000000000000000000000000000000000000000000000000000
  * }
  * ```
  */
-export async function confidentialBalance(
+export async function readConfidentialBalance(
   config: FhevmConfig,
-  params: ConfidentialBalanceParams
+  params: ReadConfidentialBalanceParams
 ): Promise<`0x${string}` | undefined> {
   const { chainId, contractAddress, account, provider: rawProvider, abi = ERC7984_ABI } = params;
 
@@ -88,7 +88,7 @@ export async function confidentialBalance(
       throw new Error("RPC URL support not yet implemented. Use ethers.JsonRpcProvider or viem.createPublicClient");
     }
 
-    const provider = detectAndWrapProvider(rawProvider);
+    const provider = detectProvider(rawProvider);
 
     const result = await provider.readContract({
       address: contractAddress,
@@ -118,7 +118,7 @@ export async function confidentialBalance(
  *
  * @example
  * ```typescript
- * const balances = await confidentialBalances(config, {
+ * const balances = await readConfidentialBalances(config, {
  *   chainId: 11155111,
  *   contracts: [
  *     { contractAddress: '0xTokenA...', account: '0xUser...' },
@@ -131,16 +131,16 @@ export async function confidentialBalance(
  * // balances = ['0xHandle1...', undefined, '0xHandle3...']
  * ```
  */
-export async function confidentialBalances(
+export async function readConfidentialBalances(
   config: FhevmConfig,
-  params: ConfidentialBalancesParams
+  params: ReadConfidentialBalancesParams
 ): Promise<Array<`0x${string}` | undefined>> {
   const { contracts } = params;
 
   // Fetch all balances in parallel
   const results = await Promise.allSettled(
     contracts.map((contract) =>
-      confidentialBalance(config, {
+      readConfidentialBalance(config, {
         ...params,
         contractAddress: contract.contractAddress,
         account: contract.account,

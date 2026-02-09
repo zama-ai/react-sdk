@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { confidentialBalance, confidentialBalances } from "../../src/actions/confidentialBalance.js";
+import { readConfidentialBalance, readConfidentialBalances } from "../../src/actions/confidentialBalance.js";
 import {
   createTestConfig,
   createMockViemClient,
@@ -10,14 +10,14 @@ import {
   ZERO_HASH,
 } from "./setup.js";
 
-describe("confidentialBalance integration", () => {
+describe("readConfidentialBalance integration", () => {
   const config = createTestConfig();
 
   describe("input validation", () => {
     it("should validate chain ID", async () => {
       const mockClient = createMockPublicClient();
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: 0,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -29,7 +29,7 @@ describe("confidentialBalance integration", () => {
     it("should validate contract address", async () => {
       const mockClient = createMockPublicClient();
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: "invalid" as `0x${string}`,
           account: TEST_ADDRESSES.user,
@@ -41,7 +41,7 @@ describe("confidentialBalance integration", () => {
     it("should validate account address", async () => {
       const mockClient = createMockPublicClient();
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           account: "0x123" as `0x${string}`,
@@ -53,7 +53,7 @@ describe("confidentialBalance integration", () => {
     it("should reject unknown chain", async () => {
       const mockClient = createMockPublicClient();
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: 999999,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -73,7 +73,7 @@ describe("confidentialBalance integration", () => {
     it("should read balance handle", async () => {
       mockClient.readContract.mockResolvedValue(MOCK_BALANCE_HANDLE);
 
-      const handle = await confidentialBalance(config, {
+      const handle = await readConfidentialBalance(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -92,7 +92,7 @@ describe("confidentialBalance integration", () => {
     it("should return undefined for zero hash", async () => {
       mockClient.readContract.mockResolvedValue(ZERO_HASH);
 
-      const handle = await confidentialBalance(config, {
+      const handle = await readConfidentialBalance(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -106,7 +106,7 @@ describe("confidentialBalance integration", () => {
       mockClient.readContract.mockResolvedValue(MOCK_BALANCE_HANDLE);
       const customAbi = [{ name: "customFunction" }];
 
-      await confidentialBalance(config, {
+      await readConfidentialBalance(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -126,7 +126,7 @@ describe("confidentialBalance integration", () => {
       mockClient.readContract.mockRejectedValue(new Error("Contract call failed"));
 
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -139,7 +139,7 @@ describe("confidentialBalance integration", () => {
   describe("reading balance with RPC URL", () => {
     it("should throw error for RPC URL (not yet implemented)", async () => {
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -165,7 +165,7 @@ describe("confidentialBalance integration", () => {
         .mockResolvedValueOnce(handle2)
         .mockResolvedValueOnce(ZERO_HASH);
 
-      const handles = await confidentialBalances(config, {
+      const handles = await readConfidentialBalances(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contracts: [
           { contractAddress: TEST_ADDRESSES.token, account: TEST_ADDRESSES.user },
@@ -185,7 +185,7 @@ describe("confidentialBalance integration", () => {
         .mockRejectedValueOnce(new Error("Contract error"))
         .mockResolvedValueOnce(MOCK_BALANCE_HANDLE);
 
-      const handles = await confidentialBalances(config, {
+      const handles = await readConfidentialBalances(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contracts: [
           { contractAddress: TEST_ADDRESSES.token, account: TEST_ADDRESSES.user },
@@ -204,7 +204,7 @@ describe("confidentialBalance integration", () => {
 
       mockClient.readContract.mockResolvedValue(MOCK_BALANCE_HANDLE);
 
-      await confidentialBalances(config, {
+      await readConfidentialBalances(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contracts: [
           { contractAddress: TEST_ADDRESSES.token, account: TEST_ADDRESSES.user, abi: customAbi1 },
@@ -233,7 +233,7 @@ describe("confidentialBalance integration", () => {
     });
 
     it("should handle empty contracts array", async () => {
-      const handles = await confidentialBalances(config, {
+      const handles = await readConfidentialBalances(config, {
         chainId: TEST_CHAIN_IDS.sepolia,
         contracts: [],
         provider: mockClient,

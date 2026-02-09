@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { confidentialTransfer } from "../../src/actions/confidentialTransfer.js";
+import { writeConfidentialTransfer } from "../../src/actions/confidentialTransfer.js";
 import {
   createTestConfig,
   createMockEthersSigner,
@@ -8,14 +8,14 @@ import {
   TEST_CHAIN_IDS,
 } from "./setup.js";
 
-describe("confidentialTransfer integration", () => {
+describe("writeConfidentialTransfer integration", () => {
   const config = createTestConfig();
 
   describe("input validation", () => {
     it("should validate chain ID", async () => {
       const mockSigner = createMockEthersSigner();
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: 0,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -28,7 +28,7 @@ describe("confidentialTransfer integration", () => {
     it("should validate contract address", async () => {
       const mockSigner = createMockEthersSigner();
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: "invalid" as `0x${string}`,
           to: TEST_ADDRESSES.recipient,
@@ -41,7 +41,7 @@ describe("confidentialTransfer integration", () => {
     it("should validate recipient address", async () => {
       const mockSigner = createMockEthersSigner();
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: "0x123" as `0x${string}`,
@@ -54,7 +54,7 @@ describe("confidentialTransfer integration", () => {
     it("should reject negative amounts", async () => {
       const mockSigner = createMockEthersSigner();
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -68,7 +68,7 @@ describe("confidentialTransfer integration", () => {
       const mockSigner = createMockEthersSigner();
       // Will fail on encryption, but passes amount validation
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -88,7 +88,7 @@ describe("confidentialTransfer integration", () => {
 
     it("should use signer address when userAddress not provided", async () => {
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -105,7 +105,7 @@ describe("confidentialTransfer integration", () => {
       const customAddress = "0x5555555555555555555555555555555555555555" as `0x${string}`;
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -123,7 +123,7 @@ describe("confidentialTransfer integration", () => {
       const largeAmount = 1_000_000_000_000n; // 1 trillion
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -143,7 +143,7 @@ describe("confidentialTransfer integration", () => {
 
     it("should use client account address when userAddress not provided", async () => {
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -160,7 +160,7 @@ describe("confidentialTransfer integration", () => {
       const customAddress = "0x5555555555555555555555555555555555555555" as `0x${string}`;
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -177,7 +177,7 @@ describe("confidentialTransfer integration", () => {
       const mockSigner = createMockEthersSigner();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -191,7 +191,7 @@ describe("confidentialTransfer integration", () => {
       const mockSigner = createMockEthersSigner();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -207,7 +207,7 @@ describe("confidentialTransfer integration", () => {
       const mockSigner = createMockEthersSigner();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -221,7 +221,7 @@ describe("confidentialTransfer integration", () => {
       const mockClient = createMockViemClient();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -233,7 +233,7 @@ describe("confidentialTransfer integration", () => {
 
     it("should reject invalid providers", async () => {
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: TEST_CHAIN_IDS.sepolia,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,

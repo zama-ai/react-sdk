@@ -2,13 +2,13 @@
 
 ***
 
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / confidentialBalance
+[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / readConfidentialBalance
 
-# Function: confidentialBalance()
+# Function: readConfidentialBalance()
 
-> **confidentialBalance**(`config`, `params`): `Promise`\<`` `0x${string}` `` \| `undefined`\>
+> **readConfidentialBalance**(`config`, `params`): `Promise`\<`` `0x${string}` `` \| `undefined`\>
 
-Defined in: [core-sdk/src/actions/confidentialBalance.ts:67](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/confidentialBalance.ts#L67)
+Defined in: [core-sdk/src/actions/readConfidentialBalance.ts:67](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/readConfidentialBalance.ts#L67)
 
 Read an encrypted balance handle from an ERC7984 contract.
 
@@ -22,7 +22,7 @@ Returns the encrypted handle - use decrypt() to get the actual value.
 
 ### params
 
-`ConfidentialBalanceParams`
+`ReadConfidentialBalanceParams`
 
 ## Returns
 
@@ -31,7 +31,7 @@ Returns the encrypted handle - use decrypt() to get the actual value.
 ## Example
 
 ```typescript
-const handle = await confidentialBalance(config, {
+const handle = await readConfidentialBalance(config, {
   chainId: 11155111,
   contractAddress: '0xToken...',
   account: '0xUser...',

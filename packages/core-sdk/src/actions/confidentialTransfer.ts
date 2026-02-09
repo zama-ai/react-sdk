@@ -1,5 +1,5 @@
 import type { FhevmConfig } from "../config/types.js";
-import { detectAndWrapProvider } from "../providers/detect.js";
+import { detectProvider } from "../providers/detect.js";
 import { ERC7984_ABI } from "../abi/index.js";
 import { encrypt } from "./encrypt.js";
 import { FhevmTransactionError } from "@zama-fhe/shared/utils";
@@ -8,7 +8,7 @@ import { assertAddress, assertChainId } from "@zama-fhe/shared/utils";
 /**
  * Parameters for confidential transfer.
  */
-export interface ConfidentialTransferParams {
+export interface WriteConfidentialTransferParams {
   /** Chain ID */
   chainId: number;
   /** ERC7984 token contract address */
@@ -30,7 +30,7 @@ export interface ConfidentialTransferParams {
 /**
  * Result from confidential transfer.
  */
-export interface ConfidentialTransferResult {
+export interface WriteConfidentialTransferResult {
   /** Transaction hash */
   txHash: `0x${string}`;
   /** Status */
@@ -51,7 +51,7 @@ export interface ConfidentialTransferResult {
  * const provider = new ethers.BrowserProvider(window.ethereum)
  * const signer = await provider.getSigner()
  *
- * const result = await confidentialTransfer(config, {
+ * const result = await writeConfidentialTransfer(config, {
  *   chainId: 11155111,
  *   contractAddress: '0xToken...',
  *   to: '0xRecipient...',
@@ -66,7 +66,7 @@ export interface ConfidentialTransferResult {
  *   transport: custom(window.ethereum),
  * })
  *
- * const result = await confidentialTransfer(config, {
+ * const result = await writeConfidentialTransfer(config, {
  *   chainId: 11155111,
  *   contractAddress: '0xToken...',
  *   to: '0xRecipient...',
@@ -75,10 +75,10 @@ export interface ConfidentialTransferResult {
  * })
  * ```
  */
-export async function confidentialTransfer(
+export async function writeConfidentialTransfer(
   config: FhevmConfig,
-  params: ConfidentialTransferParams
-): Promise<ConfidentialTransferResult> {
+  params: WriteConfidentialTransferParams
+): Promise<WriteConfidentialTransferResult> {
   const {
     chainId,
     contractAddress,
@@ -103,7 +103,7 @@ export async function confidentialTransfer(
 
   try {
     // Detect and wrap provider
-    const provider = detectAndWrapProvider(rawProvider);
+    const provider = detectProvider(rawProvider);
 
     // Get user address
     const userAddress = params.userAddress ?? (await provider.getAddress());

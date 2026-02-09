@@ -15,7 +15,7 @@ import type { UnifiedProvider } from "./types.js";
  * @returns UnifiedProvider instance
  * @throws Error if provider type cannot be detected
  */
-export function detectAndWrapProvider(provider: unknown): UnifiedProvider {
+export function detectProvider(provider: unknown): UnifiedProvider {
   // Check for viem client first (more specific properties)
   if (isViemProvider(provider)) {
     return createViemProvider(provider);

@@ -47,14 +47,14 @@ export { ERC7984_ABI } from "@zama-fhe/shared";
 // Actions
 export {
   encrypt,
-  confidentialTransfer,
-  confidentialBalance,
-  confidentialBalances,
+  writeConfidentialTransfer,
+  readConfidentialBalance,
+  readConfidentialBalances,
   type EncryptParams,
-  type ConfidentialTransferParams,
-  type ConfidentialTransferResult,
-  type ConfidentialBalanceParams,
-  type ConfidentialBalancesParams,
+  type WriteConfidentialTransferParams,
+  type WriteConfidentialTransferResult,
+  type ReadConfidentialBalanceParams,
+  type ReadConfidentialBalancesParams,
 } from "./actions/index.js";
 
 // Transport types
@@ -62,7 +62,7 @@ export type { Transport } from "./types/index.js";
 
 // Providers
 export {
-  detectAndWrapProvider,
+  detectProvider,
   type UnifiedProvider,
   type TransactionRequest,
   type ReadContractParams,

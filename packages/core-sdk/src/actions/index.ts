@@ -1,14 +1,14 @@
 export { encrypt, type EncryptParams } from "./encrypt.js";
 export {
-  confidentialTransfer,
-  type ConfidentialTransferParams,
-  type ConfidentialTransferResult,
+  writeConfidentialTransfer,
+  type WriteConfidentialTransferParams,
+  type WriteConfidentialTransferResult,
 } from "./confidentialTransfer.js";
 export {
-  confidentialBalance,
-  confidentialBalances,
-  type ConfidentialBalanceParams,
-  type ConfidentialBalancesParams,
+  readConfidentialBalance,
+  readConfidentialBalances,
+  type ReadConfidentialBalanceParams,
+  type ReadConfidentialBalancesParams,
 } from "./confidentialBalance.js";
 
 // TODO: Implement these actions

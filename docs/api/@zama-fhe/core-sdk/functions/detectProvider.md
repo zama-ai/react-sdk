@@ -2,11 +2,11 @@
 
 ***
 
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / detectAndWrapProvider
+[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / detectProvider
 
-# Function: detectAndWrapProvider()
+# Function: detectProvider()
 
-> **detectAndWrapProvider**(`provider`): `UnifiedProvider`
+> **detectProvider**(`provider`): `UnifiedProvider`
 
 Defined in: [core-sdk/src/providers/detect.ts:18](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/providers/detect.ts#L18)
 

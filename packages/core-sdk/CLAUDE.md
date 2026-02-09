@@ -43,7 +43,7 @@ npm run build:check  # Type check (alias for typecheck)
 ```
 User Code
     ↓
-Actions (encrypt, confidentialTransfer, etc.)
+Actions (encrypt, writeConfidentialTransfer, etc.)
     ↓
 UnifiedProvider (abstracts ethers/viem)
     ↓
@@ -118,20 +118,20 @@ src/
 1. **Provider Agnostic** - Works with both ethers.js and viem through `UnifiedProvider` abstraction:
    ```typescript
    // Auto-detects provider type
-   const provider = detectAndWrapProvider(signer); // ethers
-   const provider = detectAndWrapProvider(client); // viem
+   const provider = detectProvider(signer); // ethers
+   const provider = detectProvider(client); // viem
    ```
 
 2. **Pure Functions** - All actions are stateless async functions (wagmi-core pattern):
    ```typescript
    // No global state, no classes
-   const result = await confidentialTransfer(config, params);
+   const result = await writeConfidentialTransfer(config, params);
    ```
 
 3. **Subpath Exports** - Modular imports via package.json exports:
    ```typescript
    import { createFhevmConfig } from "@zama-fhe/core-sdk";
-   import { confidentialTransfer } from "@zama-fhe/core-sdk/actions";
+   import { writeConfidentialTransfer } from "@zama-fhe/core-sdk/actions";
    import { sepolia } from "@zama-fhe/core-sdk/chains";
    ```
 
@@ -163,7 +163,7 @@ export interface UnifiedProvider {
 ```
 
 **Implementation:**
-- `detectAndWrapProvider()` - Auto-detects ethers Signer or viem WalletClient
+- `detectProvider()` - Auto-detects ethers Signer or viem WalletClient
 - `createEthersProvider()` - Wraps ethers.js Signer
 - `createViemProvider()` - Wraps viem WalletClient
 
@@ -184,7 +184,7 @@ export async function myAction(
 
   // 3. Wrap provider if needed
   const provider = params.provider
-    ? detectAndWrapProvider(params.provider)
+    ? detectProvider(params.provider)
     : undefined;
 
   // 4. Execute operation
@@ -205,12 +205,12 @@ export async function myAction(
 - Type definitions (full TypeScript coverage)
 - Error classes (FhevmError hierarchy)
 - Validation utilities
-- `confidentialBalance()` - Read single balance
-- `confidentialBalances()` - Read multiple balances
+- `readConfidentialBalance()` - Read single balance
+- `readConfidentialBalances()` - Read multiple balances
 
 ### 🚧 Pending Implementation
 - `encrypt()` - Needs relayer-sdk integration
-- `confidentialTransfer()` - Needs proper ABI encoding
+- `writeConfidentialTransfer()` - Needs proper ABI encoding
 - `decrypt()` - User decryption action
 - `publicDecrypt()` - Public decryption action
 - `createEIP712()` - Signature generation helper
@@ -296,14 +296,14 @@ The react-sdk will use core-sdk actions and add:
 
 ```typescript
 import { ethers } from "ethers";
-import { createFhevmConfig, confidentialTransfer } from "@zama-fhe/core-sdk";
+import { createFhevmConfig, writeConfidentialTransfer } from "@zama-fhe/core-sdk";
 import { sepolia } from "@zama-fhe/core-sdk/chains";
 
 const config = createFhevmConfig({ chains: [sepolia] });
 const provider = new ethers.BrowserProvider(window.ethereum);
 const signer = await provider.getSigner();
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: "0x...",
   to: "0x...",
@@ -317,7 +317,7 @@ const result = await confidentialTransfer(config, {
 ```typescript
 import { createWalletClient, custom } from "viem";
 import { sepolia } from "viem/chains";
-import { createFhevmConfig, confidentialTransfer } from "@zama-fhe/core-sdk";
+import { createFhevmConfig, writeConfidentialTransfer } from "@zama-fhe/core-sdk";
 
 const config = createFhevmConfig({
   chains: [{ id: sepolia.id, name: sepolia.name }]
@@ -328,7 +328,7 @@ const client = createWalletClient({
   transport: custom(window.ethereum),
 });
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: "0x...",
   to: "0x...",
@@ -341,7 +341,7 @@ const result = await confidentialTransfer(config, {
 
 ```typescript
 import { ethers } from "ethers";
-import { createFhevmConfig, confidentialTransfer } from "@zama-fhe/core-sdk";
+import { createFhevmConfig, writeConfidentialTransfer } from "@zama-fhe/core-sdk";
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
@@ -351,7 +351,7 @@ const config = createFhevmConfig({
 });
 
 // Works perfectly in Node.js
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: process.env.TOKEN_ADDRESS as `0x${string}`,
   to: recipientAddress as `0x${string}`,
@@ -373,7 +373,7 @@ import {
 } from "@zama-fhe/core-sdk";
 
 try {
-  await confidentialTransfer(config, params);
+  await writeConfidentialTransfer(config, params);
 } catch (error) {
   if (error instanceof FhevmProviderError) {
     // Handle provider-specific errors

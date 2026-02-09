@@ -56,7 +56,7 @@ export const config = createFhevmConfig({
 ## Browser + Wallet Integration (Ethers)
 
 ```typescript
-import { createFhevmConfig, http, confidentialTransfer } from '@zama-fhe/core-sdk'
+import { createFhevmConfig, http, writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 import { sepolia } from '@zama-fhe/core-sdk/chains'
 import { ethers } from 'ethers'
 
@@ -73,7 +73,7 @@ async function transfer() {
   const provider = new ethers.BrowserProvider(window.ethereum)
   const signer = await provider.getSigner()
 
-  const result = await confidentialTransfer(config, {
+  const result = await writeConfidentialTransfer(config, {
     chainId: 11155111,
     contractAddress: '0xToken...',
     to: '0xRecipient...',
@@ -88,7 +88,7 @@ async function transfer() {
 ## Browser + Wallet Integration (Viem)
 
 ```typescript
-import { createFhevmConfig, http, confidentialTransfer } from '@zama-fhe/core-sdk'
+import { createFhevmConfig, http, writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 import { sepolia } from '@zama-fhe/core-sdk/chains'
 import { createWalletClient, custom } from 'viem'
 import { sepolia as viemSepolia } from 'viem/chains'
@@ -108,7 +108,7 @@ async function transfer() {
     transport: custom(window.ethereum),
   })
 
-  const result = await confidentialTransfer(config, {
+  const result = await writeConfidentialTransfer(config, {
     chainId: 11155111,
     contractAddress: '0xToken...',
     to: '0xRecipient...',
@@ -124,7 +124,7 @@ async function transfer() {
 
 ```typescript
 import express from 'express'
-import { createFhevmConfig, http, confidentialBalance } from '@zama-fhe/core-sdk'
+import { createFhevmConfig, http, readConfidentialBalance } from '@zama-fhe/core-sdk'
 import { sepolia } from '@zama-fhe/core-sdk/chains'
 
 const app = express()
@@ -140,7 +140,7 @@ const config = createFhevmConfig({
 // Read balance endpoint
 app.get('/balance/:address', async (req, res) => {
   try {
-    const handle = await confidentialBalance(config, {
+    const handle = await readConfidentialBalance(config, {
       chainId: 11155111,
       contractAddress: process.env.TOKEN_ADDRESS as `0x${string}`,
       account: req.params.address as `0x${string}`,
@@ -172,7 +172,7 @@ export const fhevmConfig = createFhevmConfig({
 // App.tsx
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { confidentialBalance } from '@zama-fhe/core-sdk'
+import { readConfidentialBalance } from '@zama-fhe/core-sdk'
 import { fhevmConfig } from './config'
 
 function BalanceDisplay({ tokenAddress }: { tokenAddress: `0x${string}` }) {
@@ -182,7 +182,7 @@ function BalanceDisplay({ tokenAddress }: { tokenAddress: `0x${string}` }) {
   const loadBalance = async () => {
     if (!address) return
 
-    const handle = await confidentialBalance(fhevmConfig, {
+    const handle = await readConfidentialBalance(fhevmConfig, {
       chainId: 11155111,
       contractAddress: tokenAddress,
       account: address,
@@ -205,7 +205,7 @@ function BalanceDisplay({ tokenAddress }: { tokenAddress: `0x${string}` }) {
 ```typescript
 import { createFhevmConfig, http } from '@zama-fhe/core-sdk'
 import { sepolia, hardhatLocal } from '@zama-fhe/core-sdk/chains'
-import { confidentialBalance } from '@zama-fhe/core-sdk'
+import { readConfidentialBalance } from '@zama-fhe/core-sdk'
 
 const config = createFhevmConfig({
   chains: [sepolia, hardhatLocal],
@@ -216,14 +216,14 @@ const config = createFhevmConfig({
 })
 
 // Read from Sepolia
-const sepoliaBalance = await confidentialBalance(config, {
+const sepoliaBalance = await readConfidentialBalance(config, {
   chainId: 11155111,
   contractAddress: '0xToken...',
   account: '0xUser...',
 })
 
 // Read from local Hardhat
-const localBalance = await confidentialBalance(config, {
+const localBalance = await readConfidentialBalance(config, {
   chainId: 31337,
   contractAddress: '0xToken...',
   account: '0xUser...',

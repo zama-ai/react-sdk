@@ -12,7 +12,7 @@
  * - Set environment variables: INFURA_API_KEY, PRIVATE_KEY
  */
 
-import { createFhevmConfig, http, confidentialBalance, confidentialTransfer } from '@zama-fhe/core-sdk'
+import { createFhevmConfig, http, readConfidentialBalance, writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 import { sepolia, hardhatLocal } from '@zama-fhe/core-sdk/chains'
 import { createWalletClient, createPublicClient, http as viemHttp, type Address } from 'viem'
 import { sepolia as viemSepolia } from 'viem/chains'
@@ -49,10 +49,10 @@ const walletClient = createWalletClient({
 /**
  * Example 1: Read confidential balance
  */
-async function readConfidentialBalance() {
+async function readBalance() {
   console.log('📊 Reading confidential balance...')
 
-  const balanceHandle = await confidentialBalance(config, {
+  const balanceHandle = await readConfidentialBalance(config, {
     chainId: sepolia.id,
     contractAddress: ERC7984_TOKEN_ADDRESS,
     account: account.address,
@@ -80,7 +80,7 @@ async function performConfidentialTransfer(
   console.log(`   Amount: ${amount}`)
 
   try {
-    const result = await confidentialTransfer(config, {
+    const result = await writeConfidentialTransfer(config, {
       chainId: sepolia.id,
       contractAddress: ERC7984_TOKEN_ADDRESS,
       to: recipientAddress,
@@ -134,7 +134,7 @@ async function main() {
 
   try {
     // Example 1: Read own balance
-    const myBalance = await readConfidentialBalance()
+    const myBalance = await readBalance()
     console.log('')
 
     // Example 2: Transfer tokens (uncomment to use)

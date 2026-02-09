@@ -47,12 +47,12 @@ export const config = createFhevmConfig({
 
 ```typescript
 import { ethers } from 'ethers'
-import { confidentialTransfer } from '@zama-fhe/core-sdk'
+import { writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 
 const provider = new ethers.BrowserProvider(window.ethereum)
 const signer = await provider.getSigner()
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: '0xYourToken...',
   to: '0xRecipient...',
@@ -68,14 +68,14 @@ console.log('Transaction:', result.txHash)
 ```typescript
 import { createWalletClient, custom } from 'viem'
 import { sepolia } from 'viem/chains'
-import { confidentialTransfer } from '@zama-fhe/core-sdk'
+import { writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 
 const client = createWalletClient({
   chain: sepolia,
   transport: custom(window.ethereum),
 })
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: '0xYourToken...',
   to: '0xRecipient...',
@@ -89,10 +89,10 @@ console.log('Transaction:', result.txHash)
 ### Read Confidential Balance
 
 ```typescript
-import { confidentialBalance } from '@zama-fhe/core-sdk'
+import { readConfidentialBalance } from '@zama-fhe/core-sdk'
 
 // Uses the transport configured in config
-const handle = await confidentialBalance(config, {
+const handle = await readConfidentialBalance(config, {
   chainId: 11155111,
   contractAddress: '0xToken...',
   account: '0xUser...',
@@ -104,10 +104,10 @@ const handle = await confidentialBalance(config, {
 ### Multiple Balances (Parallel)
 
 ```typescript
-import { confidentialBalances } from '@zama-fhe/core-sdk'
+import { readConfidentialBalances } from '@zama-fhe/core-sdk'
 
 // Automatically uses the configured transport for the chain
-const handles = await confidentialBalances(config, {
+const handles = await readConfidentialBalances(config, {
   chainId: 11155111,
   contracts: [
     { contractAddress: '0xUSDC...', account: userAddress },
@@ -121,7 +121,7 @@ const handles = await confidentialBalances(config, {
 
 ```typescript
 import { ethers } from 'ethers'
-import { createFhevmConfig, http, confidentialTransfer } from '@zama-fhe/core-sdk'
+import { createFhevmConfig, http, writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 import { sepolia } from '@zama-fhe/core-sdk/chains'
 
 // Configure with RPC URL
@@ -137,7 +137,7 @@ const provider = new ethers.JsonRpcProvider(process.env.RPC_URL)
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
 
 async function serverSideTransfer(to: string, amount: bigint) {
-  const result = await confidentialTransfer(config, {
+  const result = await writeConfidentialTransfer(config, {
     chainId: 11155111,
     contractAddress: process.env.TOKEN_ADDRESS as `0x${string}`,
     to: to as `0x${string}`,
@@ -186,11 +186,11 @@ The SDK automatically detects whether you're using ethers.js or viem:
 ```typescript
 // Works with ethers
 const signer = await provider.getSigner()
-await confidentialTransfer(config, { provider: signer, ... })
+await writeConfidentialTransfer(config, { provider: signer, ... })
 
 // Works with viem
 const client = createWalletClient({ ... })
-await confidentialTransfer(config, { provider: client, ... })
+await writeConfidentialTransfer(config, { provider: client, ... })
 ```
 
 ### 3. Actions
@@ -200,8 +200,8 @@ All operations are pure async functions:
 ```typescript
 import {
   encrypt,
-  confidentialTransfer,
-  confidentialBalance,
+  writeConfidentialTransfer,
+  readConfidentialBalance,
   // decrypt, // Coming soon
   // publicDecrypt, // Coming soon
 } from '@zama-fhe/core-sdk/actions'
@@ -219,9 +219,9 @@ import {
 ### Actions
 
 - `encrypt(config, params)` - Encrypt values for contract calls
-- `confidentialTransfer(config, params)` - Execute confidential ERC7984 transfer
-- `confidentialBalance(config, params)` - Read encrypted balance handle
-- `confidentialBalances(config, params)` - Read multiple balances in parallel
+- `writeConfidentialTransfer(config, params)` - Execute confidential ERC7984 transfer
+- `readConfidentialBalance(config, params)` - Read encrypted balance handle
+- `readConfidentialBalances(config, params)` - Read multiple balances in parallel
 
 ### Types
 
@@ -231,8 +231,8 @@ import type {
   FhevmChain,
   EncryptInput,
   EncryptedOutput,
-  ConfidentialTransferParams,
-  ConfidentialBalanceParams,
+  WriteConfidentialTransferParams,
+  ReadConfidentialBalanceParams,
 } from '@zama-fhe/core-sdk'
 ```
 

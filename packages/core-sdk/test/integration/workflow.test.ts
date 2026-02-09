@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { createFhevmConfig } from "../../src/config/createConfig.js";
 import { http, fallback } from "../../src/transports/index.js";
 import { sepolia, hardhatLocal } from "../../src/chains/index.js";
-import { confidentialBalance, confidentialBalances } from "../../src/actions/confidentialBalance.js";
-import { confidentialTransfer } from "../../src/actions/confidentialTransfer.js";
+import { readConfidentialBalance, readConfidentialBalances } from "../../src/actions/confidentialBalance.js";
+import { writeConfidentialTransfer } from "../../src/actions/confidentialTransfer.js";
 import {
   createMockEthersSigner,
   createMockViemClient,
@@ -71,7 +71,7 @@ describe("End-to-end workflows", () => {
     it("should read single balance", async () => {
       mockClient.readContract.mockResolvedValue(MOCK_BALANCE_HANDLE);
 
-      const handle = await confidentialBalance(config, {
+      const handle = await readConfidentialBalance(config, {
         chainId: sepolia.id,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -91,7 +91,7 @@ describe("End-to-end workflows", () => {
         .mockResolvedValueOnce(handle2)
         .mockResolvedValueOnce(handle3);
 
-      const handles = await confidentialBalances(config, {
+      const handles = await readConfidentialBalances(config, {
         chainId: sepolia.id,
         contracts: [
           { contractAddress: TEST_ADDRESSES.token, account: TEST_ADDRESSES.user },
@@ -121,7 +121,7 @@ describe("End-to-end workflows", () => {
       const mockSigner = createMockEthersSigner();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: sepolia.id,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -135,7 +135,7 @@ describe("End-to-end workflows", () => {
       const mockClient = createMockViemClient();
 
       await expect(
-        confidentialTransfer(config, {
+        writeConfidentialTransfer(config, {
           chainId: sepolia.id,
           contractAddress: TEST_ADDRESSES.token,
           to: TEST_ADDRESSES.recipient,
@@ -166,14 +166,14 @@ describe("End-to-end workflows", () => {
         "0x2222222222222222222222222222222222222222222222222222222222222222" as `0x${string}`
       );
 
-      const sepoliaHandle = await confidentialBalance(config, {
+      const sepoliaHandle = await readConfidentialBalance(config, {
         chainId: sepolia.id,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
         provider: sepoliaClient,
       });
 
-      const hardhatHandle = await confidentialBalance(config, {
+      const hardhatHandle = await readConfidentialBalance(config, {
         chainId: hardhatLocal.id,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -205,7 +205,7 @@ describe("End-to-end workflows", () => {
       // This will fail because we're using a signer for reading (needs readContract)
       // But demonstrates provider detection works
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: sepolia.id,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -218,7 +218,7 @@ describe("End-to-end workflows", () => {
       const mockClient = createMockPublicClient();
       mockClient.readContract.mockResolvedValue(MOCK_BALANCE_HANDLE);
 
-      const handle = await confidentialBalance(config, {
+      const handle = await readConfidentialBalance(config, {
         chainId: sepolia.id,
         contractAddress: TEST_ADDRESSES.token,
         account: TEST_ADDRESSES.user,
@@ -245,7 +245,7 @@ describe("End-to-end workflows", () => {
       const mockClient = createMockPublicClient();
 
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: 999999,
           contractAddress: TEST_ADDRESSES.token,
           account: TEST_ADDRESSES.user,
@@ -258,7 +258,7 @@ describe("End-to-end workflows", () => {
       const mockClient = createMockPublicClient();
 
       await expect(
-        confidentialBalance(config, {
+        readConfidentialBalance(config, {
           chainId: sepolia.id,
           contractAddress: "invalid" as `0x${string}`,
           account: TEST_ADDRESSES.user,
@@ -274,7 +274,7 @@ describe("End-to-end workflows", () => {
         .mockRejectedValueOnce(new Error("Contract not found"))
         .mockResolvedValueOnce(MOCK_BALANCE_HANDLE);
 
-      const handles = await confidentialBalances(config, {
+      const handles = await readConfidentialBalances(config, {
         chainId: sepolia.id,
         contracts: [
           { contractAddress: TEST_ADDRESSES.token, account: TEST_ADDRESSES.user },

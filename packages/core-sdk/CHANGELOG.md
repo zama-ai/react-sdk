@@ -32,9 +32,9 @@ const config = createFhevmConfig({
 - ✅ **Chain Definitions**: Sepolia and Hardhat Local preconfigured
 - ✅ **Actions**:
   - `encrypt()` - Encrypt values (scaffold)
-  - `confidentialTransfer()` - ERC7984 transfers (scaffold)
-  - `confidentialBalance()` - Read encrypted balance
-  - `confidentialBalances()` - Read multiple balances in parallel
+  - `writeConfidentialTransfer()` - ERC7984 transfers (scaffold)
+  - `readConfidentialBalance()` - Read encrypted balance
+  - `readConfidentialBalances()` - Read multiple balances in parallel
 - ✅ **Provider Abstraction**: Auto-detects ethers vs viem
 - ✅ **Type Safety**: Full TypeScript support
 - ✅ **Error Handling**: Comprehensive error classes
@@ -51,7 +51,7 @@ Follows the proven wagmi-core pattern:
 - `encrypt()` requires relayer-sdk integration (not yet implemented)
 - `decrypt()` and `publicDecrypt()` not yet implemented
 - `createEIP712()` not yet implemented
-- `confidentialTransfer()` requires ABI encoding completion
+- `writeConfidentialTransfer()` requires ABI encoding completion
 - No tests yet
 
 ### Next Steps

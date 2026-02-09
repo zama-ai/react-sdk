@@ -45,11 +45,11 @@ npm install @zama-fhe/core-sdk viem
 ```
 
 ```typescript
-import { confidentialTransfer } from '@zama-fhe/core-sdk'
+import { writeConfidentialTransfer } from '@zama-fhe/core-sdk'
 import { ethers } from 'ethers'
 
 const wallet = new ethers.Wallet(privateKey, provider)
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: '0x...',
   to: '0x...',

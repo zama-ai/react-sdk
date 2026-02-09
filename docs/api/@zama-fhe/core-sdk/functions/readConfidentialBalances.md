@@ -2,11 +2,11 @@
 
 ***
 
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / confidentialBalances
+[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / readConfidentialBalances
 
-# Function: confidentialBalances()
+# Function: readConfidentialBalances()
 
-> **confidentialBalances**(`config`, `params`): `Promise`\<(`` `0x${string}` `` \| `undefined`)[]\>
+> **readConfidentialBalances**(`config`, `params`): `Promise`\<(`` `0x${string}` `` \| `undefined`)[]\>
 
 Defined in: [core-sdk/src/actions/confidentialBalance.ts:134](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/confidentialBalance.ts#L134)
 
@@ -22,7 +22,7 @@ Similar to wagmi's useReadContracts - fetches multiple balances efficiently.
 
 ### params
 
-`ConfidentialBalancesParams`
+`ReadConfidentialBalancesParams`
 
 ## Returns
 
@@ -31,7 +31,7 @@ Similar to wagmi's useReadContracts - fetches multiple balances efficiently.
 ## Example
 
 ```typescript
-const balances = await confidentialBalances(config, {
+const balances = await readConfidentialBalances(config, {
   chainId: 11155111,
   contracts: [
     { contractAddress: '0xTokenA...', account: '0xUser...' },

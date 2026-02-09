@@ -38,7 +38,7 @@ core-sdk/
 - ✅ `UnifiedProvider` interface
 - ✅ Ethers.js adapter (`createEthersProvider`)
 - ✅ Viem adapter (`createViemProvider`)
-- ✅ Auto-detection (`detectAndWrapProvider`)
+- ✅ Auto-detection (`detectProvider`)
 - ✅ Works with both Signer and WalletClient seamlessly
 
 #### 3. Chain Definitions (`src/chains/`)
@@ -49,9 +49,9 @@ core-sdk/
 
 #### 4. Actions (`src/actions/`)
 - ✅ `encrypt()` - Encrypt values (scaffold - needs relayer-sdk integration)
-- ✅ `confidentialTransfer()` - Transfer ERC7984 tokens (scaffold)
-- ✅ `confidentialBalance()` - Read single balance
-- ✅ `confidentialBalances()` - Read multiple balances in parallel
+- ✅ `writeConfidentialTransfer()` - Transfer ERC7984 tokens (scaffold)
+- ✅ `readConfidentialBalance()` - Read single balance
+- ✅ `readConfidentialBalances()` - Read multiple balances in parallel
 
 #### 5. Types (`src/types/`)
 - ✅ `FhevmChain` - Chain configuration
@@ -77,15 +77,15 @@ const config = createFhevmConfig({ chains: [sepolia] })
 // With Ethers.js
 import { ethers } from 'ethers'
 const signer = await provider.getSigner()
-await confidentialTransfer(config, { provider: signer, ... })
+await writeConfidentialTransfer(config, { provider: signer, ... })
 
 // With Viem
 import { createWalletClient } from 'viem'
 const client = createWalletClient({ ... })
-await confidentialTransfer(config, { provider: client, ... })
+await writeConfidentialTransfer(config, { provider: client, ... })
 
 // Read balances
-const handles = await confidentialBalances(config, {
+const handles = await readConfidentialBalances(config, {
   contracts: [{ contractAddress, account }],
   provider: 'https://...',
 })
@@ -105,7 +105,7 @@ const handles = await confidentialBalances(config, {
    - `createEIP712()` - Signature generation
 
 3. **ABI Encoding**
-   - Complete `confidentialTransfer()` implementation
+   - Complete `writeConfidentialTransfer()` implementation
    - Proper function encoding using ethers or viem
 
 ### Medium Priority

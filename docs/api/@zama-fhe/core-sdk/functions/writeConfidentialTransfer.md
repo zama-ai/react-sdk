@@ -2,13 +2,13 @@
 
 ***
 
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / confidentialTransfer
+[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / writeConfidentialTransfer
 
-# Function: confidentialTransfer()
+# Function: writeConfidentialTransfer()
 
-> **confidentialTransfer**(`config`, `params`): `Promise`\<`ConfidentialTransferResult`\>
+> **writeConfidentialTransfer**(`config`, `params`): `Promise`\<`WriteConfidentialTransferResult`\>
 
-Defined in: [core-sdk/src/actions/confidentialTransfer.ts:78](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/confidentialTransfer.ts#L78)
+Defined in: [core-sdk/src/actions/writeConfidentialTransfer.ts:78](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/writeConfidentialTransfer.ts#L78)
 
 Execute a confidential ERC7984 token transfer.
 
@@ -24,11 +24,11 @@ Works with both ethers.js and viem providers.
 
 ### params
 
-`ConfidentialTransferParams`
+`WriteConfidentialTransferParams`
 
 ## Returns
 
-`Promise`\<`ConfidentialTransferResult`\>
+`Promise`\<`WriteConfidentialTransferResult`\>
 
 ## Example
 
@@ -38,7 +38,7 @@ import { ethers } from 'ethers'
 const provider = new ethers.BrowserProvider(window.ethereum)
 const signer = await provider.getSigner()
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: '0xToken...',
   to: '0xRecipient...',
@@ -53,7 +53,7 @@ const client = createWalletClient({
   transport: custom(window.ethereum),
 })
 
-const result = await confidentialTransfer(config, {
+const result = await writeConfidentialTransfer(config, {
   chainId: 11155111,
   contractAddress: '0xToken...',
   to: '0xRecipient...',
