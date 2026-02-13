@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { FhevmConfig } from "../config";
 import type { FhevmInstance } from "../fhevmTypes";
-import type { Eip1193Provider } from "../internal/eip1193";
+import type { Eip1193Provider } from "../internal/validations/eip1193";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
 import type { FhevmWallet } from "../types/wallet";
 

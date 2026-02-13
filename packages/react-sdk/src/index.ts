@@ -25,7 +25,7 @@ export type {
   TypedDataDomain,
   TypedDataField,
   EIP712TypedData,
-} from "./internal/eip1193";
+} from "./internal/validations/index";
 
 // Encryption types
 export type { FheTypeName, EncryptInput, EncryptResult, EncryptedOutput } from "./types/encryption";

@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 import { FhevmDecryptionSignature, type SignerParams } from "../FhevmDecryptionSignature";
-import type { Eip1193Provider } from "../internal/eip1193";
+import type { Eip1193Provider } from "../internal/validations/eip1193";
 import { noOpStorage } from "../storage/adapters";
 import { useFhevmContext } from "./context";
 import { fhevmKeys } from "./queryKeys";
@@ -173,7 +173,9 @@ export function useUserDecrypt(
         throw new Error("FHEVM instance not ready");
       }
       if (!wallet && !provider) {
-        throw new Error("No wallet or provider available. Pass a wallet or provider to FhevmProvider.");
+        throw new Error(
+          "No wallet or provider available. Pass a wallet or provider to FhevmProvider."
+        );
       }
       if (!address && !wallet) {
         throw new Error("No address available. Pass address to FhevmProvider.");
@@ -248,7 +250,8 @@ export function useUserDecrypt(
 
   // Can decrypt if we have everything needed
   const canDecrypt = useMemo(() => {
-    const hasSigningCapability = wallet !== undefined || (provider !== undefined && address !== undefined);
+    const hasSigningCapability =
+      wallet !== undefined || (provider !== undefined && address !== undefined);
     return (
       status === "ready" &&
       instance !== undefined &&

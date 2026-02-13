@@ -2,9 +2,10 @@ import type { EIP712Type, FhevmDecryptionSignatureType, FhevmInstance } from "./
 import {
   isAddress,
   signTypedData,
+  isEIP712,
   type Eip1193Provider,
   type EIP712TypedData,
-} from "./internal/eip1193";
+} from "./internal/validations/index";
 import { logger } from "./internal/logger";
 import type { GenericStringStorage } from "./storage/GenericStringStorage";
 import type { FhevmWallet } from "./types/wallet";
@@ -203,45 +204,23 @@ export class FhevmDecryptionSignature {
    * @returns True if the value is a valid signature type
    */
   static checkIs(s: unknown): s is FhevmDecryptionSignatureType {
-    if (!s || typeof s !== "object") {
-      return false;
-    }
-
-    // Use type assertion once after initial check, then access properties safely
-    const obj = s as Record<string, unknown>;
-
-    // Check required string fields
-    if (typeof obj.publicKey !== "string") return false;
-    if (typeof obj.privateKey !== "string") return false;
-    if (typeof obj.signature !== "string") return false;
-
-    // Check required number fields
-    if (typeof obj.startTimestamp !== "number") return false;
-    if (typeof obj.durationDays !== "number") return false;
-
-    // Check userAddress
-    if (typeof obj.userAddress !== "string" || !obj.userAddress.startsWith("0x")) {
-      return false;
-    }
-
-    // Check contractAddresses array
-    if (!Array.isArray(obj.contractAddresses)) return false;
-    for (const addr of obj.contractAddresses) {
-      if (typeof addr !== "string" || !addr.startsWith("0x")) {
-        return false;
-      }
-    }
-
-    // Check eip712 object structure
-    if (!obj.eip712 || typeof obj.eip712 !== "object") return false;
-    const eip712 = obj.eip712 as Record<string, unknown>;
-
-    if (!eip712.domain || typeof eip712.domain !== "object") return false;
-    if (typeof eip712.primaryType !== "string") return false;
-    if (!("message" in eip712)) return false;
-    if (!eip712.types || typeof eip712.types !== "object") return false;
-
-    return true;
+    if (!s || typeof s !== "object") return false;
+    const o = s as Record<string, unknown>;
+    const checks: [key: string, pred: (v: unknown) => boolean][] = [
+      ["publicKey", (v): v is string => typeof v === "string"],
+      ["privateKey", (v): v is string => typeof v === "string"],
+      ["signature", (v): v is string => typeof v === "string"],
+      ["startTimestamp", (v): v is number => typeof v === "number"],
+      ["durationDays", (v): v is number => typeof v === "number"],
+      ["userAddress", (v): v is `0x${string}` => typeof v === "string" && isAddress(v)],
+      [
+        "contractAddresses",
+        (v): v is `0x${string}`[] =>
+          Array.isArray(v) && v.every((x) => typeof x === "string" && isAddress(x)),
+      ],
+      ["eip712", isEIP712],
+    ];
+    return checks.every(([key, pred]) => key in o && pred(o[key]));
   }
 
   toJSON() {
@@ -396,9 +375,7 @@ export class FhevmDecryptionSignature {
     signer: SignerParams
   ): Promise<FhevmDecryptionSignature | null> {
     try {
-      const userAddress = signer.wallet
-        ? signer.wallet.address
-        : signer.address;
+      const userAddress = signer.wallet ? signer.wallet.address : signer.address;
       const startTimestamp = _timestampNow();
       // Default to 1 day for security - developers can override
       const durationDays = 1;
@@ -462,9 +439,7 @@ export class FhevmDecryptionSignature {
     storage: GenericStringStorage,
     keyPair?: { publicKey: string; privateKey: string }
   ): Promise<FhevmDecryptionSignature | null> {
-    const userAddress = signer.wallet
-      ? signer.wallet.address
-      : signer.address;
+    const userAddress = signer.wallet ? signer.wallet.address : signer.address;
 
     // Debug: Check storage type
     const storageType = storage.constructor?.name || "unknown";
