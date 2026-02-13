@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useUserDecryptedValue
-
 # Function: useUserDecryptedValue()
 
-> **useUserDecryptedValue**(`handle`, `contractAddress`): `UseDecryptedValueReturn`
+```ts
+function useUserDecryptedValue(handle: string | undefined, contractAddress: `0x${string}` | undefined): UseDecryptedValueReturn;
+```
 
-Defined in: [react/useUserDecryptedValue.ts:80](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useUserDecryptedValue.ts#L80)
+Defined in: [react/useUserDecryptedValue.ts:80](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useUserDecryptedValue.ts#L80)
 
 Hook for reading cached decrypted values without triggering new decryption.
 
@@ -23,17 +19,10 @@ use the useUserDecrypt hook instead.
 
 ## Parameters
 
-### handle
-
-The encrypted handle to look up, or undefined
-
-`string` | `undefined`
-
-### contractAddress
-
-The contract address, or undefined
-
-`` `0x${string}` `` | `undefined`
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `handle` | `string` \| `undefined` | The encrypted handle to look up, or undefined |
+| `contractAddress` | `` `0x${string}` `` \| `undefined` | The contract address, or undefined |
 
 ## Returns
 

@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / fallback
-
 # Function: fallback()
 
-> **fallback**(`transports`): `Transport`
+```ts
+function fallback(transports: Transport[]): Transport;
+```
 
-Defined in: [core-sdk/src/transports/fallback.ts:17](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/transports/fallback.ts#L17)
+Defined in: [core-sdk/src/transports/fallback.ts:17](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/core-sdk/src/transports/fallback.ts#L17)
 
 Create a fallback transport that tries multiple transports in order.
 
@@ -16,9 +12,9 @@ If the first transport fails, it will try the next one, and so on.
 
 ## Parameters
 
-### transports
-
-`Transport`[]
+| Parameter | Type |
+| ------ | ------ |
+| `transports` | `Transport`[] |
 
 ## Returns
 

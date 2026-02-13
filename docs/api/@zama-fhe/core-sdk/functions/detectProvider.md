@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / detectProvider
-
 # Function: detectProvider()
 
-> **detectProvider**(`provider`): `UnifiedProvider`
+```ts
+function detectProvider(provider: unknown): UnifiedProvider;
+```
 
-Defined in: [core-sdk/src/providers/detect.ts:18](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/providers/detect.ts#L18)
+Defined in: [core-sdk/src/providers/detect.ts:18](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/core-sdk/src/providers/detect.ts#L18)
 
 Auto-detect provider type and wrap it in a UnifiedProvider.
 
@@ -20,11 +16,9 @@ Supports:
 
 ## Parameters
 
-### provider
-
-`unknown`
-
-The provider to detect and wrap
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `provider` | `unknown` | The provider to detect and wrap |
 
 ## Returns
 

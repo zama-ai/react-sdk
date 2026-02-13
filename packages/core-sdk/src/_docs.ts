@@ -1,17 +1,24 @@
-// Config
+/**
+ * @category Config
+ */
 export { createFhevmConfig } from "./config/index.js";
 
-// Transports
+/**
+ * @category Transports
+ */
 export { http, custom, fallback } from "./transports/index.js";
 
-// Chains
-export { sepolia, hardhatLocal, defineChain, defineMockChain, defineProductionChain } from "@zama-fhe/shared";
+/**
+ * @category Chains
+ */
+export { sepolia, mainnet, hardhatLocal, defineChain, defineMockChain, defineProductionChain } from "@zama-fhe/shared";
 
-// Actions
+/**
+ * @category Actions
+ */
 export { encrypt, writeConfidentialTransfer, readConfidentialBalance, readConfidentialBalances } from "./actions/index.js";
 
-// Error classes
-export { FhevmError, FhevmConfigError, FhevmEncryptionError, FhevmDecryptionError, FhevmProviderError, FhevmTransactionError } from "@zama-fhe/shared";
-
-// Provider
+/**
+ * @category Providers
+ */
 export { detectProvider } from "./providers/index.js";

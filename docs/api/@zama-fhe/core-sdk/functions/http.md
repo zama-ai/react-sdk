@@ -1,22 +1,18 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / http
-
 # Function: http()
 
-> **http**(`config?`): `Transport`
+```ts
+function http(config?: string | HttpTransportConfig): Transport;
+```
 
-Defined in: [core-sdk/src/transports/http.ts:13](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/transports/http.ts#L13)
+Defined in: [core-sdk/src/transports/http.ts:13](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/core-sdk/src/transports/http.ts#L13)
 
 Create an HTTP transport for JSON-RPC connections.
 
 ## Parameters
 
-### config?
-
-`string` | `HttpTransportConfig`
+| Parameter | Type |
+| ------ | ------ |
+| `config?` | `string` \| `HttpTransportConfig` |
 
 ## Returns
 

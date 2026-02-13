@@ -38,7 +38,7 @@ pnpm clean                # Remove all dist/ and node_modules
 pnpm watch:shared         # Watch-build shared
 pnpm watch:core           # Watch-build core-sdk
 pnpm watch:react          # Watch-build react-sdk
-pnpm docs:gen             # Generate TypeDoc API docs to docs/api/
+pnpm docs:gen             # Generate TypeDoc API docs to docs/api/ (runs typedoc + updates SUMMARY.md)
 pnpm docs:serve           # Build and serve docs locally
 ```
 
@@ -88,10 +88,12 @@ import { sepolia } from "@zama-fhe/core-sdk/chains";
 import { createFhevmConfig } from "@zama-fhe/core-sdk/config";
 import { detectProvider } from "@zama-fhe/core-sdk/providers";
 
-// react-sdk subpaths: chains, core, storage, types, react
+// react-sdk subpaths: (root), chains, core, storage, types, react
 import { FhevmProvider, useEncrypt } from "@zama-fhe/react-sdk";
 import { sepolia } from "@zama-fhe/react-sdk/chains";
+import { createFhevmConfig } from "@zama-fhe/react-sdk/core";
 import { memoryStorage } from "@zama-fhe/react-sdk/storage";
+import type { EncryptInput } from "@zama-fhe/react-sdk/types";
 
 // shared subpaths (internal only): abi, chains, types, utils
 import { ERC7984_ABI } from "@zama-fhe/shared/abi";
@@ -150,8 +152,22 @@ Base config in `tsconfig.base.json`: target ES2022, module ES2022, `bundler` mod
 
 ## Documentation
 
-Docs live in `docs/` at repo root, structured for GitBook compatibility (`SUMMARY.md` for navigation). Generated API reference via TypeDoc goes to `docs/api/`. Each package has a `src/_docs.ts` file as the TypeDoc entry point. Narrative docs are organized by package (`docs/core-sdk/`, `docs/react-sdk/`) with getting-started guides in `docs/getting-started/`.
+Docs live in `docs/` at repo root, structured for GitBook compatibility (`SUMMARY.md` for navigation). Narrative docs are organized by package (`docs/core-sdk/`, `docs/react-sdk/`) with getting-started guides in `docs/getting-started/`.
 
 ## Linting
 
 Only react-sdk has a full ESLint config (flat config in `eslint.config.js`) with `react-hooks` and `import` plugins. core-sdk and shared rely on TypeScript strict mode. React-SDK also has Prettier configured.
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on push/PR to `main` and `develop`:
+- **Test & Build job**: typecheck → lint → build → test
+- **Release job** (main only): Uses `changesets/action` to auto-publish to npm
+
+## Docs Generation
+
+`pnpm docs:gen` is a two-step process:
+1. `typedoc` generates markdown API docs to `docs/api/` (using `typedoc-plugin-markdown`)
+2. `scripts/update-api-summary.mjs` updates `docs/SUMMARY.md` with links to generated pages
+
+Each package has a `src/_docs.ts` file as the TypeDoc entry point. The root `typedoc.json` orchestrates multi-package generation.

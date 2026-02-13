@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useEncrypt
-
 # Function: useEncrypt()
 
-> **useEncrypt**(): `UseEncryptReturn`
+```ts
+function useEncrypt(): UseEncryptReturn;
+```
 
-Defined in: [react/useEncrypt.ts:152](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useEncrypt.ts#L152)
+Defined in: [react/useEncrypt.ts:152](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useEncrypt.ts#L152)
 
 Hook for encrypting values for FHE contract calls.
 

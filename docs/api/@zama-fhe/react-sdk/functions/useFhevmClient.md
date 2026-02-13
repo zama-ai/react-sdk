@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useFhevmClient
-
 # Function: useFhevmClient()
 
-> **useFhevmClient**(): `UseFhevmClientReturn`
+```ts
+function useFhevmClient(): UseFhevmClientReturn;
+```
 
-Defined in: [react/useFhevmClient.ts:49](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useFhevmClient.ts#L49)
+Defined in: [react/useFhevmClient.ts:49](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useFhevmClient.ts#L49)
 
 Hook to get direct access to the FHEVM instance.
 

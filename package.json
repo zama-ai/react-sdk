@@ -24,7 +24,7 @@
     "lint:fix": "pnpm --filter '@zama-fhe/*' lint:fix",
     "typecheck": "pnpm --filter '@zama-fhe/*' typecheck",
     "clean": "pnpm --filter '@zama-fhe/*' clean && rm -rf node_modules",
-    "docs:gen": "typedoc",
+    "docs:gen": "typedoc && node scripts/update-api-summary.mjs",
     "docs:watch": "typedoc --watch",
     "docs:serve": "pnpm run docs:gen && npx serve docs/api",
     "ci": "pnpm build && pnpm typecheck && pnpm lint && pnpm test",

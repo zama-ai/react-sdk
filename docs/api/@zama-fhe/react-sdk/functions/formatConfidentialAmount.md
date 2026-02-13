@@ -1,30 +1,23 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / formatConfidentialAmount
-
 # Function: formatConfidentialAmount()
 
-> **formatConfidentialAmount**(`amount`, `decimals`, `maxDisplayDecimals?`): `string`
+```ts
+function formatConfidentialAmount(
+   amount: bigint, 
+   decimals: number, 
+   maxDisplayDecimals?: number): string;
+```
 
-Defined in: [utils/format.ts:10](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/utils/format.ts#L10)
+Defined in: [utils/format.ts:10](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/utils/format.ts#L10)
 
 Format a bigint token amount with decimals for display.
 
 ## Parameters
 
-### amount
-
-`bigint`
-
-### decimals
-
-`number`
-
-### maxDisplayDecimals?
-
-`number` = `6`
+| Parameter | Type | Default value |
+| ------ | ------ | ------ |
+| `amount` | `bigint` | `undefined` |
+| `decimals` | `number` | `undefined` |
+| `maxDisplayDecimals` | `number` | `6` |
 
 ## Returns
 

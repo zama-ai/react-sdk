@@ -1,24 +1,18 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useUserDecryptedValues
-
 # Function: useUserDecryptedValues()
 
-> **useUserDecryptedValues**(`handles`): `object`
+```ts
+function useUserDecryptedValues(handles: readonly object[] | undefined): object;
+```
 
-Defined in: [react/useUserDecryptedValue.ts:130](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useUserDecryptedValue.ts#L130)
+Defined in: [react/useUserDecryptedValue.ts:130](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useUserDecryptedValue.ts#L130)
 
 Hook for reading multiple cached decrypted values at once.
 
 ## Parameters
 
-### handles
-
-Array of { handle, contractAddress } to look up
-
-readonly `object`[] | `undefined`
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `handles` | readonly `object`[] \| `undefined` | Array of { handle, contractAddress } to look up |
 
 ## Returns
 
@@ -26,15 +20,21 @@ readonly `object`[] | `undefined`
 
 ### allCached
 
-> **allCached**: `boolean`
+```ts
+allCached: boolean;
+```
 
 ### cachedCount
 
-> **cachedCount**: `number`
+```ts
+cachedCount: number;
+```
 
 ### values
 
-> **values**: (`string` \| `bigint` \| `boolean` \| `undefined`)[]
+```ts
+values: (string | bigint | boolean | undefined)[];
+```
 
 ## Example
 

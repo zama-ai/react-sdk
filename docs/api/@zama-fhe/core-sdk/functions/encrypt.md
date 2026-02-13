@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / encrypt
-
 # Function: encrypt()
 
-> **encrypt**(`config`, `params`): `Promise`\<`EncryptedOutput`\>
+```ts
+function encrypt(config: FhevmConfig, params: EncryptParams): Promise<EncryptedOutput>;
+```
 
-Defined in: [core-sdk/src/actions/encrypt.ts:43](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/encrypt.ts#L43)
+Defined in: [core-sdk/src/actions/encrypt.ts:43](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/core-sdk/src/actions/encrypt.ts#L43)
 
 Encrypt values for FHE contract calls.
 
@@ -16,13 +12,10 @@ Returns encrypted handles and proof that can be used in contract calls.
 
 ## Parameters
 
-### config
-
-`FhevmConfig`
-
-### params
-
-`EncryptParams`
+| Parameter | Type |
+| ------ | ------ |
+| `config` | `FhevmConfig` |
+| `params` | `EncryptParams` |
 
 ## Returns
 

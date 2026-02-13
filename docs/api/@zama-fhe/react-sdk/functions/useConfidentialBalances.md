@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useConfidentialBalances
-
 # Function: useConfidentialBalances()
 
-> **useConfidentialBalances**(`options`): `UseConfidentialBalancesReturn`
+```ts
+function useConfidentialBalances(options: UseConfidentialBalancesOptions): UseConfidentialBalancesReturn;
+```
 
-Defined in: [react/useConfidentialBalances.ts:77](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useConfidentialBalances.ts#L77)
+Defined in: [react/useConfidentialBalances.ts:77](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useConfidentialBalances.ts#L77)
 
 Hook for reading encrypted balance handles from multiple ERC7984 contracts in parallel.
 
@@ -21,9 +17,9 @@ manual wiring.
 
 ## Parameters
 
-### options
-
-`UseConfidentialBalancesOptions`
+| Parameter | Type |
+| ------ | ------ |
+| `options` | `UseConfidentialBalancesOptions` |
 
 ## Returns
 

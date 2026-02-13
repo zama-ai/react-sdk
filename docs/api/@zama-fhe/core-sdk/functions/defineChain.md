@@ -1,12 +1,8 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / defineChain
-
 # Function: defineChain()
 
-> **defineChain**\<`T`\>(`chain`): `T`
+```ts
+function defineChain<T>(chain: T): T;
+```
 
 Defined in: shared/dist/chains/defineChain.d.ts:19
 
@@ -15,15 +11,15 @@ Similar to wagmi's defineChain but for FHE-enabled networks.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `FhevmChain`
+| Type Parameter |
+| ------ |
+| `T` *extends* `FhevmChain` |
 
 ## Parameters
 
-### chain
-
-`T`
+| Parameter | Type |
+| ------ | ------ |
+| `chain` | `T` |
 
 ## Returns
 

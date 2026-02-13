@@ -1,12 +1,8 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / defineMockChain
-
 # Function: defineMockChain()
 
-> **defineMockChain**(`chain`): `FhevmMockChain`
+```ts
+function defineMockChain(chain: Omit<FhevmMockChain, "isMock">): FhevmMockChain;
+```
 
 Defined in: shared/dist/chains/defineChain.d.ts:24
 
@@ -15,9 +11,9 @@ Mock chains auto-fetch contract addresses from the hardhat node.
 
 ## Parameters
 
-### chain
-
-`Omit`\<`FhevmMockChain`, `"isMock"`\>
+| Parameter | Type |
+| ------ | ------ |
+| `chain` | `Omit`\<`FhevmMockChain`, `"isMock"`\> |
 
 ## Returns
 

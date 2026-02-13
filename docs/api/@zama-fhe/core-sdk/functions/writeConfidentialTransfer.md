@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/core-sdk](../README.md) / writeConfidentialTransfer
-
 # Function: writeConfidentialTransfer()
 
-> **writeConfidentialTransfer**(`config`, `params`): `Promise`\<`WriteConfidentialTransferResult`\>
+```ts
+function writeConfidentialTransfer(config: FhevmConfig, params: WriteConfidentialTransferParams): Promise<WriteConfidentialTransferResult>;
+```
 
-Defined in: [core-sdk/src/actions/writeConfidentialTransfer.ts:78](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/core-sdk/src/actions/writeConfidentialTransfer.ts#L78)
+Defined in: [core-sdk/src/actions/confidentialTransfer.ts:78](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/core-sdk/src/actions/confidentialTransfer.ts#L78)
 
 Execute a confidential ERC7984 token transfer.
 
@@ -18,13 +14,10 @@ Works with both ethers.js and viem providers.
 
 ## Parameters
 
-### config
-
-`FhevmConfig`
-
-### params
-
-`WriteConfidentialTransferParams`
+| Parameter | Type |
+| ------ | ------ |
+| `config` | `FhevmConfig` |
+| `params` | `WriteConfidentialTransferParams` |
 
 ## Returns
 

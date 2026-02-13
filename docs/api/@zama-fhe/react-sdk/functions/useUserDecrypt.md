@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useUserDecrypt
-
 # Function: useUserDecrypt()
 
-> **useUserDecrypt**(`requestsOrParams`): `UseDecryptReturn`
+```ts
+function useUserDecrypt(requestsOrParams: DecryptParams | readonly DecryptRequest[] | undefined): UseDecryptReturn;
+```
 
-Defined in: [react/useUserDecrypt.ts:124](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useUserDecrypt.ts#L124)
+Defined in: [react/useUserDecrypt.ts:124](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useUserDecrypt.ts#L124)
 
 Hook for decrypting FHE encrypted values using TanStack Query mutations.
 
@@ -35,9 +31,9 @@ const { decrypt, results } = useUserDecrypt([
 
 ## Parameters
 
-### requestsOrParams
-
-`DecryptParams` | readonly `DecryptRequest`[] | `undefined`
+| Parameter | Type |
+| ------ | ------ |
+| `requestsOrParams` | `DecryptParams` \| readonly `DecryptRequest`[] \| `undefined` |
 
 ## Returns
 

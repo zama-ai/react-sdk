@@ -1,17 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../README.md)
-
-***
-
-[Zama FHE SDK](../../packages.md) / @zama-fhe/react-sdk
-
 # @zama-fhe/react-sdk
 
 ## Functions
 
-- [configureLogger](functions/configureLogger.md)
-- [createFhevmConfig](functions/createFhevmConfig.md)
+### Hooks
+
 - [FhevmProvider](functions/FhevmProvider.md)
-- [formatConfidentialAmount](functions/formatConfidentialAmount.md)
 - [useConfidentialBalances](functions/useConfidentialBalances.md)
 - [useConfidentialTransfer](functions/useConfidentialTransfer.md)
 - [useEncrypt](functions/useEncrypt.md)
@@ -26,3 +19,12 @@
 - [useUserDecryptedValue](functions/useUserDecryptedValue.md)
 - [useUserDecryptedValues](functions/useUserDecryptedValues.md)
 - [useWalletOrSigner](functions/useWalletOrSigner.md)
+
+### Config
+
+- [createFhevmConfig](functions/createFhevmConfig.md)
+
+### Utilities
+
+- [configureLogger](functions/configureLogger.md)
+- [formatConfidentialAmount](functions/formatConfidentialAmount.md)

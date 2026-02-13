@@ -7,10 +7,11 @@
   ],
   "entryPointStrategy": "packages",
   "packageOptions": {
-    "entryPoints": ["src/_docs.ts"]
+    "entryPoints": ["src/_docs.ts"],
+    "readme": "none"
   },
   "out": "docs/api",
-  "readme": "README.md",
+  "readme": "none",
   "plugin": ["typedoc-plugin-markdown"],
   "outputFileStrategy": "members",
   "membersWithOwnFile": ["Function"],
@@ -20,10 +21,26 @@
   "excludeInternal": true,
   "excludeExternals": true,
   "excludeReferences": true,
-  "includeVersion": true,
+  "includeVersion": false,
+  "hideBreadcrumbs": true,
+  "hidePageHeader": true,
+  "parametersFormat": "table",
+  "expandParameters": true,
+  "useCodeBlocks": true,
+  "navigationModel": {
+    "excludeCategories": false,
+    "excludeGroups": true,
+    "excludeFolders": false
+  },
   "categorizeByGroup": true,
   "categoryOrder": [
+    "Config",
+    "Actions",
     "Hooks",
+    "Chains",
+    "Transports",
+    "Providers",
+    "Utilities",
     "*"
   ],
   "groupOrder": [

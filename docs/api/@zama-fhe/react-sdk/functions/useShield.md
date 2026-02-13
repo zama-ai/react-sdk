@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useShield
-
 # Function: useShield()
 
-> **useShield**(`options`): `UseShieldReturn`
+```ts
+function useShield(options: UseShieldOptions): UseShieldReturn;
+```
 
-Defined in: [react/useShield.ts:83](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useShield.ts#L83)
+Defined in: [react/useShield.ts:83](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useShield.ts#L83)
 
 Hook for shielding ERC20 tokens into confidential ERC7984 tokens.
 
@@ -22,9 +18,9 @@ Handles the full flow:
 
 ## Parameters
 
-### options
-
-`UseShieldOptions`
+| Parameter | Type |
+| ------ | ------ |
+| `options` | `UseShieldOptions` |
 
 ## Returns
 

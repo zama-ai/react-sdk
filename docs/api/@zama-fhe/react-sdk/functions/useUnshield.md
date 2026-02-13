@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / useUnshield
-
 # Function: useUnshield()
 
-> **useUnshield**(`options`): `UseUnshieldReturn`
+```ts
+function useUnshield(options: UseUnshieldOptions): UseUnshieldReturn;
+```
 
-Defined in: [react/useUnshield.ts:92](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/useUnshield.ts#L92)
+Defined in: [react/useUnshield.ts:92](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/useUnshield.ts#L92)
 
 Hook for unshielding confidential ERC7984 tokens back to ERC20.
 
@@ -23,9 +19,9 @@ Handles the complete flow:
 
 ## Parameters
 
-### options
-
-`UseUnshieldOptions`
+| Parameter | Type |
+| ------ | ------ |
+| `options` | `UseUnshieldOptions` |
 
 ## Returns
 

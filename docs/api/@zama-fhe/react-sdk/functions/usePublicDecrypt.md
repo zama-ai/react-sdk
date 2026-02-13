@@ -1,14 +1,10 @@
-[**Zama FHE SDK v0.1.0**](../../../README.md)
-
-***
-
-[Zama FHE SDK](../../../packages.md) / [@zama-fhe/react-sdk](../README.md) / usePublicDecrypt
-
 # Function: usePublicDecrypt()
 
-> **usePublicDecrypt**(`params`): `UsePublicDecryptReturn`
+```ts
+function usePublicDecrypt(params: PublicDecryptParams | undefined): UsePublicDecryptReturn;
+```
 
-Defined in: [react/usePublicDecrypt.ts:149](https://github.com/zama-ai/react-sdk/blob/73652ce2cd36e55c11ea775809c219de287f30ed/packages/react-sdk/src/react/usePublicDecrypt.ts#L149)
+Defined in: [react/usePublicDecrypt.ts:149](https://github.com/zama-ai/react-sdk/blob/5bfa7b8f1746f561f5c2a74a33e236c34ae3f107/packages/react-sdk/src/react/usePublicDecrypt.ts#L149)
 
 Hook for public decryption of FHE encrypted values.
 
@@ -22,9 +18,9 @@ using `FHE.makePubliclyDecryptable(handle)` before calling this hook.
 
 ## Parameters
 
-### params
-
-`PublicDecryptParams` | `undefined`
+| Parameter | Type |
+| ------ | ------ |
+| `params` | `PublicDecryptParams` \| `undefined` |
 
 ## Returns
 
