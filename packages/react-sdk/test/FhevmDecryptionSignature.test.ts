@@ -481,7 +481,7 @@ describe("FhevmDecryptionSignature", () => {
     });
   });
 
-  describe.skip("loadOrSign", () => {
+  describe("loadOrSign", () => {
     it("returns cached signature when loadFromGenericStringStorage returns one", async () => {
       const storage = new GenericStringInMemoryStorage();
       const instance = createMockInstance();
@@ -492,10 +492,11 @@ describe("FhevmDecryptionSignature", () => {
       const sig = FhevmDecryptionSignature.fromJSON(data);
       await sig.saveToGenericStringStorage(storage, instance, false);
 
+      const providerRequest = vi.fn(() => Promise.resolve("0xnewSig"));
       const signer = {
-        getAddress: () => Promise.resolve("0x0000000000000000000000000000000000000001"),
-        signTypedData: vi.fn(() => Promise.resolve("0xnewSig")),
-      } as any;
+        address: "0x0000000000000000000000000000000000000001" as `0x${string}`,
+        provider: { request: providerRequest },
+      };
 
       const result = await FhevmDecryptionSignature.loadOrSign(
         instance,
@@ -504,32 +505,28 @@ describe("FhevmDecryptionSignature", () => {
         storage
       );
       expect(result).not.toBeNull();
-      //
       expect(result!.signature).toBe("0xsignature");
-      expect(signer.signTypedData).not.toHaveBeenCalled();
+      expect(providerRequest).not.toHaveBeenCalled();
     });
 
     it("creates new signature and saves when no cache", async () => {
       const storage = new GenericStringInMemoryStorage();
       const instance = createMockInstance();
       const signer = {
-        getAddress: () => Promise.resolve("0x0000000000000000000000000000000000000001"),
-        signTypedData: () => Promise.resolve("0xnewSig"),
-        wallet: {},
+        address: "0x0000000000000000000000000000000000000001" as `0x${string}`,
         provider: {
           request: ({ method }: { method: string }) => {
             if (method === "eth_signTypedData_v4") {
-              return Promise.resolve("0xsignature");
+              return Promise.resolve("0xnewSig");
             }
             return Promise.reject(new Error("Unsupported method"));
           },
         },
-      } as unknown as JsonRpcSigner;
+      };
 
       const result = await FhevmDecryptionSignature.loadOrSign(
         instance,
         ["0x0000000000000000000000000000000000000002"],
-        // @ts-expect-error testing with signer
         signer,
         storage
       );
@@ -551,20 +548,21 @@ describe("FhevmDecryptionSignature", () => {
       const storage = new GenericStringInMemoryStorage();
       const instance = createMockInstance();
       const signer = {
-        getAddress: () => Promise.resolve("0x0000000000000000000000000000000000000001"),
-        signTypedData: () => Promise.resolve("0xnewSig"),
-        request: () =>
-          Promise.resolve({
-            publicKey: "0xmyPub",
-            privateKey: "0xmyPriv",
-          }),
-      } as unknown as JsonRpcSigner;
+        address: "0x0000000000000000000000000000000000000001" as `0x${string}`,
+        provider: {
+          request: ({ method }: { method: string }) => {
+            if (method === "eth_signTypedData_v4") {
+              return Promise.resolve("0xnewSig");
+            }
+            return Promise.reject(new Error("Unsupported method"));
+          },
+        },
+      };
       const keyPair = { publicKey: "0xmyPub", privateKey: "0xmyPriv" };
 
       const result = await FhevmDecryptionSignature.loadOrSign(
         instance,
         ["0x0000000000000000000000000000000000000002"],
-        // @ts-expect-error testing with signer
         signer,
         storage,
         keyPair
