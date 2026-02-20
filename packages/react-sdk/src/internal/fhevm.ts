@@ -1,5 +1,9 @@
 import type { FhevmInstance, FhevmInstanceConfig } from "../fhevmTypes";
-import { isAddress, getChainId as getChainIdFromProvider, type Eip1193Provider } from "./eip1193";
+import {
+  isAddress,
+  getChainId as getChainIdFromProvider,
+  type Eip1193Provider,
+} from "./validations/index";
 import type {
   FhevmInitSDKOptions,
   FhevmInitSDKType,

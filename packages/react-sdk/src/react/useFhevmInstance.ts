@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useRef } from "react";
 import type { FhevmConfig } from "../config";
 import type { FhevmInstance } from "../fhevmTypes";
-import type { Eip1193Provider } from "../internal/eip1193";
+import type { Eip1193Provider } from "../internal/validations/eip1193";
 import { createFhevmInstance, FhevmAbortError } from "../internal/fhevm";
 import { logger } from "../internal/logger";
 import { FHEVM_QUERY_DEFAULTS } from "./core/constants";
@@ -91,9 +91,7 @@ export function useFhevmInstance(options: UseFhevmInstanceOptions): UseFhevmInst
 
   // TanStack Query for instance management
   const query = useQuery({
-    queryKey: chainId
-      ? fhevmKeys.instanceFor(chainId)
-      : ["fhevm", "instance", "disabled"],
+    queryKey: chainId ? fhevmKeys.instanceFor(chainId) : ["fhevm", "instance", "disabled"],
 
     queryFn: async ({ signal }): Promise<FhevmInstance> => {
       if (!provider) {

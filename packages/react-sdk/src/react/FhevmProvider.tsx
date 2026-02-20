@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useMemo } from "react";
 import type { FhevmConfig } from "../config";
-import type { Eip1193Provider } from "../internal/eip1193";
+import type { Eip1193Provider } from "../internal/validations/eip1193";
 import { logger } from "../internal/logger";
 import { useRelayerScript } from "../internal/useRelayerScript";
 import type { GenericStringStorage } from "../storage/GenericStringStorage";
@@ -347,7 +347,20 @@ export function FhevmProvider({
       storage,
       refresh,
     }),
-    [config, instance, status, error, chainId, address, isConnected, provider, walletProp, rpcUrl, storage, refresh]
+    [
+      config,
+      instance,
+      status,
+      error,
+      chainId,
+      address,
+      isConnected,
+      provider,
+      walletProp,
+      rpcUrl,
+      storage,
+      refresh,
+    ]
   );
 
   const queryClientToUse = externalQueryClient ?? fhevmQueryClient;

@@ -18,10 +18,19 @@ export function assertAddress(address: unknown, name = "address"): asserts addre
 }
 
 /**
- * Check if a value is a bigint or can be converted to one.
+ * Check if a value is a bigint.
  */
 export function isBigInt(value: unknown): value is bigint {
   return typeof value === "bigint";
+}
+
+/**
+ * Validate that a value is a bigint, throw if not.
+ */
+export function assertBigInt(value: unknown, name = "value"): asserts value is bigint {
+  if (!isBigInt(value)) {
+    throw new Error(`Invalid ${name}: ${String(value)}`);
+  }
 }
 
 /**

@@ -2,7 +2,7 @@
  * Global type declarations for @zama-fhe/react-sdk.
  */
 
-import type { Eip1193Provider } from "../internal/eip1193";
+import type { Eip1193Provider } from "../internal/validations/eip1193";
 
 declare global {
   interface Window {

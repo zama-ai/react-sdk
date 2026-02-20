@@ -1,25 +1,16 @@
-/**
- * EIP-1193 utilities for provider-only SDK design.
- * No ethers.js dependency - uses raw EIP-1193 provider methods.
- */
-
-/**
- * Standard EIP-1193 provider interface.
- * This is what window.ethereum, wagmi connectors, and viem clients all implement.
- */
-export interface Eip1193Provider {
-  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
-}
+import type { Eip1193Provider } from "./eip1193";
+import { isAddress, isIdentifier, isSolidityType, parseType } from "./generic";
 
 /**
  * EIP-712 typed data domain.
+ * TODO rename EIP712Domain
  */
 export interface TypedDataDomain {
-  name?: string;
-  version?: string;
-  chainId?: number;
-  verifyingContract?: `0x${string}`;
-  salt?: `0x${string}`;
+  name?: string; // user readable name of signing domain
+  version?: string; // current major version of the signing domain
+  chainId?: number; // EIP-155 chain id
+  verifyingContract?: `0x${string}`; // address of the contract that will verify the signature
+  salt?: `0x${string}`; //  a disambiguating salt for the protocol
 }
 
 /**
@@ -29,6 +20,15 @@ export interface TypedDataField {
   name: string;
   type: string;
 }
+
+export type TypedDataTypes = Record<string, TypedDataField[]>;
+
+/**
+ * EIP-712 message structure.
+ * This is a very loose type since the message can be any object
+ */
+
+type EIP712Message = object;
 
 /**
  * EIP-712 typed data structure.
@@ -41,23 +41,102 @@ export interface EIP712TypedData {
 }
 
 /**
- * Validate an Ethereum address.
- * Replaces ethers.isAddress.
+ * checks if payload has EIP712 shape
+ * @param e: an unknown shape
+ * @returns boolean
  */
-export function isAddress(value: unknown): value is `0x${string}` {
-  if (typeof value !== "string") return false;
-  return /^0x[a-fA-F0-9]{40}$/.test(value);
+export function isEIP712(e: unknown): e is EIP712TypedData {
+  if (!e || typeof e !== "object") return false;
+  const o = e as Record<string, unknown>;
+
+  const checks: [key: string, pred: (v: unknown) => boolean][] = [
+    ["types", isTypedDataTypes],
+    ["domain", isEIP712Domain],
+    ["primaryType", (v): v is string => typeof v === "string"],
+    ["message", isMessage],
+  ];
+  return checks.every(([key, pred]) => key in o && pred(o[key]));
 }
 
 /**
- * Normalize an address to checksummed format.
- * Simple implementation without full checksum validation.
+ * Validates that an object has the shape of an EIP712Domain
+ * port of https://github.com/wevm/abitype/blob/main/packages/abitype/src/zod.ts#L301
  */
-export function normalizeAddress(address: string): `0x${string}` {
-  if (!isAddress(address)) {
-    throw new Error(`Invalid address: ${address}`);
+export function isEIP712Domain(d: unknown): d is TypedDataDomain {
+  if (!d || typeof d !== "object") return false;
+  const o = d as Record<string, unknown>;
+  const checks: [key: string, pred: (v: unknown) => boolean][] = [
+    ["name", isIdentifier],
+    ["version", (v): v is string => typeof v === "string"],
+    ["chainId", (v): v is number => typeof v === "number" || typeof v === "bigint"],
+    ["verifyingContract", isAddress],
+    ["salt", (v): v is `0x${string}` => typeof v === "string" && v.startsWith("0x")],
+  ];
+  return checks.some(([key, pred]) => key in o && pred(o[key]));
+}
+
+export function isMessage(m: unknown): m is EIP712Message {
+  if (!m || typeof m !== "object") return false;
+  return true;
+}
+
+/**
+ * isTypedDataTypes
+ * @param value: an unknown shape
+ * @returns boolean
+ */
+
+export function isTypedDataTypes(value: unknown): value is TypedDataTypes {
+  if (!value || typeof value !== "object") return false;
+  const typed = value as Record<string, unknown>;
+
+  for (const key of Object.keys(typed)) {
+    if (typeof key !== "string") return false;
+    if (isSolidityType(key)) return false;
+
+    const fields = typed[key];
+    if (!Array.isArray(fields)) return false;
+
+    for (const field of fields) {
+      if (!field || typeof field !== "object") return false;
+      const f = field as Record<string, unknown>;
+
+      if (!isIdentifier(f.name)) return false;
+      if (typeof f.type !== "string") return false;
+
+      const parsed = parseType(f.type);
+      if (!parsed) return false;
+
+      if (!(parsed.base in typed || isSolidityType(parsed.base))) {
+        return false;
+      }
+    }
   }
-  return address.toLowerCase() as `0x${string}`;
+
+  function validateNoCycles(key: string, ancestors: Set<string> = new Set()): boolean {
+    const fields = typed[key] as TypedDataField[];
+
+    for (const field of fields) {
+      const parsed = parseType(field.type);
+      if (!parsed) return false;
+
+      if (parsed.base === key) return false; // self reference
+
+      if (parsed.base in typed) {
+        if (ancestors.has(parsed.base)) return false;
+
+        if (!validateNoCycles(parsed.base, new Set([...ancestors, parsed.base]))) return false;
+      }
+    }
+
+    return true;
+  }
+
+  for (const key of Object.keys(typed)) {
+    if (!validateNoCycles(key)) return false;
+  }
+
+  return true;
 }
 
 /**
