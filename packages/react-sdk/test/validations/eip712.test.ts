@@ -75,7 +75,7 @@ describe("validator/eip712", () => {
   });
 
   describe("isTypedDataTypes", () => {
-    // these tests are infered from
+    // these tests are inferred from
     // https://github.com/wevm/abitype/blob/main/packages/abitype/src/zod.test.ts
     it("should invalidate incorrect types", () => {
       const selfReference = {
